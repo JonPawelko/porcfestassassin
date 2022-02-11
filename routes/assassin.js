@@ -6,7 +6,7 @@ const fileUpload = require('express-fileupload');
 var router = express.Router();
 var dbConn  = require('../lib/db');   // database object
 const cron = require('node-cron');
-var CREDENTIALS = require('../gitignore/credentials.json');
+var CREDENTIALS = require('../credentials/credentials.json');
 const twilio = require('twilio')(CREDENTIALS.TWILIO_ACCOUNT_SID, CREDENTIALS.TWILIO_AUTH_TOKEN);
 
 // -------------------------------------------------------------
