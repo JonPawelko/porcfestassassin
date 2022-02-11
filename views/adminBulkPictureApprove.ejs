@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<title>Assassin</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="\stylesheets\custom.css">
+	<script src="javascripts/utilities.js"></script>
+</head>
+
+<body class="container" style="margin-top: 10px;">
+
+  <div class="card" style="width:21rem;">
+
+    <div class="card-header">
+        Player:&nbsp<%=playerName%> - <%=playerCode%>
+    </div>
+
+		<div class="card-body">
+
+				<div style="height: 3px;"></div>
+        <form>
+        <img src=<%=photoFilename%>
+          loading="lazy">
+        </form>
+
+				<div style="height: 15px;"></div>
+
+        <form action="adminApprovePicture" method="post" onsubmit="return waitCursor()">
+            <input type="hidden" name="playerCode" value="<%= playerCode %>">
+            <input type="hidden" name="oneOrMorePhotos" value="More">
+            <input type="submit" class="btn btn-info" value="Approve Photo"/>
+        </form>
+
+				<div style="height: 15px;"></div>
+
+        <form action="adminRejectPicture" method="post" onsubmit="return waitCursor()">
+            <input type="hidden" name="playerCode" value="<%= playerCode %>">
+            <input type="hidden" name="oneOrMorePhotos" value="More">
+            <input type="submit" class="btn btn-info" value="Reject Photo"/>
+        </form>
+
+				<div style="height: 5px;"></div>
+
+    </div>
+
+	</div>
+
+</body>
+</html>

@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<title>Assassin</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="\stylesheets\custom.css">
+	<script src="javascripts/utilities.js"></script>
+</head>
+
+<body class="container" style="margin-top: 10px;">
+
+  <div class="card" style="width:21rem;">
+
+    <div class="card-header">
+        Your Game photo
+				<div style="height: 6px;"></div>
+    </div>
+
+		<div class="card-body">
+
+				<div style="height: 8px;"></div>
+
+        <form>
+        		<img src=<%=myPicture%>
+        		loading="lazy">
+        </form>
+
+				<% 	if (picFeature == "View") { %>
+
+						<form action="assassinLogin" method="post"onsubmit="return waitCursor()">
+									<input type="submit" style="margin:10px" class="btn btn-info" value="Return Home"/>
+						</form>
+
+				<% } else {  // rejected pic %>
+
+					<form autocomplete="off" action="uploadPhoto" onsubmit="return waitCursor()" method="post" encType="multipart/form-data">
+							<input type="hidden" name="playerCode" value="<%= playerCode %>">
+							<input type="hidden" name="userType" value="User">
+							<div style="height: 12px;"></div>
+							<input type="file" size="15" name="playerPhotoFile" accept="image/*" />
+							<div style="height: 12px;"></div>
+							<input type="submit" class="btn btn-info" value="Upload New Picture"/>
+					</form>
+
+
+				<%}%>
+
+				<div style="height: 5px;"></div>
+
+    </div>
+
+	</div>
+
+</body>
+</html>

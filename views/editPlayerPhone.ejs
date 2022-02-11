@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<title>Assassin</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="\stylesheets\custom.css">
+	<script src="javascripts/utilities.js"></script>
+</head>
+
+<body class="container" style="margin-top: 10px;">
+
+  <div class="card" style="width:21rem;">
+
+    <div class="card-header">
+
+			<% 	if (playerPhone == "") { %>
+					Add your phone number
+			<% } else {%>
+        	Edit your phone number
+			<%}%>
+			<div style="height: 6px;"></div>
+		</div>
+
+    <div class="card-body">
+
+      <form autocomplete="off" action="updatePlayerPhone" method="post" onsubmit="return waitCursor()" encType="multipart/form-data">
+					<div style="height: 10px;"></div>
+					Player Phone Number: <input type="search" size="12" name="playerPhone" value="<%= playerPhone %>" autocomplete="off">
+					<input type="hidden" name="playerCode" value="<%= playerCode %>">
+					<div style="height: 14px;"></div>
+
+          <input type="submit" class="btn btn-info"
+					value="<% 	if (playerPhone == "") { %>
+							Add Phone Number
+					<% } else {%>
+		        	Update Phone Number
+					<%}%>"/>
+      </form>
+
+			<div style="height: 6px;"></div>
+
+    </div>
+
+  </div>
+
+</body>
+</html>

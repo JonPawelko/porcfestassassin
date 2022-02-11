@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<title>Assassin</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="\stylesheets\custom.css">
+	<script src="javascripts/utilities.js"></script>
+</head>
+
+<body class="container" style="margin-top: 10px;">
+
+    <div class="card" style="width:21rem;">
+
+	    	<div class="card-header">
+						Welcome to Assassin!
+						<div style="height: 4px;"></div>
+						Please choose an option below.
+						<div style="height: 4px;"></div>
+				</div>
+
+			<!-- No card-body used, buttons look better without -->
+
+				<div style="height: 8px;"></div>
+
+				<form action="assassinLogin" method="post"onsubmit="return waitCursor()">
+							<input type="submit" style="margin:10px" class="btn btn-info" value="Login"/>
+				</form>
+
+				<form action="assassinRegister" method="post"onsubmit="return waitCursor()">
+							<input type="submit" style="margin:10px" class="btn btn-info" value="Register"/>
+				</form>
+
+				<div style="height: 8px;"></div>
+
+		</div>
+
+</body>
+</html>

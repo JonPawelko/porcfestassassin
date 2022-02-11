@@ -1,0 +1,11 @@
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="\stylesheets\custom.css">
+<script src="javascripts/utilities.js"></script>
+
+<form action="goLive" method="post" onsubmit="return confirmChoice(<%= CONFIRM_GO_LIVE %>)">
+    <div style="height: 5px;"></div>
+    <input type="hidden" name="myTeamCode" value="<%= playerTeamCode %>">
+    <input type="hidden" name="myPlayerCode" value="<%= playerCode %>">
+    <input type="submit" class="btn btn-info" value="Go Live"/>
+    <div style="height: 10px;"></div>
+</form>

@@ -1,0 +1,17 @@
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="\stylesheets\custom.css">
+<script src="javascripts/utilities.js"></script>
+
+<%  if	((gameStatus == "Not Started") || (gameStatus == "Live") || (gameStatus == "Overnight"))
+    {
+%>
+      <div style="height: 2px;"></div>
+      You must either join or create a Team to play Assassin.
+      <div style="height: 11px;"></div>
+      <%- include('joinTeamFeatures'); %>
+      -OR-
+      <div style="height: 12px;"></div>
+
+      <%- include('createTeamFeatures'); %>
+
+<%  } %>

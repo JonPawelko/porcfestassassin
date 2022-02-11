@@ -1,0 +1,11 @@
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="\stylesheets\custom.css">
+<script src="javascripts/utilities.js"></script>
+
+<form action="joinTeam" method="post" onsubmit="return waitCursor()" encType="multipart/form-data">
+      8-digit Team Code: <input type="search" size="12" name="joinTeamCode" autocomplete="off">
+      <input type="hidden" name="myPlayerCode" value="<%= playerCode %>">
+      <div style="height: 9px;"></div>
+      <input type="submit" class="btn btn-info" value="Join Team"/>
+      <div style="height: 14px;"></div>
+</form>

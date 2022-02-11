@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<title>Assassin</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="\stylesheets\custom.css">
+	<script src="javascripts/utilities.js"></script>
+</head>
+
+<body class="container" style="margin-top: 10px;">
+
+  <div class="card" style="width:21rem;">
+
+    <div class="card-header">
+        Team Name:&nbsp<%= teamName %>
+				<div style="height: 5px;"></div>
+    </div>
+
+    <div class="card-body">
+
+			<div style="height: 5px;"></div>
+      Team Code:&nbsp<%= teamCode %>
+			<div style="height: 10px;"></div>
+      Team Status:&nbsp<%= teamStatus %>
+			<div style="height: 10px;"></div>
+      Captain:&nbsp<%= captainName %> - <%= captainCode %>
+			<div style="height: 10px;"></div>
+			Bounties Owed:&nbsp<%= bountiesOwed %>
+			<div style="height: 10px;"></div>
+
+				<% if (bountiesOwed >= 1) { %>
+
+					<form autocomplete="off" action="adminPayBounties" method="post" onsubmit="return waitCursor()" encType="multipart/form-data">
+	            <input type="hidden" name="teamCode" value="<%= teamCode %>">
+              Pay Bounties: &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<input type="search" size="2" name="numBounties" value="<%= bountiesOwed %>" autocomplete="off">
+              &nbsp&nbsp<input type="submit" class="btn btn-info" value="Pay"/>
+							<div style="height: 14px;"></div>
+	        </form>
+
+				<% } %>
+
+				<% if ((teamStatus == "Registered") || (teamStatus == "Pics Approved") || (teamStatus == "Inactive")) { %>
+
+					<form autocomplete="off" action="adminMarkPaid" method="post" onsubmit="return waitCursor()" encType="multipart/form-data">
+							<input type="hidden" name="teamCode" value="<%= teamCode %>">
+							<input type="submit" class="btn btn-info" value="Mark Paid"/>
+							<div style="height: 16px;"></div>
+					</form>
+
+				<% } %>
+
+				<form autocomplete="off" action="adminUpdateTeamName" method="post" onsubmit="return waitCursor()" encType="multipart/form-data">
+						<input type="hidden" name="teamCode" value="<%= teamCode %>">
+								New Team Name: <input type="search" size="12" name="teamName" value="" autocomplete="off">
+								<div style="height: 16px;"></div>
+								<input type="submit" class="btn btn-info" value="Update Team Name"/>
+								<div style="height: 16px;"></div>
+				</form>
+
+				<form autocomplete="off" action="assassinLogin" method="post" onsubmit="return waitCursor()" encType="multipart/form-data">
+							<input type="submit" class="btn btn-info" value="Home"/>
+							<div style="height: 6px;"></div>
+				</form>
+
+      </div>
+
+    </div>
+
+</body>
+</html>

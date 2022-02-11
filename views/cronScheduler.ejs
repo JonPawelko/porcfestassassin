@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<title>Assassin</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="\stylesheets\custom.css">
+	<script src="javascripts/utilities.js"></script>
+</head>
+
+<body class="container" style="margin-top: 10px;">
+
+  <div class="card" style="width:21rem;">
+
+    <div class="card-header">
+        Cron Scheduler
+				<div style="height: 5px;"></div>
+    </div>
+
+		<div class="card-body">
+
+		    <form autocomplete="off" action="systemStartCronScripts" method="post" onsubmit="return waitCursor()" encType="multipart/form-data">
+					<div style="height: 7px;"></div>
+	        <input type="checkbox" name="startGameCheckbox" unchecked>&nbsp
+	        Start Game:&nbsp&nbsp<input type="search" size="17" name="startGameTimestamp" value="<%= gameStart %>" autocomplete="off">
+          <div style="height: 5px;"></div>
+          <% if (gameStartCronScript == 1)
+          {%>
+              &nbsp&nbsp&nbsp&nbsp
+              Running
+        <%}
+          else
+          {%>
+              &nbsp&nbsp&nbsp&nbsp
+              Stopped
+        <%}%>
+
+        <hr>
+
+          <div style="height: 3px;"></div>
+
+          <input type="checkbox" name="endGameCheckbox" unchecked>&nbsp
+          End Game:&nbsp&nbsp&nbsp&nbsp<input type="search" size="17" name="endGameTimestamp" value="<%= gameEnd %>" autocomplete="off">
+          <div style="height: 5px;"></div>
+          <% if (gameEndCronScript == 1)
+          {%>
+              &nbsp&nbsp&nbsp&nbsp
+              Running
+        <%}
+          else
+          {%>
+              &nbsp&nbsp&nbsp&nbsp
+              Stopped
+        <%}%>
+
+        <hr>
+
+        <div style="height: 3px;"></div>
+
+        <input type="checkbox" name="morningStartCheckbox" unchecked>&nbsp
+        Morning Start:&nbsp<input type="search" size="2" name="morningStartTime" value="<%= morningStart %>" autocomplete="off">
+        <div style="height: 5px;"></div>
+        <% if (morningStartCronScript == 1)
+        {%>
+            &nbsp&nbsp&nbsp&nbsp
+            Running
+        <%}
+        else
+        {%>
+            &nbsp&nbsp&nbsp&nbsp
+            Stopped
+        <%}%>
+
+        <hr>
+
+        <div style="height: 3px;"></div>
+
+        <input type="checkbox" name="nightEndCheckbox" unchecked>&nbsp
+        Night End:&nbsp<input type="search" size="2" name="nightEndTime" value="<%= nightEnd %>" autocomplete="off">
+        <div style="height: 5px;"></div>
+        <% if (nightEndCronScript == 1)
+        {%>
+            &nbsp&nbsp&nbsp&nbsp
+            Running
+        <%}
+        else
+        {%>
+            &nbsp&nbsp&nbsp&nbsp
+            Stopped
+        <%}%>
+
+        <hr>
+
+        <input type="checkbox" name="twoHoursToGoCheckbox" unchecked>&nbsp
+        Two Hours To Go Shift Check
+        <div style="height: 5px;"></div>
+        <% if (twoHoursToGoCronScript == 1)
+        {%>
+            &nbsp&nbsp&nbsp&nbsp
+            Running
+        <%}
+        else
+        {%>
+            &nbsp&nbsp&nbsp&nbsp
+            Stopped
+        <%}%>
+
+        <hr>
+
+        <div style="height: 3px;"></div>
+
+        <input type="checkbox" name="oneHourToGoCheckbox" unchecked>&nbsp
+        One Hour To Go Shift Check
+        <div style="height: 5px;"></div>
+        <% if (oneHourToGoCronScript == 1)
+        {%>
+            &nbsp&nbsp&nbsp&nbsp
+            Running
+        <%}
+        else
+        {%>
+            &nbsp&nbsp&nbsp&nbsp
+            Stopped
+        <%}%>
+
+        <hr>
+
+        <div style="height: 3px;"></div>
+
+        <input type="checkbox" name="checkHowManyPhotosCheckbox" unchecked>&nbsp
+        Photo Queue Size:&nbsp<input type="search" size="2" name="checkHowManyPhotos" value="3" autocomplete="off">
+        <div style="height: 5px;"></div>
+        <% if (checkHowManyPhotosCronScript == 1)
+        {%>
+          &nbsp&nbsp&nbsp&nbsp
+          Running
+        <%}
+        else
+        {%>
+          &nbsp&nbsp&nbsp&nbsp
+          Stopped
+        <%}%>
+
+        <hr>
+
+        <div style="height: 3px;"></div>
+
+        <input type="checkbox" name="checkOldPhotosCheckbox" unchecked>&nbsp
+        Photo Age:&nbsp<input type="search" size="2" name="checkOldPhotos" value="20" autocomplete="off">
+        <div style="height: 5px;"></div>
+        <% if (checkOldPhotosCronScript == 1)
+        {%>
+          &nbsp&nbsp&nbsp&nbsp
+          Running
+        <%}
+        else
+        {%>
+          &nbsp&nbsp&nbsp&nbsp
+          Stopped
+        <%}%>
+
+        <hr>
+
+					<div style="height: 2px;"></div>
+	        <input type="submit" class="btn btn-info" value="Start Scripts"/>
+          <input type="submit" class="btn btn-info" formaction="systemStopCronScripts" onsubmit="return waitCursor()" value="Stop Scripts"/>
+	      </form>
+
+	  </div>
+
+	</div>
+
+	<div style="height: 12px;"></div>
+
+</body>
+</html>

@@ -1,0 +1,77 @@
+<link rel="stylesheet" type="text/css" href="\stylesheets\custom.css">
+<script src="javascripts/utilities.js"></script>
+
+<div class="card" style="width:21rem;">
+
+  <div class="card-header">
+    Admin Features
+    <div style="height: 4px;"></div>
+  </div>
+
+  <div class="card-body">
+
+        <form autocomplete="off" action="adminSearchForPlayer" method="post" onsubmit="return waitCursor()" encType="multipart/form-data">
+            <div style="height: 11px;"></div>
+            Player Name: <input type="search" size="12" name="playerName" value="" autocomplete="off">
+            <div style="height: 12px;"></div>
+            Team Name: &nbsp<input type="search" size="12" name="teamName" value="" autocomplete="off">
+            <div style="height: 12px;"></div>
+            Player Code: &nbsp<input type="search" size="12" name="playerCode" value="" autocomplete="off">
+            <div style="height: 12px;"></div>
+            Team Code: &nbsp&nbsp<input type="search" size="12" name="teamCode" value="" autocomplete="off">
+            <div style="height: 15px;"></div>
+            <input type="submit" class="btn btn-info" value="Search For Player"/>
+            &nbsp&nbsp<input type="submit" class="btn btn-info" formaction="adminSearchForTeam" onsubmit="return waitCursor()" value="Search For Team"/>
+        </form>
+
+        <div style="height: 4px;"></div>
+
+        <hr>
+
+        <form autocomplete="off" action="adminActivateTeamPrep" method="post" onsubmit="return waitCursor()" encType="multipart/form-data">
+            <div style="height: 5px;"></div>
+            Team Code: &nbsp&nbsp<input type="search" size="12" name="teamCode" value="" autocomplete="off">
+            <div style="height: 15px;"></div>
+            <input type="submit" class="btn btn-info" value="Activate Team Prep"/>
+        </form>
+
+        <div style="height: 4px;"></div>
+        <hr>
+
+        <div style="height: 3px;"></div>
+
+        <form autocomplete="off" action="adminDropBomb" onsubmit="return confirmChoice()" method="post" encType="multipart/form-data">
+            <input type="submit" class="btn btn-info" value="Drop Bomb"/>
+            &nbsp&nbsp
+            <input type="submit" class="btn btn-info" formaction="adminBulkPictureApprove" onsubmit="return waitCursor()" value="Bulk Picture Approve"/>
+            <div style="height: 18px;"></div>
+            <input type="submit" class="btn btn-info" formaction="adminShowCreatePrepsPage" onsubmit="return waitCursor()" value="Create Prep Templates"/>
+            &nbsp&nbsp
+            <input type="submit" class="btn btn-info" formaction="resetDatabase" onsubmit="return waitCursor()" value="Reset DB"/>
+        </form>
+
+        <div style="height: 4px;"></div>
+
+        <hr>
+
+        <div style="height: 2px;"></div>
+
+        <form autocomplete="off" action="cronManager" method="post" onsubmit="return waitCursor()" encType="multipart/form-data">
+            <input type="submit" class="btn btn-info" value="Cron Scheduler"/>
+            <div style="height: 16px;"></div>
+        </form>
+
+        <form autocomplete="off" action="systemCheckForceShiftChange" onsubmit="return confirmChoice(<%= CONFIRM_FORCE_SHIFT %>)" method="post" encType="multipart/form-data">
+            Hours To Go: <input type="search" size="1" name="hoursToGo" value="2" autocomplete="off">
+            &nbsp&nbsp
+            <input type="submit" class="btn btn-info" value="Force Shifts"/>
+            <div style="height: 2px;"></div>
+        </form>
+
+        <div style="height: 8px;"></div>
+
+  </div>
+
+</div>
+
+<div style="height: 12px;"></div>

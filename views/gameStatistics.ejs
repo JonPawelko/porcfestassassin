@@ -1,0 +1,56 @@
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="\stylesheets\custom.css">
+<script src="javascripts/utilities.js"></script>
+
+<div class="card" style="width:21rem;">
+
+<div class="card-header">
+    Game Statistics
+    <div style="height: 4px;"></div>
+</div>
+
+<div class="card-body">
+    <div style="height: 5px;"></div>
+    Total Players:&nbsp<%= totalPlayers %>
+    <div style="height: 8px;"></div>
+    Total Teams:&nbsp<%= totalTeams %>
+    <div style="height: 8px;"></div>
+    Total Celebritarians:&nbsp<%= totalCelebs %>
+    <div style="height: 8px;"></div>
+    Live Celebritarians:&nbsp<%= liveCelebs %>
+    <div style="height: 8px;"></div>  
+    Live Teams:&nbsp<%= liveTeams %>
+    <div style="height: 8px;"></div>
+    Waiting Teams:&nbsp<%= waitingTeams %>
+    <div style="height: 8px;"></div>
+    Total Kills:&nbsp<%= totalKills %>
+    <div style="height: 8px;"></div>
+    Today's Kills:&nbsp<%= todaysKills %>
+    <div style="height: 8px;"></div>
+    Most Team Kills - Week:&nbsp<%= weekTeamLeader %>
+    <div style="height: 8px;"></div>
+    Most Team Kills - Today:&nbsp<%= dayTeamLeader %>
+    <div style="height: 8px;"></div>
+    Most Player Kills - Week:&nbsp<%= weekPlayerLeader %>
+    <div style="height: 8px;"></div>
+    Most Player Kills - Today:&nbsp<%= dayPlayerLeader %>
+    <div style="height: 8px;"></div>
+    <% if (teamStatus != "0") { %>
+      My Team Kills - Week:&nbsp<%= myTeamTotalKills %>
+      <div style="height: 8px;"></div>
+      My Team Kills - Today:&nbsp<%= myTeamTodayKills %>
+      <div style="height: 8px;"></div>
+      Personal Kills - Week:&nbsp<%= myPersonalKillsWeek %>
+      <div style="height: 8px;"></div>
+      Personal Kills - Today:&nbsp<%= myPersonalKillsDay %>
+      <div style="height: 8px;"></div>
+    <%}%>
+
+
+
+
+
+
+</div>
+
+</div>

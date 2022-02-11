@@ -1,0 +1,290 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<title>Assassin</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="\stylesheets\custom.css">
+	<script src="javascripts/utilities.js"></script>
+</head>
+
+<body class="container" style="margin-top: 10px;">
+
+  <div class="card" style="width:21rem;">
+
+    <div class="card-header">
+        Error
+				<div style="height: 4px;"></div>
+    </div>
+
+    <div class="card-body">
+
+			<div style="height: 6px;"></div>
+
+      <% 	switch(result)
+          {
+						case ERROR_MYSQL_SYSTEM_ERROR_ON_RPC:
+								%>
+									System Error. Please logout, close your browser, and try logging back in. If the error persists, please contact the Admin.
+									<br>
+								<%
+								break;
+
+              case ERROR_ALREADY_REGISTERED:
+                  %>
+                    You are already Registered.
+                    <br>
+                  <%
+                  break;
+
+              case ERROR_PLAYER_CODE_ALREADY_IN_USE:
+                  %>
+                    Player Code already in use.
+                    <br>
+                  <%
+                  break;
+
+              case ERROR_INVALID_PLAYER_CODE:
+                    %>
+                        Player Code doesn't exist.
+                    <br>
+                    <%
+                    break;
+
+              case ERROR_INVALID_PLAYER_OR_TEAM_CODE_FORMAT:
+                    %>
+                        Invalid data, Player and Team Codes are 8 digit numbers.
+                    <br>
+                    <%
+                    break;
+
+              case ERROR_TEAM_NOT_FOUND_OR_QUIT:
+                    %>
+                        Team not found or Team quit the Game.
+                    <br>
+                    <%
+                    break;
+
+              case ERROR_TEAM_FULL:
+                    %>
+                        The Team is full.
+                    <br>
+                    <%
+                    break;
+
+              case ERROR_CANT_REMOVE_SELF:
+                    %>
+                        You can't remove yourself from your Team. Quit instead.
+                    <br>
+                    <%
+                    break;
+
+              case ERROR_PLAYER_NOT_FOUND_OR_NOT_ON_TEAM:
+                    %>
+                        The Player is not found.
+                    <br>
+                    <%
+                    break;
+
+              case ERROR_PLAYER_ALREADY_ON_A_TEAM:
+                    %>
+                        Player is already on a Team.
+                    <br>
+                    <%
+                    break;
+
+              case ERROR_NO_FILE_UPLOADED:
+                    %>
+                        No file uploaded.
+                    <br>
+                    <%
+                    break;
+
+              case ERROR_INVALID_PLAYER_NAME:
+                    %>
+                        Invalid Player name.
+                    <br>
+                    <%
+                    break;
+
+            case ERROR_GO_LIVE:
+                  %>
+                      Player could not Go Live. Either current Live Player hasn't been Live for at least 1 hour or you are not on the Bench.
+                  <br>
+                  <%
+                  break;
+
+            case ERROR_NOT_CAPTAIN:
+                  %>
+                      Only the Team Captain can use this feature.
+                  <br>
+                  <%
+                  break;
+
+            case ERROR_TOO_EARLY_TO_RETURN_FROM_BREAK:
+                  %>
+                      It is too early to return from Break.
+                  <br>
+                  <%
+                  break;
+
+            case ERROR_MUST_BE_INACTIVE_TO_REBUY:
+                  %>
+                      You must be Inactive in order to Rebuy.
+                  <br>
+                  <%
+                  break;
+
+            case ERROR_INSUFFICIENT_BOUNTIES_TO_REBUY:
+                  %>
+                      Insufficient bounties to rebuy.
+                  <br>
+                  <%
+                  break;
+
+            case ERROR_MUST_BE_LIVE_OR_WAITING_TO_BREAK:
+                  %>
+                      Your Team must be Live or Waiting to go on Break.
+                  <br>
+                  <%
+                  break;
+
+            case ERROR_CANT_REMOVE_SELF:
+                  %>
+                      Your can't remove yourself from Team, Quit instead.
+                  <br>
+                  <%
+                  break;
+
+            case ERROR_MUST_BE_LIVE_TO_ATTEMPT_KILL:
+                  %>
+                      Your Team must be Live to attempt an Assassination.
+                  <br>
+                  <%
+                  break;
+
+            case ERROR_MUST_BE_REGISTERED_STATUS_TO_CREATE_TEAM:
+                  %>
+                      Your must be Registered status to create a Team.
+                  <br>
+                  <%
+                  break;
+
+
+            case ERROR_INVALID_EMAIL:
+                  %>
+                      Invalid email.
+                  <br>
+                  <%
+                  break;
+
+            case ERROR_INVALID_TEAM_NAME:
+                  %>
+                      Invalid Team name.
+                  <br>
+                  <%
+                  break;
+
+            case ERROR_INVALID_PHONE_NUMBER:
+                  %>
+                      Invalid phone number.
+                  <br>
+                  <%
+                  break;
+
+            case ERROR_INVALID_BOUNTY_PAYOUT:
+                  %>
+                      Invalid bounty payout.
+                  <br>
+                  <%
+                  break;
+
+						case ERROR_INVALID_HOURS_TO_GO:
+									%>
+											Invalid hours to go.
+									<br>
+									<%
+									break;
+
+						case ERROR_INVALID_PREP_INPUTS:
+									%>
+											Invalid prep inputs.
+									<br>
+									<%
+									break;
+
+						case ERROR_INSUFFICIENT_TEAMS_TO_START:
+									%>
+											Insufficient number of Teams to start the game.
+									<br>
+									<%
+									break;
+
+
+						case ERROR_FEATURE_UNAVAILABLE_UNTIL_PHOTO_APPROVED:
+									%>
+											This feature is not available before your photo is approved.
+									<br>
+									<%
+									break;
+
+						case ERROR_AT_LEAST_ONE_INPUT_REQUIRED:
+									%>
+											At least 1 valid input is required.
+									<br>
+									<%
+									break;
+
+						case ERROR_INVALID_DATE:
+									%>
+											Invalid date.
+									<br>
+									<%
+									break;
+
+						case ERROR_INVALID_INTEGER_INPUT:
+									%>
+											Invalid integer input.
+									<br>
+									<%
+									break;
+
+						case ERROR_ON_FILE_UPLOAD:
+									%>
+											Error on file upload.
+									<br>
+									<%
+									break;
+
+						case ERROR_FEATURE_UNAVAILABLE_OVERNIGHT:
+									%>
+											This feature is unavailable during overnight break.
+									<br>
+									<%
+									break;
+
+              default:
+							%>
+									System Error. Please logout, close your browser, and try logging back in. If the error persists, please contact the Admin.<%= result %>
+							<br>
+							<%
+							break;
+
+          }
+
+      %>
+
+      <div style="height: 12px;"></div>
+
+			<form action="assassinLogin" method="post"onsubmit="return waitCursor()">
+            <input type="submit" class="btn btn-info" value="Home"/>
+						<div style="height: 6px;"></div>
+      </form>
+
+		</div>
+
+  </div>
+
+</body>
+</html>

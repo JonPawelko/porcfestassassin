@@ -1,0 +1,140 @@
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="\stylesheets\custom.css">
+<script src="javascripts/utilities.js"></script>
+
+<%  if	(gameStatus != "Over")
+    {
+%>
+      <div style="height: 14px;"></div>
+
+      <div class="card" style="width:21rem;">
+
+        <div class="card-header">
+          You are the Captain of your Team.
+          <div style="height: 4px;"></div>
+        </div>
+
+        <div class="card-body">
+
+              <div style="height: 8px;"></div>
+
+              <% if (numTeammates > 0)	{%>
+
+                    <% if (playerStatus == "Bench")
+                        {%>
+                          <%- include('benchFeatures'); %>
+                        <%}
+                    %>
+
+                    <%-  include('teammateList'); %>
+
+                    <hr>
+                    <form action="removePlayerFromTeam" method="post" onsubmit="return waitCursor()">
+
+                      <% if (numTeammates < 2)
+                      {%>
+                          8-digit Player Code to add or remove:
+                    <%}
+                      else
+                      {%>
+                          8-digit Player Code to remove:
+                    <%}%>
+
+                        <div style="height: 12px;"></div>
+                        <input type="search" size="7" name="playerCode" autocomplete="off">
+                        &nbsp&nbsp&nbsp
+                        <input type="hidden" name="myPlayerCode" value="<%= playerCode %>">
+                        <input type="hidden" name="myTeamCode" value="<%= playerTeamCode %>">
+
+                        <% if (numTeammates < 2)	{%>
+
+                            <input type="submit" class="btn btn-info" formaction="addPlayer" onsubmit="return waitCursor()" value="Add"/>
+                            &nbsp&nbsp&nbsp
+                        <%}%>
+
+                        <input type="submit" class="btn btn-info" value="Remove"/>
+
+                    </form>
+                    <div style="height: 5px;"></div>
+
+              <% } %>
+
+              <% if (numTeammates == 0)
+              {%>
+
+                  <form action="addPlayer" method="post"onsubmit="return waitCursor()">
+                      Enter 8-digit Player Code to add:
+                      <div style="height: 10px;"></div>
+                      <input type="search" size="7" name="playerCode" autocomplete="off">
+                      <input type="hidden" name="myTeamCode" value="<%= playerTeamCode %>">
+                      <input type="hidden" name="myPlayerCode" value="<%= playerCode %>">
+                      &nbsp&nbsp&nbsp<input type="submit" class="btn btn-info" value="Add"/>
+                  </form>
+                  <div style="height: 5px;"></div>
+
+            <%}%>
+
+              <% 	switch(teamStatus)
+        					{
+        						  case "Live": case "Waiting":
+        										%>
+                                <hr>
+                                <form action="takeBreak" method="post" onsubmit="return confirmChoice(<%= CONFIRM_TAKE_BREAK %>)">
+                                    <input type="hidden" name="myPlayerCode" value="<%= playerCode %>">
+                                    <input type="hidden" name="myTeamCode" value="<%= playerTeamCode %>">
+                                    <input type="submit" class="btn btn-info" value="Take a Break"/>
+                                    <div style="height: 8px;"></div>
+                                </form>
+        										<%
+        										break;
+
+        							case "Break":
+        										%>
+                                <hr>
+                                <form action="returnFromBreak" method="post" onsubmit="return confirmChoice(<%= CONFIRM_RETURN_BREAK %>)">
+                                    <input type="hidden" name="playerCode" value="<%= playerCode %>">
+                                    <input type="hidden" name="teamCode" value="<%= playerTeamCode %>">
+                                    <input type="submit" class="btn btn-info" value="Return From Break"/>
+                                    <div style="height: 8px;"></div>
+                                </form>
+
+        										<%
+        										break;
+
+                      case "Inactive":
+                          %>
+                              <hr>
+                              <%- include('paypal'); %>
+                              <div style="height: 16px;"></div>
+                          <%
+                            if (teamBountiesOwed >= 1)
+                            {
+                            %>
+
+                                <form action="rebuy" method="post" onsubmit="return confirmChoice(<%=CONFIRM_REBUY%>)">
+                                    <input type="hidden" name="myTeamCode" value="<%= playerTeamCode %>">
+                                    <input type="hidden" name="myPlayerCode" value="<%= playerCode %>">
+                                    <input type="submit" class="btn btn-info" value="Rebuy"/>
+                                </form>
+                                <div style="height: 8px;"></div>
+                            <%}
+                              break;
+
+                        case "Registered":
+                        case "Pics Approved":
+
+                            %>
+                                <hr>
+                                <%- include('paypal'); %>
+                                <div style="height: 16px;"></div>
+                            <%
+                                break;
+
+        							default:
+        						    // code block
+        					}%>
+
+        </div>
+      </div>
+
+<% } %>

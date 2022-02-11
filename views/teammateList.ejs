@@ -1,0 +1,50 @@
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="\stylesheets\custom.css">
+<script src="javascripts/utilities.js"></script>
+ <%
+
+   var listText = "";
+
+   if (playerTeammates.length == 1)
+   {
+      if (captainFlag == 1)
+        listText = "Your teammate is " + playerTeammates[0]['player-name'] + "-" + playerTeammates[0]['player-code'] + ".";
+      else
+        listText = "Your teammate is " + playerTeammates[0]['player-name'] + ".";
+
+   }
+  else
+  {
+    listText = "Your teammates are ";
+    var i = 1;
+
+    playerTeammates.forEach(function(teammate)
+    {
+      if (captainFlag == 1)
+      {
+        listText = listText + teammate['player-name'] + "-" + teammate['player-code'];
+        if (i++ != playerTeammates.length)
+          listText = listText + " and ";
+      }
+      else
+      {
+        listText = listText + teammate['player-name'];
+        if (i++ != playerTeammates.length)
+          listText = listText + " and ";
+      }
+    });
+
+    listText = listText + "."
+
+}%>
+
+<%= listText %>
+<div style="height: 4px;"></div>
+<%
+if (captainFlag != 1)
+{%>
+      Your Team Captain is <%= teamCaptainName %>.
+      <div style="height: 6px;"></div>
+<%}%>
+
+Your Team's Live Player is <%= teamLivePlayerName %>.

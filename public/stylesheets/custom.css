@@ -1,0 +1,61 @@
+
+hr
+{
+        border: 0;
+        height: .02em;
+        background-color: gray;
+}
+
+textarea {
+  resize: none;
+}
+
+ul { margin: 0; padding: 15px;}
+
+
+.card
+{
+         border-color: black;
+         border-width: 1.5px;
+
+         /* width: 500px; */
+}
+
+.card-header
+{
+         background-color: #B8B8B8;
+         border-color: black;
+         border-width: 1px;
+         font-weight: bold;
+         padding-top: 5px;
+         padding-bottom: 3px;
+         padding-left: 10px;
+}
+
+.card-body
+{
+         padding-top: 5px;
+         padding-left: 10px;
+         padding-bottom: 9px;
+}
+
+
+img {
+  border: 1px solid black;
+  border-radius: 2px;
+  padding: 2px;
+  width: 295px;
+}
+
+.btn
+{
+  color: white;
+}
+
+.link-button {
+     background: none;
+     border: none;
+     color: #1a0dab;
+     text-decoration: underline;
+     cursor: pointer;
+}

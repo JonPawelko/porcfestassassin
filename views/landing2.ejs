@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<title>Assassin</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="\stylesheets\custom.css">
+	<script src="javascripts/utilities.js"></script>
+</head>
+
+<body class="container" style="margin-top: 10px;">
+
+    <div class="card" style="width:21rem;">
+
+	    	<div class="card-header">
+						Welcome to Assassin!&nbsp&nbspIf you are activating an 8-digit player code given on paper, enter the code and click Activate.
+						<div style="height: 9px;"></div>
+						Or if you are a brand new player, enter your real first name below and upload a clear picture of your face as it will appear at PorcFest.
+						<div style="height: 9px;"></div>
+						Enter an optional Team Name to create a new Team as the Captain.&nbsp&nbspYou can also create or join a Team later.
+						<div style="height: 9px;"></div>
+						Include an optional phone number for major game alerts (recommended).
+						<div style="height: 9px;"></div>
+						Then click the New Player button.
+						<div style="height: 9px;"></div>
+				</div>
+
+				<div style="height: 14px;"></div>
+
+				<div class="card-body">
+					<form action="activateAssassin" method="post"onsubmit="return waitCursor()">
+									8-digit Player Code:&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+									<input type="search" size="10" name="playerCode" value="" autocomplete="off">
+									<div style="height: 14px;"></div>
+									<input type="submit" class="btn btn-info" value="Activate"/>
+									<div style="height: 16px;"></div>
+					</form>
+
+				---- OR ----
+
+				<div style="height: 14px;"></div>
+
+						<form autocomplete="off" action="newAssassin" onsubmit="return waitCursor()" method="post" encType="multipart/form-data">
+
+									Player Name: &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+									<input type="search" size="10" name="playerName" value="" autocomplete="off">
+									<div style="height: 10px;"></div>
+
+									Photo: <input type="file" name="playerPhotoFile" accept="image/*" />
+									<div style="height: 14px;"></div>
+
+									Team Name (Optional): <input type="search" size="10" name="playerTeamName" value="" autocomplete="off">
+									<div style="height: 14px;"></div>
+
+									Phone (Optional): &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+									<input type="search" size="10" name="playerPhone" value="" autocomplete="off">
+									<div style="height: 14px;"></div>
+
+									<input type="submit" class="btn btn-info" value="New Player"/>
+
+									<hr>
+									
+						</form>
+
+						<div style="height: 14px;"></div>
+
+						<form action="assassinLogout" method="post"onsubmit="return waitCursor()">
+									<input type="submit" class="btn btn-info" value="Logout"/>
+						</form>
+
+				</div>
+
+    </div>
+<br>
+</body>
+</html>

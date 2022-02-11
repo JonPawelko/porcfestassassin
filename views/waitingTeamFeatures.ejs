@@ -1,0 +1,26 @@
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="\stylesheets\custom.css">
+<script src="javascripts/utilities.js"></script>
+
+<%  if	((gameStatus == "Live") || (gameStatus == "Overnight"))
+    {
+%>
+        Your team status is Waiting.
+        <br>Your individual status is <%= playerStatus %>.
+        <br>Your team will enter the game on the next major event.
+        <br>
+<% } %>
+
+<%  if	(gameStatus == "Not Started")
+    {
+%>
+        Your team status is Waiting.
+        <br>Your individual status is <%= playerStatus %>.
+        <br>Your team will be Live when the game starts.
+        <br>
+<% } %>
+
+<%  if	(gameStatus == "Over")
+    {
+%>
+<% } %>

@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<title>Assassin</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="\stylesheets\custom.css">
+	<script src="javascripts/utilities.js"></script>
+</head>
+
+<body class="container" style="margin-top: 10px;">
+
+    <div class="card" style="width:21rem;">
+
+        <div class="card-header">
+            Player Name:&nbsp<%= playerName %>
+						<div style="height: 5px;"></div>
+        </div>
+
+        <div class="card-body">
+						<div style="height: 5px;"></div>
+            Player Code:&nbsp<%= playerCode %>
+						<div style="height: 9px;"></div>
+            Player Status:&nbsp<%= playerStatus %>
+            <div style="height: 9px;"></div>
+						Celebritarian:
+
+						<% if (celebritarian == 1) { %>
+							Yes
+						<%}
+						else
+						{%>
+							No
+						<%}%>
+
+						<div style="height: 9px;"></div>
+            Team Code:&nbsp<%= teamCode %>
+            <div style="height: 9px;"></div>
+            Team Status:&nbsp<%= teamStatus %>
+            <div style="height: 9px;"></div>
+						Player Phone:&nbsp<%= playerPhone %>
+						<div style="height: 9px;"></div>
+            Photo Status:&nbsp<%= photoStatus %>
+						<div style="height: 15px;"></div>
+
+            <form>
+            <img src=<%=playerPhoto%>
+             loading="lazy">
+            </form>
+
+						<div style="height: 20px;"></div>
+
+						<% if ((photoStatus == "Uploaded") || (photoStatus == "Rejected"))
+						{ %>
+
+	            <form autocomplete="off" action="adminApprovePicture" method="post" onsubmit="return waitCursor()" encType="multipart/form-data">
+		              <input type="hidden" name="playerCode" value="<%= playerCode %>">
+		              <input type="hidden" name="oneOrMorePhotos" value="One">
+								  <input type="submit" class="btn btn-info" value="Approve Pic"/>
+									<div style="height: 14px;"></div>
+	            </form>
+
+						<% } %>
+
+						<% if ((photoStatus == "Uploaded") || (photoStatus == "Approved"))
+						{ %>
+
+	            <form autocomplete="off" action="adminRejectPicture" method="post" onsubmit="return waitCursor()" encType="multipart/form-data">
+		              <input type="hidden" name="playerCode" value="<%= playerCode %>">
+									<input type="hidden" name="oneOrMorePhotos" value="One">
+		              <input type="submit" class="btn btn-info" value="Reject Pic"/>
+									<div style="height: 14px;"></div>
+	            </form>
+
+						<% } %>
+
+						<form autocomplete="off" action="adminChoosePhoto" method="post" onsubmit="return waitCursor()" encType="multipart/form-data">
+								<input type="hidden" name="playerCode" value="<%= playerCode %>">
+								<input type="submit" class="btn btn-info" value="Upload Pic"/>
+								<div style="height: 14px;"></div>
+						</form>
+
+						<% if ((teamStatus == "Registered") || (teamStatus == "Pics Approved") || (teamStatus == "Inactive"))
+						{ %>
+
+							<form autocomplete="off" action="adminMarkPaid" method="post" onsubmit="return waitCursor()" encType="multipart/form-data">
+									<input type="hidden" name="teamCode" value="<%= teamCode %>">
+									<input type="submit" class="btn btn-info" value="Mark Team Paid"/>
+									<div style="height: 14px;"></div>
+							</form>
+
+						<% } %>
+
+						<% if (((teamStatus == "Registered") || (teamStatus == "Pics Approved")) && ((photoStatus == "Uploaded") || (photoStatus == "Rejected")))
+						{ %>
+
+							<form autocomplete="off" action="adminMarkPaidAndApprovePhoto" method="post" onsubmit="return waitCursor()" encType="multipart/form-data">
+									<input type="hidden" name="teamCode" value="<%= teamCode %>">
+									<input type="hidden" name="playerCode" value="<%= playerCode %>">
+									<input type="submit" class="btn btn-info" value="Mark Team Paid and Approve Photo"/>
+									<div style="height: 14px;"></div>
+							</form>
+
+						<% } %>
+
+						<form autocomplete="off" action="adminEditPlayerData" method="post" onsubmit="return waitCursor()" encType="multipart/form-data">
+								<input type="hidden" name="playerCode" value="<%= playerCode %>">
+	              <input type="hidden" name="playerName" value="<%= playerName %>">
+								<input type="hidden" name="celebritarian" value="<%= celebritarian %>">
+								<input type="hidden" name="playerPhone" value="<%= playerPhone %>">
+	              <input type="submit" class="btn btn-info" value="Edit Player Data"/>
+								&nbsp&nbsp&nbsp&nbsp
+            		<input type="submit" class="btn btn-info" formaction="assassinLogin" onsubmit="return waitCursor()" value="Home"/>
+								<div style="height: 6px;"></div>
+						</form>
+
+        </div>
+
+    </div>
+
+<br>
+</body>
+</html>
