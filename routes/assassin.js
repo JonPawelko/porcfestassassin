@@ -173,6 +173,7 @@ router.get('/', function(req, res, next) {
 
                                   // route to home page passing Player info and teammate info
                                   res.render('home', {
+                                  adminPlayerCode: CREDENTIALS.ADMIN_PLAYER_CODE,
                                   gameStatus: rows[0][0].gameStatus,
                                   playerCode: rows[0][0].playerCode,
                                   playerName: rows[0][0].playerName,
@@ -219,6 +220,7 @@ router.get('/', function(req, res, next) {
                       else // Player has no teammates, don't send data that defaults to the Captain
                       {
                           res.render('home', {
+                          adminPlayerCode: CREDENTIALS.ADMIN_PLAYER_CODE,
                           gameStatus: rows[0][0].gameStatus,
                           playerCode: rows[0][0].playerCode,
                           playerName: rows[0][0].playerName,

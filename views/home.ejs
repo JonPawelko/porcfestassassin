@@ -11,6 +11,25 @@
 
 <body class="container" style="margin-top: 10px;" onload="defaultCursor();">
 
+	<!-- check if admin first -->
+
+	<% if (adminPlayerCode == playerCode)
+	{%>
+
+		<div style="height: 8px;"></div>
+
+		<%- include('adminFeatures'); %>
+
+		<div style="height: 16px;"></div>
+
+		<%- include('gameStatistics'); %>
+
+		<div style="height: 16px;"></div>
+
+	<%}
+	else
+	{%>
+
 		<div class="card" style="width:21rem;">
 
 		  <div class="card-header">
@@ -18,7 +37,7 @@
 				<h5>Welcome to Assassin <%= playerName %>!</h5>
 
 				<!-- check game status here -->
-				<% 	switch(gameStatus)
+				<% switch(gameStatus)
 				{
 						case "Not Started":
 								%>
@@ -48,7 +67,7 @@
 
 		  <div class="card-body">
 
-					<% 	switch(teamStatus)
+				<% switch(teamStatus)
 					{
 							case "0":
 									%>
@@ -114,203 +133,203 @@
 
 				</div>
 
-		</div>
+				</div>
 
-		<div style="height: 2px;"></div>
+				<div style="height: 2px;"></div>
 
-		<% if (captainFlag == 1) { %>
-				<%- include('captainFeatures'); %>
-		<%}
-		else
-		{%>
-				<% if ((numTeammates > 0) && (gameStatus != "Over")) { %>
+				<% if (captainFlag == 1) { %>
+						<%- include('captainFeatures'); %>
+				<%}
+				else
+				{%>
+						<% if ((numTeammates > 0) && (gameStatus != "Over")) { %>
 
-						<div style="height: 14px;"></div>
+								<div style="height: 14px;"></div>
 
-						<div class="card" style="width:21rem;">
+								<div class="card" style="width:21rem;">
 
-							<div class="card-header">
-								Teammate Details
+									<div class="card-header">
+										Teammate Details
+									</div>
+
+									<div class="card-body">
+
+											<div style="height: 6px;"></div>
+											<%-  include('teammateList'); %>
+											<div style="height: 10px;"></div>
+
+											<%
+												if (playerStatus == "Bench")
+												{%>
+														<%- include('benchFeatures'); %>
+												<%}%>
+
+									</div>
+
 							</div>
 
-							<div class="card-body">
-
-									<div style="height: 6px;"></div>
-									<%-  include('teammateList'); %>
-									<div style="height: 10px;"></div>
-
-									<%
-										if (playerStatus == "Bench")
-										{%>
-												<%- include('benchFeatures'); %>
-										<%}%>
-
-							</div>
-
-					</div>
+						<%}%>
 
 				<%}%>
 
-		<%}%>
+		<div style="height: 17px;"></div>
 
-<div style="height: 17px;"></div>
+		<div class="card" style="width:21rem;">
 
-<div class="card" style="width:21rem;">
+		  <div class="card-header">
+		    Your Player Data
+				<div style="height: 4px;"></div>
+		  </div>
 
-  <div class="card-header">
-    Your Player Data
-		<div style="height: 4px;"></div>
-  </div>
+		  <div class="card-body">
 
-  <div class="card-body">
+					<div style="height: 5px;"></div>
 
-			<div style="height: 5px;"></div>
+					Player Code:  <%= playerCode %>
+					<div style="height: 9px;"></div>
 
-			Player Code:  <%= playerCode %>
-			<div style="height: 9px;"></div>
+					Email:  <%= playerEmail %>
+					<div style="height: 9px;"></div>
 
-			Email:  <%= playerEmail %>
-			<div style="height: 9px;"></div>
+					Phone:  <%= playerPhone %>
+					<div style="height: 9px;"></div>
 
-			Phone:  <%= playerPhone %>
-			<div style="height: 9px;"></div>
+					<% if (teamStatus != "0") { %>
 
-			<% if (teamStatus != "0") { %>
+						My Last Shift:  <%= myLastShiftTimeStamp %>
+						<div style="height: 9px;"></div>
 
-				My Last Shift:  <%= myLastShiftTimeStamp %>
-				<div style="height: 9px;"></div>
+						Your Team Name:  <%= playerTeamName %>
+						<div style="height: 9px;"></div>
 
-				Your Team Name:  <%= playerTeamName %>
-				<div style="height: 9px;"></div>
+						Team Code:  <%= playerTeamCode %>
+						<div style="height: 9px;"></div>
 
-				Team Code:  <%= playerTeamCode %>
-				<div style="height: 9px;"></div>
+						Team Shift Start:
+							<%
+									if (numTeammates == 0)
+							{%>
+									<%= myLastShiftTimeStamp %>
+							<%}	else
+							{%>
+								<%= teamCurrentShiftStart %>
+							<%}%>
 
-				Team Shift Start:
-					<%
-							if (numTeammates == 0)
-					{%>
-							<%= myLastShiftTimeStamp %>
-					<%}	else
-					{%>
-						<%= teamCurrentShiftStart %>
+							<div style="height: 9px;"></div>
+
+							Team Bounties Owed:  <%= teamBountiesOwed %>
+							<div style="height: 9px;"></div>
+
+							Total Team Bounties Earned:  <%= totalTeamBountiesEarned %>
+							<div style="height: 9px;"></div>
+
 					<%}%>
 
-					<div style="height: 9px;"></div>
+					Your Photo Status:  <%= playerPicStatus %>
+					<div style="height: 15px;"></div>
 
-					Team Bounties Owed:  <%= teamBountiesOwed %>
-					<div style="height: 9px;"></div>
+					<!-- game over checks -->
 
-					Total Team Bounties Earned:  <%= totalTeamBountiesEarned %>
-					<div style="height: 9px;"></div>
+					<% 	if (((playerPicStatus == "Approved") || (playerPicStatus == "Uploaded")) && (gameStatus != "Over"))  { %>
 
-			<%}%>
+						<form action="managePicture" method="post" onsubmit="return waitCursor()">
+									<input type="hidden" name="myPlayerCode" value="<%= playerCode %>">
+									<input type="hidden" name="playerPic" value="<%= playerPic %>">
+									<input type="hidden" name="picFeature" value="View">
+									<input type="submit" class="btn btn-info" value="View My Picture"/>
+									<div style="height: 18px;"></div>
+						</form>
 
-			Your Photo Status:  <%= playerPicStatus %>
-			<div style="height: 15px;"></div>
+					<% } else {  // rejected pic
 
-			<!-- game over checks -->
+								if	(gameStatus != "Over")
+								    {
+								%>
+												<form action="managePicture" method="post"onsubmit="return waitCursor()">
+															<input type="hidden" name="myPlayerCode" value="<%= playerCode %>">
+															<input type="hidden" name="playerPic" value="<%= playerPic %>">
+															<input type="hidden" name="picFeature" value="Edit">
+															<input type="submit" class="btn btn-info" value="Upload New Picture"/>
+															<div style="height: 18px;"></div>
+												</form>
 
-			<% 	if (((playerPicStatus == "Approved") || (playerPicStatus == "Uploaded")) && (gameStatus != "Over"))  { %>
+								<% } %>
+					<%}%>
 
-				<form action="managePicture" method="post" onsubmit="return waitCursor()">
-							<input type="hidden" name="myPlayerCode" value="<%= playerCode %>">
-							<input type="hidden" name="playerPic" value="<%= playerPic %>">
-							<input type="hidden" name="picFeature" value="View">
-							<input type="submit" class="btn btn-info" value="View My Picture"/>
-							<div style="height: 18px;"></div>
-				</form>
+					<% 	if (((playerPhone == "") || (playerPhone == null)) && (gameStatus != "Over")) { %>
 
-			<% } else {  // rejected pic
+						<form action="addPlayerPhoneNumber" method="post"onsubmit="return waitCursor()">
+									<input type="hidden" name="myPlayerCode" value="<%= playerCode %>">
+									<input type="submit" class="btn btn-info" value="Add Phone Number"/>
+									<div style="height: 18px;"></div>
+						</form>
 
-						if	(gameStatus != "Over")
-						    {
-						%>
-										<form action="managePicture" method="post"onsubmit="return waitCursor()">
-													<input type="hidden" name="myPlayerCode" value="<%= playerCode %>">
-													<input type="hidden" name="playerPic" value="<%= playerPic %>">
-													<input type="hidden" name="picFeature" value="Edit">
-													<input type="submit" class="btn btn-info" value="Upload New Picture"/>
-													<div style="height: 18px;"></div>
-										</form>
+					<% } else {
 
-						<% } %>
-			<%}%>
+							if	(gameStatus != "Over")
+									{
+							%>
+											<form action="editPlayerPhoneNumber" method="post"onsubmit="return waitCursor()">
+														<input type="hidden" name="myPlayerCode" value="<%= playerCode %>">
+														<input type="hidden" name="myPhoneNumber" value="<%= playerPhone %>">
+														<input type="submit" class="btn btn-info" value="Edit Phone Number"/>
+														<div style="height: 18px;"></div>
+											</form>
 
-			<% 	if (((playerPhone == "") || (playerPhone == null)) && (gameStatus != "Over")) { %>
+											<form action="removePlayerPhoneNumber" onsubmit="return confirmChoice(<%= CONFIRM_REMOVE_PHONE %>)" method="post">
+														<input type="hidden" name="myPlayerCode" value="<%= playerCode %>">
+														<input type="submit" class="btn btn-info" value="Remove Phone Number"/>
+														<div style="height: 18px;"></div>
+											</form>
 
-				<form action="addPlayerPhoneNumber" method="post"onsubmit="return waitCursor()">
-							<input type="hidden" name="myPlayerCode" value="<%= playerCode %>">
-							<input type="submit" class="btn btn-info" value="Add Phone Number"/>
-							<div style="height: 18px;"></div>
-				</form>
+									<% } %>
 
-			<% } else {
+								<% } %>
 
-					if	(gameStatus != "Over")
-							{
+					<%  if	(gameStatus != "Over")
+					    {
 					%>
-									<form action="editPlayerPhoneNumber" method="post"onsubmit="return waitCursor()">
-												<input type="hidden" name="myPlayerCode" value="<%= playerCode %>">
-												<input type="hidden" name="myPhoneNumber" value="<%= playerPhone %>">
-												<input type="submit" class="btn btn-info" value="Edit Phone Number"/>
-												<div style="height: 18px;"></div>
-									</form>
 
-									<form action="removePlayerPhoneNumber" onsubmit="return confirmChoice(<%= CONFIRM_REMOVE_PHONE %>)" method="post">
-												<input type="hidden" name="myPlayerCode" value="<%= playerCode %>">
-												<input type="submit" class="btn btn-info" value="Remove Phone Number"/>
-												<div style="height: 18px;"></div>
-									</form>
+								<form action="viewRules" method="post">
+									<input type="hidden" name="myPlayerCode" value="<%= playerCode %>">
+									<input type="hidden" name="myPhone" value="<%= playerPhone %>">
+									<input type="hidden" name="myPlayerName" value="<%= playerName %>">
+									<input type="submit" class="btn btn-info" value="View Rules"/>
+									&nbsp&nbsp&nbsp&nbsp&#8201
+									<input type="submit" class="btn btn-info" formaction="contactAdmin" value="Contact Admin" onsubmit="return waitCursor()"/>
+								</form>
 
-							<% } %>
+								<div style="height: 18px;"></div>
 
-						<% } %>
+								<form action="quitGame" onsubmit="return confirmChoice(<%= CONFIRM_QUIT %>)" method="post">
+										<input type="hidden" name="myPlayerCode" value="<%= playerCode %>">
+										<input type="hidden" name="myTeamCode" value="<%= playerTeamCode %>">
+										<input type="submit" class="btn btn-info" value="Quit Game"/>
+								</form>
 
-			<%  if	(gameStatus != "Over")
-			    {
-			%>
+								<div style="height: 18px;"></div>
 
-						<form action="viewRules" method="post">
-							<input type="hidden" name="myPlayerCode" value="<%= playerCode %>">
-							<input type="hidden" name="myPhone" value="<%= playerPhone %>">
-							<input type="hidden" name="myPlayerName" value="<%= playerName %>">
-							<input type="submit" class="btn btn-info" value="View Rules"/>
-							&nbsp&nbsp&nbsp&nbsp&#8201
-							<input type="submit" class="btn btn-info" formaction="contactAdmin" value="Contact Admin" onsubmit="return waitCursor()"/>
-						</form>
+								<form action="assassinLogout" method="post"onsubmit="return waitCursor()">
+									<input type="hidden" name="myPlayerCode" value="<%= playerCode %>">
+									<input type="hidden" name="myTeamCode" value="<%= playerTeamCode %>">
+									<input type="submit" class="btn btn-info" value="Logout"/>
+								</form>
 
-						<div style="height: 18px;"></div>
+					<% } %>
 
-						<form action="quitGame" onsubmit="return confirmChoice(<%= CONFIRM_QUIT %>)" method="post">
-								<input type="hidden" name="myPlayerCode" value="<%= playerCode %>">
-								<input type="hidden" name="myTeamCode" value="<%= playerTeamCode %>">
-								<input type="submit" class="btn btn-info" value="Quit Game"/>
-						</form>
+					<div style="height: 10px;"></div>
 
-						<div style="height: 18px;"></div>
+				</div>
 
-						<form action="assassinLogout" method="post"onsubmit="return waitCursor()">
-							<input type="hidden" name="myPlayerCode" value="<%= playerCode %>">
-							<input type="hidden" name="myTeamCode" value="<%= playerTeamCode %>">
-							<input type="submit" class="btn btn-info" value="Logout"/>
-						</form>
+			</div>
 
-			<% } %>
+			<div style="height: 22px;"></div>
 
-			<div style="height: 10px;"></div>
+			<%- include('gameStatistics'); %>
 
-		</div>
+			<div style="height: 16px;"></div>
 
-	</div>
-
-	<div style="height: 22px;"></div>
-
-	<%- include('gameStatistics'); %>
-
-	<div style="height: 15px;"></div>
-
-	<%- include('adminFeatures'); %>
+	<% } %>
 
 </body>
 </html>
