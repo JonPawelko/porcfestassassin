@@ -12,6 +12,10 @@ textarea {
 
 ul { margin: 0; padding: 15px;}
 
+.rules-page
+{
+         font-size: 12px;
+}
 
 .card
 {
@@ -37,6 +41,7 @@ ul { margin: 0; padding: 15px;}
          padding-top: 5px;
          padding-left: 10px;
          padding-bottom: 9px;
+         padding-right: 8px;
 }
 
 
@@ -44,7 +49,7 @@ img {
   border: 1px solid black;
   border-radius: 2px;
   padding: 2px;
-  width: 295px;
+  width: 314px;
 }
 
 .btn
