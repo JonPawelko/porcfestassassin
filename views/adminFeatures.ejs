@@ -19,9 +19,9 @@
             Player Code: &nbsp<input type="search" size="12" name="playerCode" value="" autocomplete="off">
             <div style="height: 12px;"></div>
             Team Code: &nbsp&nbsp<input type="search" size="12" name="teamCode" value="" autocomplete="off">
-            <div style="height: 15px;"></div>
+            <div style="height: 17px;"></div>
             <input type="submit" class="btn btn-info" value="Search For Player"/>
-            &nbsp&nbsp<input type="submit" class="btn btn-info" formaction="adminSearchForTeam" onsubmit="return waitCursor()" value="Search For Team"/>
+            &nbsp&nbsp&nbsp&nbsp<input type="submit" class="btn btn-info" formaction="adminSearchForTeam" onsubmit="return waitCursor()" value="Search For Team"/>
         </form>
 
         <div style="height: 4px;"></div>
@@ -31,23 +31,29 @@
         <form autocomplete="off" action="adminActivateTeamPrep" method="post" onsubmit="return waitCursor()" encType="multipart/form-data">
             <div style="height: 5px;"></div>
             Team Code: &nbsp&nbsp<input type="search" size="12" name="teamCode" value="" autocomplete="off">
-            <div style="height: 15px;"></div>
+            <div style="height: 18px;"></div>
             <input type="submit" class="btn btn-info" value="Activate Team Prep"/>
         </form>
 
         <div style="height: 4px;"></div>
         <hr>
 
-        <div style="height: 3px;"></div>
+        <div style="height: 5px;"></div>
 
         <form autocomplete="off" action="adminDropBomb" onsubmit="return confirmChoice()" method="post" encType="multipart/form-data">
             <input type="submit" class="btn btn-info" value="Drop Bomb"/>
-            &nbsp&nbsp
+            &nbsp&nbsp&nbsp
             <input type="submit" class="btn btn-info" formaction="adminBulkPictureApprove" onsubmit="return waitCursor()" value="Bulk Picture Approve"/>
-            <div style="height: 18px;"></div>
+
+            <div style="height: 20px;"></div>
             <input type="submit" class="btn btn-info" formaction="adminShowCreatePrepsPage" onsubmit="return waitCursor()" value="Create Prep Templates"/>
-            &nbsp&nbsp
+            &nbsp&nbsp&nbsp&nbsp
             <input type="submit" class="btn btn-info" formaction="resetDatabase" onsubmit="return waitCursor()" value="Reset DB"/>
+
+            <div style="height: 20px;"></div>
+            <input type="submit" class="btn btn-info" formaction="assassinLogout" value="Logout"/>
+            &nbsp&nbsp&nbsp
+            <input type="submit" class="btn btn-info" formaction="viewRules" value="View Rules"/>
         </form>
 
         <div style="height: 4px;"></div>
@@ -74,4 +80,4 @@
 
 </div>
 
-<div style="height: 12px;"></div>
+<div style="height: 4px;"></div>
