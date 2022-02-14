@@ -314,7 +314,7 @@ router.post('/newAssassin', function(req, res, next)
     // Only validate teamname if it was passed in, optional
     if ((req.body.playerTeamName != null) && (req.body.playerTeamName != ""))
     {
-        if (validateString(req.body.playerTeamName) == false)
+        if (validateTeamName(req.body.playerTeamName) == false)
         {
             // Render error page, passing in error code
             res.render('errorMessagePage', {result: ERROR_INVALID_TEAM_NAME});
@@ -706,7 +706,7 @@ router.post('/createTeam', function(req, res, next)
       return;
   }
 
-  if (validateString(req.body.playerTeamName) == false)
+  if (validateTeamName(req.body.playerTeamName) == false)
   {
       // Render error page, passing in error code
       res.render('errorMessagePage', {result: ERROR_INVALID_TEAM_NAME});
@@ -1244,7 +1244,7 @@ router.post('/adminActivateTeam', function(req, res, next)
     }
 
     // validate team name
-    if (validateString(req.body.teamName) == false)
+    if (validateTeamName(req.body.teamName) == false)
     {
         // Render error page, passing in error code
         res.render('errorMessagePage', {result: ERROR_INVALID_TEAM_NAME});
@@ -1525,7 +1525,7 @@ router.post('/adminSearchForTeam', function(req, res, next)
         atLeastOneInput = true;
     }
 
-    if (((req.body.teamName != "") && (validateString(req.body.teamName) == true))
+    if (((req.body.teamName != "") && (validateTeamName(req.body.teamName) == true))
           ||
         ((req.body.playerName != "") && (validateString(req.body.playerName) == true)))
     {
@@ -1641,7 +1641,7 @@ router.post('/adminSearchForPlayer', function(req, res, next)
       tempPlayerName = req.body.playerName;
     }
 
-    if ((req.body.teamName != "") && (validateString(req.body.teamName) == true))
+    if ((req.body.teamName != "") && (validateTeamName(req.body.teamName) == true))
     {
       atLeastOneInput = true;
       tempTeamName = req.body.teamName;
@@ -2223,7 +2223,7 @@ router.post('/adminUpdateTeamName', function(req, res, next)
   }
 
   // validate team name
-  if (validateString(req.body.teamName) == false)
+  if (validateTeamName(req.body.teamName) == false)
   {
       // Render error page, passing in error code
       res.render('errorMessagePage', {result: ERROR_INVALID_TEAM_NAME});
@@ -2922,6 +2922,16 @@ function validateString(inString)
     return ((typeof inString === 'string') && (inString.length > 0) && (inString.length < STRING_LENGTH + 1) && (/^[A-Za-z\s]*$/.test(inString)))
 
 } // end function validateString
+
+// -------------------------------------------------------------
+// Called by Node layer to validate the format only of a text string input with letters and numbers
+
+function validateTeamName(inString)
+{
+    // only allow non-empty strings, right size, only letters and spaces, and numbers
+    return ((typeof inString === 'string') && (inString.length > 0) && (inString.length < STRING_LENGTH + 1) && (/^[0-9A-Za-z\s]*$/.test(inString)))
+
+} // end function validateTeamName
 
 // -------------------------------------------------------------
 // Called by Node layer to validate the format only a phone number
