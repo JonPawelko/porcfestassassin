@@ -35,8 +35,25 @@
 						<%}%>
 
 						<div style="height: 9px;"></div>
-            Team Code:&nbsp<%= teamCode %>
-            <div style="height: 9px;"></div>
+						Team Name:&nbsp<%=teamName%>
+						<div style="height: 12px;"></div>
+
+						Team Code:&nbsp
+
+						<% if (teamCode != 0)
+						{ %>
+
+							<form autocomplete='off' action='adminSearchForTeam' method='post' onsubmit="return waitCursor()" encType='multipart/form-data'>
+									<input type='hidden' name='teamName' value=''>
+									<input type='hidden' name='playerName' value=''>
+									<input type='hidden' name='teamCode' value='<%= teamCode %>'>
+									<input type='submit' class='link-button' value='<%= teamCode %>'/>
+									<div style="height: 3px;"></div>
+							</form>
+
+							<% } %>
+
+						<div style="height: 9px;"></div>
             Team Status:&nbsp<%= teamStatus %>
             <div style="height: 9px;"></div>
 						Player Phone:&nbsp<%= playerPhone %>
