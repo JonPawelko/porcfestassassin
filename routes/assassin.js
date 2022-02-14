@@ -1607,6 +1607,7 @@ router.post('/adminSearchForTeam', function(req, res, next)
 router.post('/adminSearchForPlayer', function(req, res, next)
 {
     console.log("Got into adminSearchForPlayer call");
+    console.log(req.body);
 
     // Check authentication status
     if (!req.oidc.isAuthenticated())
@@ -1621,13 +1622,20 @@ router.post('/adminSearchForPlayer', function(req, res, next)
     var tempPlayerName = "";
     var tempPlayerCode = 0;
     var tempTeamCode = 0;
+    var tempCeleb = CHECKBOX_OFF;  // req.body.celebritarian is being passed in as undefined when unchecked
+
     var playerPicPath; // helper var to replace any spaces from file names with code
     var atLeastOneInput = false;
 
-    // start error checking
-    if (validateCode(req.body.playerCode))
+    // zzzz
+    if (req.body.playerCode != "")
     {
-        tempPlayerCode = req.body.playerCode;
+        tempPlayerCode = parseInt(req.body.playerCode);
+    }
+
+    // start error checking
+    if (validateCode(tempPlayerCode))
+    {
         atLeastOneInput = true;
     }
 
@@ -1649,6 +1657,12 @@ router.post('/adminSearchForPlayer', function(req, res, next)
       tempTeamName = req.body.teamName;
     }
 
+    if (req.body.celebritarian == CHECKBOX_ON)
+    {
+      atLeastOneInput = true;
+      tempCeleb = CHECKBOX_ON;
+    }
+
     if (atLeastOneInput == false)
     {
       // Render error page, passing in error code
@@ -1659,7 +1673,7 @@ router.post('/adminSearchForPlayer', function(req, res, next)
     // end error checking  --------------
 
     // Call stored procedure to search for the player
-    dbConn.query('CALL `assassin-demo1`.`admin_search_for_player`(?,?,?,?)', [tempTeamName, tempPlayerName, tempPlayerCode, tempTeamCode], function(err,rows)
+    dbConn.query('CALL `assassin-demo1`.`admin_search_for_player`(?,?,?,?,?)', [tempTeamName, tempPlayerName, tempPlayerCode, tempTeamCode, tempCeleb], function(err,rows)
     {
         if(err)
         {
@@ -2585,7 +2599,7 @@ router.post('/viewRules', function(req, res, next)
     }
 
     // No stored procedure needed, just display rules page
-    res.render('rules', {paypalFlag: PAYPAL_FLAG}); // zzzz
+    res.render('rules', {paypalFlag: PAYPAL_FLAG});
 
 });  // end router - viewRules
 
@@ -2711,9 +2725,7 @@ router.get('/updateDBPaidPaypal', function(req, res, next)
 
             // zzz maybe some error checking here
 
-            // Route user back to Home via login
-            // res.oidc.login();  zzzz
-
+            // had some problems directing back to login, created this success page instead
             res.render('palPalSuccess');
             return;
 
