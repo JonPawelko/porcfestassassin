@@ -65,6 +65,8 @@ router.get('/', function(req, res, next) {
   var tempPlayerPic; // used to replace any spaces in file names
   var tempTargetPic;
 
+  var tempTeamCode; // helper to not send undefined to rpc
+
   // Check authentication status, route to landing page if not authenticated
   if (!req.oidc.isAuthenticated())
   {
@@ -104,7 +106,16 @@ router.get('/', function(req, res, next) {
               // Get and save game statistics
               console.log("Just before get stats call");
 
-              dbConn.query('CALL `assassin-demo1`.`get_statistics`(?,?)', [rows[0][0].playerCode, rows[0][0].playerTeamCode], function(err,rowsStats)
+              if (rows[0][0].teamStatus == '0')
+              {
+                  tempTeamCode = 0;
+              }
+              else
+              {
+                tempTeamCode = rows[0][0].teamCode;
+              }
+
+              dbConn.query('CALL `assassin-demo1`.`get_statistics`(?,?)', [rows[0][0].playerCode, tempTeamCode], function(err,rowsStats)
               {
                   if(err)
                   {
