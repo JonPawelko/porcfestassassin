@@ -123,11 +123,14 @@
                         case "Registered":
                         case "Pics Approved":
 
+                            if (paypalFlag == 1)
+                            {
                             %>
                                 <hr>
                                 <%- include('paypal'); %>
-                                <div style="height: 16px;"></div>
+                                <div style="height: 8px;"></div>
                             <%
+                            }
                                 break;
 
         							default:

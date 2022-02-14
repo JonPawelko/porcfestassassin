@@ -174,6 +174,7 @@ router.get('/', function(req, res, next) {
                                   // route to home page passing Player info and teammate info
                                   res.render('home', {
                                   adminPlayerCode: CREDENTIALS.ADMIN_PLAYER_CODE,
+                                  paypalFlag: PAYPAL_FLAG,
                                   gameStatus: rows[0][0].gameStatus,
                                   playerCode: rows[0][0].playerCode,
                                   playerName: rows[0][0].playerName,
@@ -221,6 +222,7 @@ router.get('/', function(req, res, next) {
                       {
                           res.render('home', {
                           adminPlayerCode: CREDENTIALS.ADMIN_PLAYER_CODE,
+                          paypalFlag: PAYPAL_FLAG,
                           gameStatus: rows[0][0].gameStatus,
                           playerCode: rows[0][0].playerCode,
                           playerName: rows[0][0].playerName,
@@ -2583,7 +2585,7 @@ router.post('/viewRules', function(req, res, next)
     }
 
     // No stored procedure needed, just display rules page
-    res.render('rules');
+    res.render('rules', {paypalFlag: PAYPAL_FLAG}); // zzzz
 
 });  // end router - viewRules
 
