@@ -120,6 +120,8 @@ global.ERROR_MYSQL_SYSTEM_ERROR_ON_RPC = 132;
 global.ERROR_ON_FILE_UPLOAD = 133;
 global.ERROR_FEATURE_UNAVAILABLE_OVERNIGHT = 134;
 
+global.PAYPAL_FLAG = 1; // paypal on by default
+
 const { auth } = require('express-openid-connect');
 
 const config = {
