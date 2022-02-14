@@ -28,6 +28,7 @@
                     <form autocomplete='off' action='adminSearchForPlayer' method='post' onsubmit="return waitCursor()" encType='multipart/form-data'>
                         <input type='hidden' name='teamName' value=''>
                         <input type='hidden' name='playerName' value=''>
+												<input type='hidden' name='teamCode' value=''>
                         <input type='hidden' name='playerCode' value='<%=players[i]['player-code']%>'>
                         <input type='submit' class='link-button' value='<%=players[i]['player-name']%> - <%=players[i]['team-name']%> - <%=players[i]['player-code']%>'/>
 												<div style="height: 12px;"></div>
