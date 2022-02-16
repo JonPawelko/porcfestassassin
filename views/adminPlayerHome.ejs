@@ -73,7 +73,7 @@
 
 	            <form autocomplete="off" action="adminApprovePicture" method="post" onsubmit="return waitCursor()" encType="multipart/form-data">
 		              <input type="hidden" name="playerCode" value="<%= playerCode %>">
-		              <input type="hidden" name="oneOrMorePhotos" value="One">
+		              <input type="hidden" name="oneOrMorePhotos" value="one">
 								  <input type="submit" class="btn btn-info" value="Approve Pic"/>
 									<div style="height: 14px;"></div>
 	            </form>
@@ -85,7 +85,7 @@
 
 	            <form autocomplete="off" action="adminRejectPicture" method="post" onsubmit="return waitCursor()" encType="multipart/form-data">
 		              <input type="hidden" name="playerCode" value="<%= playerCode %>">
-									<input type="hidden" name="oneOrMorePhotos" value="One">
+									<input type="hidden" name="oneOrMorePhotos" value="one">
 		              <input type="submit" class="btn btn-info" value="Reject Pic"/>
 									<div style="height: 14px;"></div>
 	            </form>
