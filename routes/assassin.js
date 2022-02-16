@@ -22,6 +22,7 @@ router.post('/assassinLogin', function(req, res, next)
   console.log("Got into assassinLogin");
   console.log("Got into feature test with max");
   console.log("Got into feature test with max2");
+  console.log("Got into feature test with Chris");
 
   res.oidc.login();
 
