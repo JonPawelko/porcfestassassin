@@ -1,9 +1,24 @@
 // some change --------------------------------------------
 var createError = require("http-errors");
 var express = require("express");
+var bodyParser = require('body-parser');
+
+var app = express();
+app.use(bodyParser.json({ limit: "10mb", extended: true }));
+app.use(bodyParser.urlencoded({ limit: "10mb", extended: true }));
+
+// global variables and constants to configure auth0, nodejs, and mysql environments
+// constants
+global.TEST_ENVIRONMENT = "Test Environment";
+global.PRODUCTION_ENVIRONMENT = "Production Environment";
+global.LOCAL_ENVIRONMENT = "Local Environment";
+
+global.MYSQL_ENVIRONMENT = TEST_ENVIRONMENT;      // TEST_ENVIRONMENT, PRODUCTION_ENVIRONMENT, LOCAL_ENVIRONMENT
+global.AUTH0_ENVIRONMENT = TEST_ENVIRONMENT;      // TEST_ENVIRONMENT, PRODUCTION_ENVIRONMENT
+global.NODEJS_ENVIRONMENT = LOCAL_ENVIRONMENT;    // TEST_ENVIRONMENT, PRODUCTION_ENVIRONMENT, LOCAL_ENVIRONMENT
+
 const fileUpload = require('express-fileupload');
 var path = require('path');
-var bodyParser = require('body-parser');
 var CREDENTIALS = require('./credentials/credentials.json');
 var session = require('express-session');
 var mysql = require('mysql2');
@@ -12,13 +27,7 @@ const myCronModule = require(__dirname + '/public/javascripts/cronScripts.js');
 const cron = require('node-cron');
 var dbConn  = require('./lib/db');   // database object
 
-var app = express();
-app.use(bodyParser.json({ limit: "10mb", extended: true }));
-app.use(bodyParser.urlencoded({ limit: "10mb", extended: true }));
-
-
 // Removed these from tutorials, not using
-
 // require('dotenv').config();
 // var cookieParser = require('cookie-parser');
 // var logger = require('morgan');
@@ -124,15 +133,74 @@ global.PAYPAL_FLAG = 1; // paypal on by default
 
 const { auth } = require('express-openid-connect');
 
-const config = {
-  authRequired: false,
-  auth0Logout: true,
-  secret: CREDENTIALS.AUTH0_SECRET,
-  // baseURL: CREDENTIALS.REMOTE_NODEJS_BASE_URL,
-  baseURL: 'http://localhost:3000',
-  clientID: CREDENTIALS.AUTH0_CLIENT_ID,
-  issuerBaseURL: CREDENTIALS.AUTH0_ISSUER_BASE_URL
-};
+// global variables and constants to configure auth0, nodejs, and mysql environments
+// constants
+global.TEST_ENVIRONMENT = "Test Environment";
+global.PRODUCTION_ENVIRONMENT = "Production Environment";
+global.LOCAL_ENVIRONMENT = "Local Environment";
+
+global.MYSQL_ENVIRONMENT = TEST_ENVIRONMENT;      // TEST_ENVIRONMENT, PRODUCTION_ENVIRONMENT, LOCAL_ENVIRONMENT
+global.AUTH0_ENVIRONMENT = TEST_ENVIRONMENT;      // TEST_ENVIRONMENT, PRODUCTION_ENVIRONMENT
+global.NODEJS_ENVIRONMENT = LOCAL_ENVIRONMENT;    // TEST_ENVIRONMENT, PRODUCTION_ENVIRONMENT, LOCAL_ENVIRONMENT
+
+var tempNodeJSEnvHelper;
+
+// first determine the node js environment
+switch (NODEJS_ENVIRONMENT)
+{
+		case TEST_ENVIRONMENT:
+
+				 tempNodeJSEnvHelper = CREDENTIALS.REMOTE_NODEJS_BASE_URL_TEST; // zzzz
+				 break;
+
+		case PRODUCTION_ENVIRONMENT:
+
+				tempNodeJSEnvHelper = CREDENTIALS.REMOTE_NODEJS_BASE_URL_PROD;
+				break;
+
+		case LOCAL_ENVIRONMENT:
+
+        tempNodeJSEnvHelper = CREDENTIALS.NODEJS_BASE_URL_LOCALHOST;
+        break;
+
+		default:
+
+}
+
+var config; // auth0 config object
+
+// Next configure auth0 with node temp var
+switch (AUTH0_ENVIRONMENT)
+{
+		case TEST_ENVIRONMENT:
+
+          config = {
+            authRequired: false,
+            auth0Logout: true,
+            secret: CREDENTIALS.AUTH0_SECRET,
+            baseURL: tempNodeJSEnvHelper,
+            clientID: CREDENTIALS.AUTH0_CLIENT_ID,
+            issuerBaseURL: CREDENTIALS.AUTH0_ISSUER_BASE_URL
+          };
+
+          break;
+
+		case PRODUCTION_ENVIRONMENT:
+
+          config = {
+            authRequired: false,
+            auth0Logout: true,
+            secret: CREDENTIALS.AUTH0_SECRET,
+            baseURL: tempNodeJSEnvHelper,
+            clientID: CREDENTIALS.AUTH0_CLIENT_ID,
+            issuerBaseURL: CREDENTIALS.AUTH0_ISSUER_BASE_URL
+          };
+
+          break;
+
+		default:
+
+}
 
 // auth router attaches /login, /logout, and /callback routes to the baseURL
 app.use(auth(config));
