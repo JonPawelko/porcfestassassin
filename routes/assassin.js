@@ -5,6 +5,9 @@ var express = require('express');
 const fileUpload = require('express-fileupload');
 var router = express.Router();
 var dbConn  = require('../lib/db');   // database object
+var app  = require('../app');   // database object
+
+// var app = express();
 const cron = require('node-cron');
 var CREDENTIALS = require('../credentials/credentials.json');
 const twilio = require('twilio')(CREDENTIALS.TWILIO_ACCOUNT_SID, CREDENTIALS.TWILIO_AUTH_TOKEN);
@@ -81,7 +84,7 @@ router.get('/', function(req, res, next) {
   console.log("User Authenticated - Email in Root index is " + req.oidc.user.email);
 
   // Retrieve User info passing in email
-  dbConn.query('CALL `assassin-demo1`.`get_player_info_and_game_status`(?)', req.oidc.user.email, function(err,rows)
+  dbConn.query('CALL `assassin`.`get_player_info_and_game_status`(?)', req.oidc.user.email, function(err,rows)
   {
       if(err)
       {
@@ -118,7 +121,7 @@ router.get('/', function(req, res, next) {
                 tempTeamCode = rows[0][0].teamCode;
               }
 
-              dbConn.query('CALL `assassin-demo1`.`get_statistics`(?,?)', [rows[0][0].playerCode, tempTeamCode], function(err,rowsStats)
+              dbConn.query('CALL `assassin`.`get_statistics`(?,?)', [rows[0][0].playerCode, tempTeamCode], function(err,rowsStats)
               {
                   if(err)
                   {
@@ -170,7 +173,7 @@ router.get('/', function(req, res, next) {
                           console.log("At least 1 teammate");
 
                           // get teammate info, could be multiple rows returned
-                          dbConn.query('CALL `assassin-demo1`.`get_teammate_info`(?,?)', [rows[0][0].playerCode, rows[0][0].playerTeamCode], function(err,rows2)
+                          dbConn.query('CALL `assassin`.`get_teammate_info`(?,?)', [rows[0][0].playerCode, rows[0][0].playerTeamCode], function(err,rows2)
                           {
                               if(err)
                               {
@@ -358,7 +361,7 @@ router.post('/newAssassin', function(req, res, next)
     console.log("Upload path is: " + uploadPath);
 
     // Call stored procedure to create the player
-    dbConn.query('CALL `assassin-demo1`.`create_player_from_email`(?,?,?,?,?)', [req.oidc.user.email, req.body.playerName, tempPlayerPhone, playerPhotoFile.name, req.body.playerTeamName], function(err,rows)
+    dbConn.query('CALL `assassin`.`create_player_from_email`(?,?,?,?,?)', [req.oidc.user.email, req.body.playerName, tempPlayerPhone, playerPhotoFile.name, req.body.playerTeamName], function(err,rows)
     {
         if(err)
         {
@@ -390,7 +393,7 @@ router.post('/newAssassin', function(req, res, next)
                         console.log("Successful file upload");
 
                         // Update status of player picture to Uploaded, use email because we don't know playerCode here
-                        dbConn.query('CALL `assassin-demo1`.`update_photo_status_to_uploaded`(?)', req.oidc.user.email, function(err,rows)
+                        dbConn.query('CALL `assassin`.`update_photo_status_to_uploaded`(?)', req.oidc.user.email, function(err,rows)
                         {
                             if(err)
                             {
@@ -458,7 +461,7 @@ router.post('/activateAssassin', function(req, res, next)
 
   // valid player code format
   // Activate the Player, essentially updating the Player table with the email
-  dbConn.query('CALL `assassin-demo1`.`activate_player`(?,?)', [req.body.playerCode, req.oidc.user.email], function(err,rows)
+  dbConn.query('CALL `assassin`.`activate_player`(?,?)', [req.body.playerCode, req.oidc.user.email], function(err,rows)
   {
       if(err)
       {
@@ -512,7 +515,7 @@ router.post('/validateKill', function(req, res, next)
   }
 
   // Call stored proc
-  dbConn.query('CALL `assassin-demo1`.`validate_kill`(?,?)', [req.body.myTeamCode, req.body.myKillName], function(err,rows)
+  dbConn.query('CALL `assassin`.`validate_kill`(?,?)', [req.body.myTeamCode, req.body.myKillName], function(err,rows)
   {
       if(err) {
           console.log("MySQL error on validate_kill call: " + err.code + " - " + err.message);
@@ -562,7 +565,7 @@ router.post('/rebuy', function(req, res, next)
   }
 
   // call stored procedure
-  dbConn.query('CALL `assassin-demo1`.`rebuy`(?,?)', [req.body.myPlayerCode, req.body.myTeamCode], function(err,rows)
+  dbConn.query('CALL `assassin`.`rebuy`(?,?)', [req.body.myPlayerCode, req.body.myTeamCode], function(err,rows)
   {
       if(err) {
           console.log("MySQL error on rebuy call: " + err.code + " - " + err.message);
@@ -612,7 +615,7 @@ router.post('/goLive', function(req, res, next)
   }
 
   // Call stored procedure
-  dbConn.query('CALL `assassin-demo1`.`go_live`(?,?)', [req.body.myPlayerCode, req.body.myTeamCode], function(err,rows)
+  dbConn.query('CALL `assassin`.`go_live`(?,?)', [req.body.myPlayerCode, req.body.myTeamCode], function(err,rows)
   {
       if(err)
       {
@@ -672,7 +675,7 @@ router.post('/joinTeam', function(req, res, next)
 
    // valid player code format
   // Call stored procedure
-  dbConn.query('CALL `assassin-demo1`.`join_team`(?,?)', [req.body.myPlayerCode, req.body.joinTeamCode], function(err,rows)
+  dbConn.query('CALL `assassin`.`join_team`(?,?)', [req.body.myPlayerCode, req.body.joinTeamCode], function(err,rows)
   {
       if(err)
       {
@@ -730,7 +733,7 @@ router.post('/createTeam', function(req, res, next)
   }
 
   // Call stored procedure
-  dbConn.query('CALL `assassin-demo1`.`create_team`(?,?)', [req.body.myPlayerCode, req.body.playerTeamName], function(err,rows)
+  dbConn.query('CALL `assassin`.`create_team`(?,?)', [req.body.myPlayerCode, req.body.playerTeamName], function(err,rows)
   {
       if(err)
       {
@@ -777,7 +780,7 @@ router.post('/takeBreak', function(req, res, next)
   }
 
   // Call stored procedure, passing in LEAVE_BREAK
-  dbConn.query('CALL `assassin-demo1`.`leave_game`(?,?,?)', [req.body.myPlayerCode, req.body.myTeamCode, LEAVE_BREAK], function(err,rows)
+  dbConn.query('CALL `assassin`.`leave_game`(?,?,?)', [req.body.myPlayerCode, req.body.myTeamCode, LEAVE_BREAK], function(err,rows)
   {
       if(err)
       {
@@ -827,7 +830,7 @@ router.post('/returnFromBreak', function(req, res, next)
   }
 
   // Call stored proc
-  dbConn.query('CALL `assassin-demo1`.`return_from_break`(?,?)', [req.body.playerCode, req.body.teamCode], function(err,rows)
+  dbConn.query('CALL `assassin`.`return_from_break`(?,?)', [req.body.playerCode, req.body.teamCode], function(err,rows)
   {
       if(err)
       {
@@ -887,7 +890,7 @@ router.post('/addPlayer', function(req, res, next)
 
   // valid player code format
   // Call stored procedure
-  dbConn.query('CALL `assassin-demo1`.`add_player_to_team`(?,?,?)', [req.body.myPlayerCode,req.body.myTeamCode,req.body.playerCode], function(err,rows)
+  dbConn.query('CALL `assassin`.`add_player_to_team`(?,?,?)', [req.body.myPlayerCode,req.body.myTeamCode,req.body.playerCode], function(err,rows)
   {
       if(err)
       {
@@ -946,7 +949,7 @@ router.post('/removePlayerFromTeam', function(req, res, next)
 
   // valid player code format
   // Call stored proc
-  dbConn.query('CALL `assassin-demo1`.`remove_player_from_team`(?,?,?)', [req.body.myPlayerCode,req.body.myTeamCode,req.body.playerCode], function(err,rows)
+  dbConn.query('CALL `assassin`.`remove_player_from_team`(?,?,?)', [req.body.myPlayerCode,req.body.myTeamCode,req.body.playerCode], function(err,rows)
   {
       if(err)
       {
@@ -997,7 +1000,7 @@ router.post('/quitGame', function(req, res, next)
   }
 
   // leave_game stored proc handles both Quit and Break, send in quit here
-  dbConn.query('CALL `assassin-demo1`.`leave_game`(?,?,?)', [req.body.myPlayerCode, req.body.myTeamCode, LEAVE_QUIT], function(err,rows)
+  dbConn.query('CALL `assassin`.`leave_game`(?,?,?)', [req.body.myPlayerCode, req.body.myTeamCode, LEAVE_QUIT], function(err,rows)
   {
       if(err)
       {
@@ -1107,7 +1110,7 @@ router.post('/adminCreatePrepTemplateData', function(req, res, next)
   }
 
   // Retrieve prepped player codes
-  dbConn.query('CALL `assassin-demo1`.`admin_create_prepped_teams`(?,?,?)', [num1, num2, num3], function(err,rows)
+  dbConn.query('CALL `assassin`.`admin_create_prepped_teams`(?,?,?)', [num1, num2, num3], function(err,rows)
   {
       if(err)
       {
@@ -1159,7 +1162,7 @@ router.post('/adminActivateTeamPrep', function(req, res, next)
   tempTeamCode = req.body.teamCode;
 
   // Retrieve prepped player codes
-  dbConn.query('CALL `assassin-demo1`.`admin_get_prepped_team_player_codes`(?)', req.body.teamCode, function(err,rows)
+  dbConn.query('CALL `assassin`.`admin_get_prepped_team_player_codes`(?)', req.body.teamCode, function(err,rows)
   {
       if(err)
       {
@@ -1387,7 +1390,7 @@ router.post('/adminActivateTeam', function(req, res, next)
     // error checking complete ---------------------------------------------------
 
     // Call stored procedure to activate the Team, if call succeeds, upload photos
-    dbConn.query('CALL `assassin-demo1`.`admin_activate_team`(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)', [req.body.activatedTeamCode, req.body.teamName, req.body.captainCode, req.body.captainName, captPhone, req.files.captainPhotoFile.name, req.body.captainCeleb, p2Code, p2Name, p2Phone, p2Photo, p2Celeb, p3Code, p3Name, p3Phone, p3Photo, p3Celeb], function(err,rows)
+    dbConn.query('CALL `assassin`.`admin_activate_team`(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)', [req.body.activatedTeamCode, req.body.teamName, req.body.captainCode, req.body.captainName, captPhone, req.files.captainPhotoFile.name, req.body.captainCeleb, p2Code, p2Name, p2Phone, p2Photo, p2Celeb, p3Code, p3Name, p3Phone, p3Photo, p3Celeb], function(err,rows)
     {
         if(err)
         {
@@ -1556,7 +1559,7 @@ router.post('/adminSearchForTeam', function(req, res, next)
     }
 
     // Call stored procedure to search for the team
-    dbConn.query('CALL `assassin-demo1`.`admin_search_for_team`(?,?,?,?)', [req.body.teamName, req.body.playerName, tempTeamCode, tempPlayerCode], function(err,rows)
+    dbConn.query('CALL `assassin`.`admin_search_for_team`(?,?,?,?)', [req.body.teamName, req.body.playerName, tempTeamCode, tempPlayerCode], function(err,rows)
     {
         if(err)
         {
@@ -1687,7 +1690,7 @@ router.post('/adminSearchForPlayer', function(req, res, next)
     // end error checking  --------------
 
     // Call stored procedure to search for the player
-    dbConn.query('CALL `assassin-demo1`.`admin_search_for_player`(?,?,?,?,?)', [tempTeamName, tempPlayerName, tempPlayerCode, tempTeamCode, tempCeleb], function(err,rows)
+    dbConn.query('CALL `assassin`.`admin_search_for_player`(?,?,?,?,?)', [tempTeamName, tempPlayerName, tempPlayerCode, tempTeamCode, tempCeleb], function(err,rows)
     {
         if(err)
         {
@@ -1769,7 +1772,7 @@ router.post('/adminApprovePicture', function(req, res, next)
     }
 
     // Call stored procedure to approve picture
-    dbConn.query('CALL `assassin-demo1`.`admin_approve_picture`(?)', req.body.playerCode, function(err,rows)
+    dbConn.query('CALL `assassin`.`admin_approve_picture`(?)', req.body.playerCode, function(err,rows)
     {
         if(err)
         {
@@ -1824,7 +1827,7 @@ router.post('/adminRejectPicture', function(req, res, next)
     }
 
     // Call stored procedure to reject picture
-    dbConn.query('CALL `assassin-demo1`.`admin_reject_picture`(?)', req.body.playerCode, function(err,rows)
+    dbConn.query('CALL `assassin`.`admin_reject_picture`(?)', req.body.playerCode, function(err,rows)
     {
         if(err)
         {
@@ -1909,7 +1912,7 @@ router.post('/uploadPhoto', function(req, res, next)
     }
 
     // Call stored procedure to upload photo data, if call succeeds, then upload photo
-    dbConn.query('CALL `assassin-demo1`.`upload_photo_data`(?,?,?)', [req.body.playerCode, req.files.playerPhotoFile.name, req.body.userType], function(err,rows)
+    dbConn.query('CALL `assassin`.`upload_photo_data`(?,?,?)', [req.body.playerCode, req.files.playerPhotoFile.name, req.body.userType], function(err,rows)
     {
         if(err)
         {
@@ -1986,7 +1989,7 @@ router.post('/adminPayBounties', function(req, res, next)
   }
 
   // Call stored procedure to pay bounties
-  dbConn.query('CALL `assassin-demo1`.`admin_pay_bounties`(?,?)', [req.body.teamCode, req.body.numBounties], function(err,rows)
+  dbConn.query('CALL `assassin`.`admin_pay_bounties`(?,?)', [req.body.teamCode, req.body.numBounties], function(err,rows)
   {
       if(err)
       {
@@ -2032,7 +2035,7 @@ router.post('/adminMarkPaid', function(req, res, next)
   }
 
   // Call stored procedure to mark team paid
-  dbConn.query('CALL `assassin-demo1`.`admin_mark_paid`(?)', req.body.teamCode, function(err,rows)
+  dbConn.query('CALL `assassin`.`admin_mark_paid`(?)', req.body.teamCode, function(err,rows)
   {
       if(err)
       {
@@ -2084,7 +2087,7 @@ router.post('/adminMarkPaidAndApprovePhoto', function(req, res, next)
   }
 
   // Call stored procedure to mark team paid
-  dbConn.query('CALL `assassin-demo1`.`admin_mark_paid`(?)', req.body.teamCode, function(err,rows)
+  dbConn.query('CALL `assassin`.`admin_mark_paid`(?)', req.body.teamCode, function(err,rows)
   {
       if(err)
       {
@@ -2103,7 +2106,7 @@ router.post('/adminMarkPaidAndApprovePhoto', function(req, res, next)
               // don't need to check for alerts here because we are about to approve pic
 
               // Call stored procedure to approve picture
-              dbConn.query('CALL `assassin-demo1`.`admin_approve_picture`(?)', req.body.playerCode, function(err,rows)
+              dbConn.query('CALL `assassin`.`admin_approve_picture`(?)', req.body.playerCode, function(err,rows)
               {
                   if(err)
                   {
@@ -2207,7 +2210,7 @@ router.post('/adminUpdatePlayerData', function(req, res, next)
   }
 
   // Call stored procedure
-  dbConn.query('CALL `assassin-demo1`.`admin_update_player_data`(?,?,?,?)', [req.body.playerCode, req.body.playerName, tempPlayerPhone, tempCeleb], function(err,rows)
+  dbConn.query('CALL `assassin`.`admin_update_player_data`(?,?,?,?)', [req.body.playerCode, req.body.playerName, tempPlayerPhone, tempCeleb], function(err,rows)
   {
       if(err)
       {
@@ -2261,7 +2264,7 @@ router.post('/adminUpdateTeamName', function(req, res, next)
   }
 
   // Call stored procedure
-  dbConn.query('CALL `assassin-demo1`.`admin_update_team_name`(?,?)', [req.body.teamCode, req.body.teamName], function(err,rows)
+  dbConn.query('CALL `assassin`.`admin_update_team_name`(?,?)', [req.body.teamCode, req.body.teamName], function(err,rows)
   {
       if(err)
       {
@@ -2355,7 +2358,7 @@ router.post('/updatePlayerPhone', function(req, res, next)
   }
 
   // Call stored procedure
-  dbConn.query('CALL `assassin-demo1`.`update_player_phone`(?,?)', [req.body.playerCode, tempPlayerPhone], function(err,rows)
+  dbConn.query('CALL `assassin`.`update_player_phone`(?,?)', [req.body.playerCode, tempPlayerPhone], function(err,rows)
   {
       if(err)
       {
@@ -2401,7 +2404,7 @@ router.post('/removePlayerPhoneNumber', function(req, res, next)
   }
 
   // Call stored procedure
-  dbConn.query('CALL `assassin-demo1`.`remove_player_phone`(?)', req.body.myPlayerCode, function(err,rows)
+  dbConn.query('CALL `assassin`.`remove_player_phone`(?)', req.body.myPlayerCode, function(err,rows)
   {
       if(err)
       {
@@ -2466,7 +2469,7 @@ router.post('/adminDropBomb', function(req, res, next)
   }
 
   // Call stored procedure to drop bomb
-  dbConn.query('CALL `assassin-demo1`.`admin_drop_bomb`()', function(err,rows)
+  dbConn.query('CALL `assassin`.`admin_drop_bomb`()', function(err,rows)
   {
       if(err)
       {
@@ -2517,7 +2520,7 @@ router.post('/systemCheckForceShiftChange', function(req, res, next)
   }
 
   // Call stored procedure check_for_forced_shift_changes
-  dbConn.query('CALL `assassin-demo1`.`system_check_for_forced_shift_changes`(?)', req.body.hoursToGo, function(err,rows)
+  dbConn.query('CALL `assassin`.`system_check_for_forced_shift_changes`(?)', req.body.hoursToGo, function(err,rows)
   {
       if(err)
       {   // zzz - ui?
@@ -2568,7 +2571,7 @@ router.post('/resetDatabase', function(req, res, next)
   }
 
   // Call stored procedure to resetDatabase
-  dbConn.query('CALL `assassin-demo1`.`reset_database`()', function(err,rows)
+  dbConn.query('CALL `assassin`.`reset_database`()', function(err,rows)
   {
       if(err)
       {
@@ -2653,7 +2656,7 @@ router.post('/sendAdminMessage', function(req, res, next)
     }
 
     // First get admin phone number
-    dbConn.query('CALL `assassin-demo1`.`get_admin_phone_number`()', function(err,rows)
+    dbConn.query('CALL `assassin`.`get_admin_phone_number`()', function(err,rows)
     {
         if(err)
         {
@@ -2687,7 +2690,7 @@ router.post('/sendAdminMessage', function(req, res, next)
             .then(message => console.log("Twilio return sid: " + message.sid));
 
             // Log event to DB just in case Admin doesn't get the text
-            dbConn.query('CALL `assassin-demo1`.`log_event`(?,?,?,?,?,?)', [EVENT_ADMIN_MESSAGE, req.body.playerCode, 0, 0, 0, 0], function(err,rows)
+            dbConn.query('CALL `assassin`.`log_event`(?,?,?,?,?,?)', [EVENT_ADMIN_MESSAGE, req.body.playerCode, 0, 0, 0, 0], function(err,rows)
             {
                 if(err)
                 {
@@ -2725,7 +2728,7 @@ router.get('/updateDBPaidPaypal', function(req, res, next)
     }
 
     // Use email to update team to paid
-    dbConn.query('CALL `assassin-demo1`.`update_db_paid_paypal`(?)', req.oidc.user.email, function(err,rows)
+    dbConn.query('CALL `assassin`.`update_db_paid_paypal`(?)', req.oidc.user.email, function(err,rows)
     {
         if(err)
         {
@@ -2888,7 +2891,7 @@ function send_text_alerts(rows)
 function checkForUploadedPhotos(res)
 {
   // Call stored procedure to get uploaded photo info
-  dbConn.query('CALL `assassin-demo1`.`admin_get_first_uploaded_photo_and_count`()', function(err,rows)
+  dbConn.query('CALL `assassin`.`admin_get_first_uploaded_photo_and_count`()', function(err,rows)
   {
       if(err)
       {
@@ -3021,7 +3024,7 @@ router.post('/cronManager', function(req, res, next)
     var nightEndTime;
 
     // Call stored procedure to get game settings
-    dbConn.query('CALL `assassin-demo1`.`system_get_game_settings_for_cron`()', function(err,rows)
+    dbConn.query('CALL `assassin`.`system_get_game_settings_for_cron`()', function(err,rows)
     {
         if(err)
         { // zzz
@@ -3341,7 +3344,7 @@ function startGameCronFunction()
     return;
 
     // call stored procedure
-    dbConn.query('CALL `assassin-demo1`.`system_start_game`()', function(err,rows)
+    dbConn.query('CALL `assassin`.`system_start_game`()', function(err,rows)
     {
         if(err)
         {   // zzz
@@ -3383,7 +3386,7 @@ function endGameCronFunction()
     return;
 
     // call stored procedure
-    dbConn.query('CALL `assassin-demo1`.`system_end_game`()', function(err,rows)
+    dbConn.query('CALL `assassin`.`system_end_game`()', function(err,rows)
     {
         if(err)
         { // zzz
@@ -3425,7 +3428,7 @@ function morningStartCronFunction()
     return;
 
     // call stored procedure
-    dbConn.query('CALL `assassin-demo1`.`system_morning_start`()', function(err,rows)
+    dbConn.query('CALL `assassin`.`system_morning_start`()', function(err,rows)
     {
         if(err)
         {
@@ -3466,7 +3469,7 @@ function nightEndCronFunction()
     console.log('nightEndCronFunction started');
 
     // call stored procedure
-    dbConn.query('CALL `assassin-demo1`.`system_night_end`()', function(err,rows)
+    dbConn.query('CALL `assassin`.`system_night_end`()', function(err,rows)
     {
         if(err)
         {
@@ -3507,7 +3510,7 @@ function twoHoursToGoCronFunction()
     console.log('twoHoursToGoCronFunction started');
 
     // call stored procedure
-    dbConn.query('CALL `assassin-demo1`.`system_check_for_forced_shift_changes`(?)',2, function(err,rows)
+    dbConn.query('CALL `assassin`.`system_check_for_forced_shift_changes`(?)',2, function(err,rows)
     {
         if(err)
         {
@@ -3548,7 +3551,7 @@ function oneHourToGoCronFunction()
     console.log('OneHourToGoCronFunction started');
 
     // call stored procedure
-    dbConn.query('CALL `assassin-demo1`.`system_check_for_forced_shift_changes`(?)',1, function(err,rows)
+    dbConn.query('CALL `assassin`.`system_check_for_forced_shift_changes`(?)',1, function(err,rows)
     {
         if(err)
         {
@@ -3590,7 +3593,7 @@ function checkHowManyPhotosCronFunction(maxPhotos)
   console.log(maxPhotos);
 
     // call stored procedure
-    dbConn.query('CALL `assassin-demo1`.`system_check_how_many_photos`()', function(err,rows)
+    dbConn.query('CALL `assassin`.`system_check_how_many_photos`()', function(err,rows)
     {
         if(err)
         {
@@ -3632,7 +3635,7 @@ function checkOldPhotosCronFunction(photoWaitTime)
   console.log(photoWaitTime);
 
     // call stored procedure
-    dbConn.query('CALL `assassin-demo1`.`system_check_old_photos`(?)', photoWaitTime, function(err,rows)
+    dbConn.query('CALL `assassin`.`system_check_old_photos`(?)', photoWaitTime, function(err,rows)
     {
         if(err)
         {
