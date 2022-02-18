@@ -133,17 +133,7 @@ global.PAYPAL_FLAG = 1; // paypal on by default
 
 const { auth } = require('express-openid-connect');
 
-// global variables and constants to configure auth0, nodejs, and mysql environments
-// constants
-global.TEST_ENVIRONMENT = "Test Environment";
-global.PRODUCTION_ENVIRONMENT = "Production Environment";
-global.LOCAL_ENVIRONMENT = "Local Environment";
-
-global.MYSQL_ENVIRONMENT = TEST_ENVIRONMENT;      // TEST_ENVIRONMENT, PRODUCTION_ENVIRONMENT, LOCAL_ENVIRONMENT
-global.AUTH0_ENVIRONMENT = TEST_ENVIRONMENT;      // TEST_ENVIRONMENT, PRODUCTION_ENVIRONMENT
-global.NODEJS_ENVIRONMENT = LOCAL_ENVIRONMENT;    // TEST_ENVIRONMENT, PRODUCTION_ENVIRONMENT, LOCAL_ENVIRONMENT
-
-var tempNodeJSEnvHelper;
+var tempNodeJSEnvHelper;	// store the Node JS env, then use it in Auth0 config
 
 // first determine the node js environment
 switch (NODEJS_ENVIRONMENT)
