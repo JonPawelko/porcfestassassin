@@ -1,4 +1,13 @@
 // some change --------------------------------------------
+// global variables and constants to configure auth0, nodejs, and mysql environments
+// constants
+global.TEST_ENVIRONMENT = "Test Environment";
+global.PRODUCTION_ENVIRONMENT = "Production Environment";
+global.LOCAL_ENVIRONMENT = "Local Environment";
+
+var CREDENTIALS = require('./credentials/credentials.json');
+var PERSONAL_ENV = require('./personal/personal_env.json');
+
 var createError = require("http-errors");
 var express = require("express");
 var bodyParser = require('body-parser');
@@ -7,19 +16,13 @@ var app = express();
 app.use(bodyParser.json({ limit: "10mb", extended: true }));
 app.use(bodyParser.urlencoded({ limit: "10mb", extended: true }));
 
-// global variables and constants to configure auth0, nodejs, and mysql environments
-// constants
-global.TEST_ENVIRONMENT = "Test Environment";
-global.PRODUCTION_ENVIRONMENT = "Production Environment";
-global.LOCAL_ENVIRONMENT = "Local Environment";
 
-global.MYSQL_ENVIRONMENT = TEST_ENVIRONMENT;      // TEST_ENVIRONMENT, PRODUCTION_ENVIRONMENT, LOCAL_ENVIRONMENT
-global.AUTH0_ENVIRONMENT = TEST_ENVIRONMENT;      // TEST_ENVIRONMENT, PRODUCTION_ENVIRONMENT
-global.NODEJS_ENVIRONMENT = LOCAL_ENVIRONMENT;    // TEST_ENVIRONMENT, PRODUCTION_ENVIRONMENT, LOCAL_ENVIRONMENT
+//global.MYSQL_ENVIRONMENT = TEST_ENVIRONMENT;      // TEST_ENVIRONMENT, PRODUCTION_ENVIRONMENT, LOCAL_ENVIRONMENT
+//global.AUTH0_ENVIRONMENT = TEST_ENVIRONMENT;      // TEST_ENVIRONMENT, PRODUCTION_ENVIRONMENT
+//global.NODEJS_ENVIRONMENT = LOCAL_ENVIRONMENT;    // TEST_ENVIRONMENT, PRODUCTION_ENVIRONMENT, LOCAL_ENVIRONMENT
 
 const fileUpload = require('express-fileupload');
 var path = require('path');
-var CREDENTIALS = require('./credentials/credentials.json');
 var session = require('express-session');
 var mysql = require('mysql2');
 var assassinRouter = require('./routes/assassin');
@@ -136,7 +139,7 @@ const { auth } = require('express-openid-connect');
 var tempNodeJSEnvHelper;	// store the Node JS env, then use it in Auth0 config
 
 // first determine the node js environment
-switch (NODEJS_ENVIRONMENT)
+switch (PERSONAL_ENV.NODEJS_ENVIRONMENT)
 {
 		case TEST_ENVIRONMENT:
 
@@ -160,7 +163,7 @@ switch (NODEJS_ENVIRONMENT)
 var config; // auth0 config object
 
 // Next configure auth0 with node temp var
-switch (AUTH0_ENVIRONMENT)
+switch (PERSONAL_ENV.AUTH0_ENVIRONMENT)
 {
 		case TEST_ENVIRONMENT:
 
