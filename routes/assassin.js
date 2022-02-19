@@ -23,10 +23,6 @@ module.exports = router;
 router.post('/assassinLogin', function(req, res, next)
 {
   console.log("Got into assassinLogin");
-  console.log("Got into feature test with max");
-  console.log("Got into feature test with max2");
-  console.log("Got into feature test with ChrisP99999");
-
   res.oidc.login();
 
 }); // end router post assassinLogin
