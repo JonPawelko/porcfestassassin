@@ -16,11 +16,6 @@ var app = express();
 app.use(bodyParser.json({ limit: "10mb", extended: true }));
 app.use(bodyParser.urlencoded({ limit: "10mb", extended: true }));
 
-
-//global.MYSQL_ENVIRONMENT = TEST_ENVIRONMENT;      // TEST_ENVIRONMENT, PRODUCTION_ENVIRONMENT, LOCAL_ENVIRONMENT
-//global.AUTH0_ENVIRONMENT = TEST_ENVIRONMENT;      // TEST_ENVIRONMENT, PRODUCTION_ENVIRONMENT
-//global.NODEJS_ENVIRONMENT = LOCAL_ENVIRONMENT;    // TEST_ENVIRONMENT, PRODUCTION_ENVIRONMENT, LOCAL_ENVIRONMENT
-
 const fileUpload = require('express-fileupload');
 var path = require('path');
 var session = require('express-session');
@@ -167,26 +162,30 @@ switch (PERSONAL_ENV.AUTH0_ENVIRONMENT)
 {
 		case TEST_ENVIRONMENT:
 
+					console.log("Auth0 Test");
+
           config = {
             authRequired: false,
             auth0Logout: true,
-            secret: CREDENTIALS.AUTH0_SECRET,
+            secret: CREDENTIALS.AUTH0_SECRET_TEST,
             baseURL: tempNodeJSEnvHelper,
-            clientID: CREDENTIALS.AUTH0_CLIENT_ID,
-            issuerBaseURL: CREDENTIALS.AUTH0_ISSUER_BASE_URL
+            clientID: CREDENTIALS.AUTH0_CLIENT_ID_TEST,
+            issuerBaseURL: CREDENTIALS.AUTH0_ISSUER_BASE_URL_TEST
           };
 
           break;
 
 		case PRODUCTION_ENVIRONMENT:
 
+					console.log("Auth0 Prod");
+
           config = {
             authRequired: false,
             auth0Logout: true,
-            secret: CREDENTIALS.AUTH0_SECRET,
+            secret: CREDENTIALS.AUTH0_SECRET_PROD,
             baseURL: tempNodeJSEnvHelper,
-            clientID: CREDENTIALS.AUTH0_CLIENT_ID,
-            issuerBaseURL: CREDENTIALS.AUTH0_ISSUER_BASE_URL
+            clientID: CREDENTIALS.AUTH0_CLIENT_ID_PROD,
+            issuerBaseURL: CREDENTIALS.AUTH0_ISSUER_BASE_URL_PROD
           };
 
           break;
