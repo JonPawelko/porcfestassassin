@@ -2748,6 +2748,48 @@ router.get('/updateDBPaidPaypal', function(req, res, next)
 
 }); // end router post update_db_paid_paypal
 
+// --------------------------------------------------------------------------------
+// Route called by player to process and send message to admin
+// --------------------------------------------------------------------------------
+router.post('/systemCheckCleanData', function(req, res, next)
+{
+    console.log("Got into systemCheckCleanData");
+
+    // Check authentication status
+    if (!req.oidc.isAuthenticated())
+    {
+        console.log("Not authenticated");
+        res.render('landing');
+        return;
+    }
+
+    // First get admin phone number
+    dbConn.query('CALL `assassin`.`system_confirm_all_data_clean`()', function(err,rows)
+    {
+        if(err)
+        {
+            console.log("MySQL error on system_confirm_all_data_clean call: " + err.code + " - " + err.message);
+            // Render error page, passing in error data
+            res.render('errorMessagePage', {result: ERROR_MYSQL_SYSTEM_ERROR_ON_RPC});
+            return;
+        } else
+        {
+            console.log("system_confirm_all_data_clean rpc worked.");
+
+            // zzzz maybe some error checking here
+            console.log("Return from clean data check: " + rows[0][0].returnCode);
+
+            res.oidc.login();
+
+        } // end else
+
+    }); // end query
+
+    // Route user back to Home via login
+    // res.oidc.login();
+
+}); // end router post sendAdminMessage
+
 // -------------------------------------------------------------
 // Start Helper function section - Not express routes ----------
 // -------------------------------------------------------------
