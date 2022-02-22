@@ -36,6 +36,13 @@
 				<div style="height: 3px;"></div>
 				<h5>Welcome to Assassin <%= playerName %>!</h5>
 
+				<% if (playerMessage != "")
+				{%>
+					<div style="height: 2px;"></div>
+					<%= playerMessage %>
+					<div style="height: 6px;"></div>
+				<%}%>
+
 				<!-- check game status here -->
 				<% switch(gameStatus)
 				{

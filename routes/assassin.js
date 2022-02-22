@@ -197,6 +197,7 @@ router.get('/', function(req, res, next) {
                                   playerPic: tempPlayerPic,
                                   playerPicStatus: rows[0][0].playerPicStatus,
                                   myLastShiftTimeStamp: tempMyLastShift,
+                                  playerMessage: rows[0][0].playerMessage,
                                   playerTeamName: rows[0][0].playerTeamName,
                                   playerTeamCode: rows[0][0].playerTeamCode,
                                   playerTeammates: rows2[0],
@@ -245,6 +246,7 @@ router.get('/', function(req, res, next) {
                           playerPic: tempPlayerPic,
                           playerPicStatus: rows[0][0].playerPicStatus,
                           myLastShiftTimeStamp: tempMyLastShift,
+                          playerMessage: rows[0][0].playerMessage,
                           playerTeamName: rows[0][0].playerTeamName,
                           playerTeamCode: rows[0][0].playerTeamCode,
                           // playerTeammates: rows2[0], // don't need this, no teammates
@@ -1640,7 +1642,6 @@ router.post('/adminSearchForPlayer', function(req, res, next)
     var playerPicPath; // helper var to replace any spaces from file names with code
     var atLeastOneInput = false;
 
-    // zzzz
     if (req.body.playerCode != "")
     {
         tempPlayerCode = parseInt(req.body.playerCode);
@@ -2776,7 +2777,7 @@ router.post('/systemCheckCleanData', function(req, res, next)
         {
             console.log("system_confirm_all_data_clean rpc worked.");
 
-            // zzzz maybe some error checking here
+            // zzz maybe some error checking here
             console.log("Return from clean data check: " + rows[0][0].returnCode);
 
             res.oidc.login();
@@ -2789,6 +2790,56 @@ router.post('/systemCheckCleanData', function(req, res, next)
     // res.oidc.login();
 
 }); // end router post sendAdminMessage
+
+// --------------------------------------------------------------------------------
+// Route called by player to process and send message to admin
+// --------------------------------------------------------------------------------
+router.post('/adminStartContest', function(req, res, next)
+{
+    console.log("Got into adminStartContest");
+
+    // Check authentication status
+    if (!req.oidc.isAuthenticated())
+    {
+        console.log("Not authenticated");
+        res.render('landing');
+        return;
+    }
+
+    // Call rpc to start contest
+    dbConn.query('CALL `assassin`.`admin_start_contest`(?)', req.body.contests, function(err,rows)
+    {
+        if(err)
+        {
+            console.log("MySQL error on admin_start_contest call: " + err.code + " - " + err.message);
+            // Render error page, passing in error data
+            res.render('errorMessagePage', {result: ERROR_MYSQL_SYSTEM_ERROR_ON_RPC});
+            return;
+        } else
+        {
+            console.log("admin_start_contest rpc worked.");
+
+            // Check return code.
+            if (rows[0][0].phone == CALL_SUCCESS)
+            {
+                if (rows[0].length > 1)
+                {
+                    send_text_alerts(rows);
+                }
+                res.oidc.login(); // send back home to refresh page with new target
+            }
+            else
+            {
+              // Render error page, passing in error code
+              res.render('errorMessagePage', {result: parseInt(rows[0][0].phone)});
+              return;
+            }
+
+        } // end else
+
+    }); // end query
+
+}); // end router post adminStartContest
 
 // -------------------------------------------------------------
 // Start Helper function section - Not express routes ----------
@@ -2803,11 +2854,14 @@ function send_text_alerts(rows)
   var i;
   var decodedMessage;
 
+  // used for contests
+  var dt = new Date(Date.now());
+  dt.setMinutes( dt.getMinutes() + 20 ); // 20 minutes for all contests
+
   for (i=0; i<rows[0].length-1; i++)
   {
       switch(rows[0][i+1].eventCode)
       {
-
           case EVENT_ASSASSINATION:
             console.log("Your Team has made a successful assassination!");
             decodedMessage = "Your Team has made a successful assassination! Log into Assassin to view your new Target.";
@@ -2906,6 +2960,32 @@ function send_text_alerts(rows)
             case EVENT_MARK_NIGHT_END:
               console.log("Night end");
               decodedMessage = "Assassin has ended for the night.";
+              break;
+
+            case CONTEST_NEXT_KILL:
+              console.log("Contest next kill");
+              decodedMessage = "Bonus! Next assassination +1 bounty. Expires " + formatDate(dt);
+              console.log(decodedMessage);
+              break;
+
+            case CONTEST_NEXT_CELEB_TARGET:
+              console.log("Contest next celeb target");
+              decodedMessage = "Bonus! Next Celebritarian assassinated +1 bounty. Expires " + formatDate(dt);
+              break;
+
+            case CONTEST_NEXT_CELEB_ASSASSIN:
+              console.log("The Assassin Game has ended!");
+              decodedMessage = "Bonus! Next assassination by a Celebritarian +1 bounty. Expires " + formatDate(dt);
+              break;
+
+            case CONTEST_FIRST_MORNING_KILL:
+              console.log("Your Team has been moved to the Waiting Area!");
+              decodedMessage = "Bonus! First assassination today +1 bounty. Doesn't expire.";
+              break;
+
+            case CONTEST_LAST_NIGHT_KILL:
+              console.log("Morning start.");
+              decodedMessage = "Bonus! Last assassination tonight +1 bounty.";
               break;
 
           default:
@@ -3060,6 +3140,7 @@ router.post('/cronManager', function(req, res, next)
     var gameEndTime;
     var morningStartTime;
     var nightEndTime;
+    var currContest = 0;
 
     // Call stored procedure to get game settings
     dbConn.query('CALL `assassin`.`system_get_game_settings_for_cron`()', function(err,rows)
@@ -3095,6 +3176,10 @@ router.post('/cronManager', function(req, res, next)
                     console.log("Night end time: " + rows[0][i].value);
                     nightEndTime = rows[0][i].value;
                     break;
+                  case "contest-status":
+                    console.log("Contest status: " + rows[0][i].value);
+                    currContest = rows[0][i].value;
+                    break;
 
                   default:
 
@@ -3112,6 +3197,8 @@ router.post('/cronManager', function(req, res, next)
                   oneHourToGoCronScript: CRON_1_HOUR_TO_GO_SCRIPT_RUNNING,
                   checkHowManyPhotosCronScript: CRON_CHECK_MANY_PHOTOS_SCRIPT_RUNNING,
                   checkOldPhotosCronScript: CRON_CHECK_OLD_PHOTOS_SCRIPT_RUNNING,
+                  contestCheckerCronScript: CRON_BONUS_CONTEST_CHECKER_SCRIPT_RUNNING,
+                  currentContestRunning: currContest,
                   gameStart: gameStartTime,
                   gameEnd: gameEndTime,
                   morningStart: morningStartTime,
@@ -3366,6 +3453,24 @@ router.post('/systemStartCronScripts', function(req, res, next)
       {
         CRON_CHECK_OLD_PHOTOS_SCRIPT_RUNNING = 1;
         req.app.locals.checkOldPhotosCronScript = cron.schedule('* * * * *', () => checkOldPhotosCronFunction(req.body.checkOldPhotos));
+      }
+
+    }
+
+    // ------------------------------------
+    if (req.body.contestCheckerCheckbox == "on")
+    {
+      console.log("contestCheckerCheckbox is on");
+
+      // var cronString = "*****";  // every minute
+      //
+      // console.log("Final cron string is " + cronString);
+
+      // run every minute
+      if (CRON_BONUS_CONTEST_CHECKER_SCRIPT_RUNNING == 0)
+      {
+          CRON_BONUS_CONTEST_CHECKER_SCRIPT_RUNNING = 1;
+          req.app.locals.contestCheckerCronScript = cron.schedule('* * * * *', contestCheckerCronFunction);
       }
 
     }
@@ -3709,6 +3814,45 @@ function checkOldPhotosCronFunction(photoWaitTime)
 
   } // checkOldPhotosCronFunction
 
+  // ---------------------------
+  //
+  function contestCheckerCronFunction()
+  {
+      console.log('contestCheckerCronFunction started');
+
+      // call stored procedure
+      dbConn.query('CALL `assassin`.`system_check_for_contest_end`()', function(err,rows)
+      {
+          if(err)
+          {
+              console.log("MySQL error on contestCheckerCronFunction call: " + err.code + " - " + err.message);
+              // Render error page, passing in error data
+              res.render('errorMessagePage', {result: ERROR_MYSQL_SYSTEM_ERROR_ON_RPC});
+              return;
+          }
+          else
+          {
+              console.log("Successful contestCheckerCronFunction RPC call.");
+
+              console.log(rows);
+
+              // if (rows[0][0].phone == CALL_SUCCESS)
+              // {
+              //     console.log("Successful contestCheckerCronFunction return code.");
+              // }
+              // else
+              // {
+              //   // Render error page, passing in error code
+              //   res.render('errorMessagePage', {result: parseInt(rows[0][0].phone)});
+              //   return;
+              // }
+
+          } // end else
+
+      }); // end query
+
+    } // contestCheckerCronFunction
+
 // ------------------------------------------------------------
 //
 router.post('/systemStopCronScripts', function(req, res, next)
@@ -3807,8 +3951,19 @@ router.post('/systemStopCronScripts', function(req, res, next)
       if (CRON_CHECK_OLD_PHOTOS_SCRIPT_RUNNING == 1)
       {
         CRON_CHECK_OLD_PHOTOS_SCRIPT_RUNNING = 0;
-        console.log("Got here 2");
         req.app.locals.checkOldPhotosCronScript.stop();
+      }
+
+    }
+
+    if (req.body.contestCheckerCheckbox == "on")
+    {
+      console.log("contestCheckerCheckbox is on.  Going to try to stop the script now.");
+
+      if (CRON_BONUS_CONTEST_CHECKER_SCRIPT_RUNNING == 1)
+      {
+        CRON_BONUS_CONTEST_CHECKER_SCRIPT_RUNNING = 0;
+        req.app.locals.contestCheckerCronScript.stop();
       }
 
     }

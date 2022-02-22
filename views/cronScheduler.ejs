@@ -162,10 +162,58 @@
 
         <hr>
 
+				<div style="height: 3px;"></div>
+
+				<input type="checkbox" name="contestCheckerCheckbox" unchecked>&nbsp
+        Bonus Contest Checker
+        <div style="height: 5px;"></div>
+        <% if (contestCheckerCronScript == 1)
+        {%>
+            &nbsp&nbsp&nbsp&nbsp
+            Running
+        <%}
+        else
+        {%>
+            &nbsp&nbsp&nbsp&nbsp
+            Stopped
+        <%}%>
+
+        <hr>
+
+				<div style="height: 4px;"></div>
+
 					<div style="height: 2px;"></div>
 	        <input type="submit" class="btn btn-info" value="Start Scripts"/>
           <input type="submit" class="btn btn-info" formaction="systemStopCronScripts" onsubmit="return waitCursor()" value="Stop Scripts"/>
 	      </form>
+
+				<div style="height: 4px;"></div>
+
+				<hr>
+
+				Contest Running: <%= currentContestRunning %>
+        <div style="height: 4px;"></div>
+
+				<form autocomplete="off" action="adminStartContest" method="post" onsubmit="return waitCursor()" encType="multipart/form-data">
+						<div style="height: 12px;"></div>
+
+						Choose contest:&nbsp
+
+						<select name="contests">
+						  <option value="1">Next Kill</option>
+						  <option value="2">Next Celeb Target</option>
+						  <option value="3">Next Celeb Assassin</option>
+						  <option value="4">First Kill of Day</option>
+							<option value="5">Last Kill of Day</option>
+						</select>
+
+						<div style="height: 13px;"></div>
+
+	          <input type="submit" class="btn btn-info"
+						value="Start Contest"/>
+	      </form>
+
+				<div style="height: 4px;"></div>
 
 	  </div>
 
