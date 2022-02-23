@@ -3187,6 +3187,8 @@ router.post('/cronManager', function(req, res, next)
 
             } // end for loop
 
+            console.log("Contest is " + currContest);
+            
             res.render('cronScheduler',
                 {
                   gameStartCronScript: CRON_START_GAME_SCRIPT_RUNNING,
