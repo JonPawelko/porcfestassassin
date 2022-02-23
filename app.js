@@ -96,7 +96,6 @@ global.CONTEST_NEXT_KILL = 1001;
 global.CONTEST_NEXT_CELEB_TARGET = 1002;
 global.CONTEST_NEXT_CELEB_ASSASSIN = 1003;
 global.CONTEST_FIRST_MORNING_KILL = 1004;
-global.CONTEST_LAST_NIGHT_KILL = 1005;	// not implemented yet
 
 // Global Error Code constants
 global.ERROR_ALREADY_REGISTERED = 100;

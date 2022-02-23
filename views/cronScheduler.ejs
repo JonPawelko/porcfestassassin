@@ -191,20 +191,60 @@
 
 				<hr>
 
-				Contest Running: <%= currentContestRunning %>
+				Active Contest:&nbsp
+
+				<% 	switch(currentContestRunning)
+						{
+							case "0":
+									%>
+										None
+									<%
+									break;
+
+							case "1":
+									%>
+										Next Kill
+									<%
+									break;
+
+								case "2":
+										%>
+											Next Celebritarian Target
+										<%
+										break;
+
+								case "3":
+										%>
+											Next Celebritarian Assassin
+										<%
+										break;
+
+								case "4":
+											%>
+												First Kill of Day
+											<%
+											break;
+
+								default:
+								%>
+										Contest Error
+								<%
+								break;
+
+						}%>
+
         <div style="height: 4px;"></div>
 
 				<form autocomplete="off" action="adminStartContest" method="post" onsubmit="return waitCursor()" encType="multipart/form-data">
 						<div style="height: 12px;"></div>
 
-						Choose contest:&nbsp
+						Choose Contest:&nbsp
 
 						<select name="contests">
 						  <option value="1">Next Kill</option>
 						  <option value="2">Next Celeb Target</option>
 						  <option value="3">Next Celeb Assassin</option>
 						  <option value="4">First Kill of Day</option>
-							<option value="5">Last Kill of Day</option>
 						</select>
 
 						<div style="height: 13px;"></div>
