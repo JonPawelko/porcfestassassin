@@ -308,23 +308,27 @@
 
 								<div style="height: 18px;"></div>
 
+								<form action="assassinLogout" method="post"onsubmit="return waitCursor()">
+									<input type="hidden" name="myPlayerCode" value="<%= playerCode %>">
+									<input type="hidden" name="myTeamCode" value="<%= playerTeamCode %>">
+									<input type="submit" class="btn btn-info" value="Logout"/>
+									&nbsp&nbsp&nbsp&nbsp&#8201
+									<input type="submit" class="btn btn-info" formaction="viewTeamHistory" value="View Team History" onsubmit="return waitCursor()"/>
+								</form>
+
+								<div style="height: 4px;"></div>
+								<hr>
+								<div style="height: 2px;"></div>
+
 								<form action="quitGame" onsubmit="return confirmChoice(<%= CONFIRM_QUIT %>)" method="post">
 										<input type="hidden" name="myPlayerCode" value="<%= playerCode %>">
 										<input type="hidden" name="myTeamCode" value="<%= playerTeamCode %>">
 										<input type="submit" class="btn btn-info" value="Quit Game"/>
 								</form>
 
-								<div style="height: 18px;"></div>
-
-								<form action="assassinLogout" method="post"onsubmit="return waitCursor()">
-									<input type="hidden" name="myPlayerCode" value="<%= playerCode %>">
-									<input type="hidden" name="myTeamCode" value="<%= playerTeamCode %>">
-									<input type="submit" class="btn btn-info" value="Logout"/>
-								</form>
-
 					<% } %>
 
-					<div style="height: 10px;"></div>
+					<div style="height: 6px;"></div>
 
 				</div>
 
