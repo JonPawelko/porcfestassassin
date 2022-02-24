@@ -2617,6 +2617,52 @@ router.post('/viewRules', function(req, res, next)
 
 });  // end router - viewRules
 
+
+
+// -------------------------------------------------------------
+// viewTeamHistory called by player to view their teams history
+
+router.post('/viewTeamHistory', function(req, res, next)
+{
+    console.log("Got into viewTeamHistory call");
+
+    // Check authentication status
+    if (!req.oidc.isAuthenticated())
+    {
+        console.log("Not authenticated");
+        res.render('landing');
+        return;
+    }
+
+    // validate team code and player code here zzz
+
+    // Call stored procedure to search for the player
+    dbConn.query('CALL `assassin`.`get_team_history`(?,?)', [req.body.myTeamCode, req.body.myPlayerCode], function(err,rows)
+    {
+        if(err)
+        {
+            console.log("MySQL error on get_team_history call: " + err.code + " - " + err.message);
+            // Render error page, passing in error data
+            res.render('errorMessagePage', {result: ERROR_MYSQL_SYSTEM_ERROR_ON_RPC});
+            return;
+        } else
+        {
+            // get_team_history worked, now inspect data
+            console.log("get_team_history successful rpc call.");
+
+            // show the rows
+            res.render('viewHistory',
+            {
+                eventRecords: rows[0]
+            });
+
+        } // end else rpc worked
+
+    });  // end db query
+
+});  // end router - viewRget_team_historyules
+
+
 // --------------------------------------------------------------------------------
 // Route called by player to start the contact admin process
 // ---------------------------------------------------------------------------------
@@ -3188,7 +3234,7 @@ router.post('/cronManager', function(req, res, next)
             } // end for loop
 
             console.log("Contest is " + currContest);
-            
+
             res.render('cronScheduler',
                 {
                   gameStartCronScript: CRON_START_GAME_SCRIPT_RUNNING,
