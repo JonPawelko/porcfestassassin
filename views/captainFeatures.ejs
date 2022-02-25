@@ -108,10 +108,10 @@
                           <% if ((paypalFlag == 1) && (teamBountiesOwed == 0))
                               {
                           %>
-                                  Pay again through Paypal and you will be credited with a bounty and can then Rebuy.
+                                  Pay $5 through Paypal and you will be credited with a bounty and can then Rebuy.
                                   <div style="height: 14px;"></div>
 
-                                  <%- include('paypal'); %>
+                                  <%- include('paypalRebuy'); %>
                                   <div style="height: 6px;"></div>
 
                           <% } %>
@@ -136,13 +136,23 @@
 
                             if (paypalFlag == 1)
                             {
+                              if (playerCelebStatus == 1)
+                              {
                             %>
-                                <hr>
-                                <%- include('paypal'); %>
-                                <div style="height: 6px;"></div>
-                            <%
+                                  <hr>
+                                  Pay $5 Celebritarian Fee through Paypal:
+                                  <div style="height: 14px;"></div>
+                                  <%- include('paypalInitialCeleb'); %>
+                                  <div style="height: 6px;"></div>
+                            <%} else
+                              {%>
+                                  <hr>
+                                  Pay $10 Team Fee through Paypal:
+                                  <%- include('paypalInitialRegular'); %>
+                                  <div style="height: 6px;"></div>
+                            <%}
                             }
-                                break;
+                            break;
 
         							default:
         						    // code block
