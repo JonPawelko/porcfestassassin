@@ -90,6 +90,7 @@ global.EVENT_MARK_TEAM_ACTIVATED = 22;
 global.EVENT_MORNING_START = 23;
 global.EVENT_MARK_NIGHT_END = 24;
 global.EVENT_ADMIN_MESSAGE = 25;
+global.EVENT_ONE_TEAM_LEFT = 26;
 
 // Global contest codes
 global.CONTEST_NEXT_KILL = 1001;
