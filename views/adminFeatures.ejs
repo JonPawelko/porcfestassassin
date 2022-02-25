@@ -4,7 +4,10 @@
 <div class="card" style="width:21rem;">
 
   <div class="card-header">
-    Admin Features
+    <div style="height: 1px;"></div>
+    Welcome to Assassin Admin
+    <div style="height: 3px;"></div>
+    Game Status: <%= gameStatus %>
     <div style="height: 4px;"></div>
   </div>
 
@@ -44,21 +47,30 @@
 
         <div style="height: 5px;"></div>
 
-        <form autocomplete="off" action="adminDropBomb" onsubmit="return confirmChoice()" method="post" encType="multipart/form-data">
-            <input type="submit" class="btn btn-info" value="Drop Bomb"/>
+
+        <form autocomplete="off" action="adminBulkPictureApprove" method="post" encType="multipart/form-data">
+            <input type="submit" class="btn btn-info" value="Bulk Picture Approve"/>
             &nbsp&nbsp&nbsp
-            <input type="submit" class="btn btn-info" formaction="adminBulkPictureApprove" onsubmit="return waitCursor()" value="Bulk Picture Approve"/>
+            <input type="submit" class="btn btn-info" formaction="viewRules" value="View Rules"/>
 
             <div style="height: 20px;"></div>
             <input type="submit" class="btn btn-info" formaction="adminShowCreatePrepsPage" onsubmit="return waitCursor()" value="Create Prep Templates"/>
             &nbsp&nbsp&nbsp&nbsp
             <input type="submit" class="btn btn-info" formaction="resetDatabase" onsubmit="return waitCursor()" value="Reset DB"/>
-
             <div style="height: 20px;"></div>
-            <input type="submit" class="btn btn-info" formaction="assassinLogout" value="Logout"/>
-            &nbsp&nbsp&nbsp
-            <input type="submit" class="btn btn-info" formaction="viewRules" value="View Rules"/>
+
         </form>
+
+        <form autocomplete="off" action="adminDropBomb" onsubmit="return confirmChoice(<%= CONFIRM_BOMB %>)" method="post" encType="multipart/form-data">
+            <input type="submit" class="btn btn-info" value="Drop Bomb"/>
+        </form>
+
+        <div style="height: 20px;"></div>
+
+        <form autocomplete="off" action="assassinLogout" method="post" encType="multipart/form-data">
+            <input type="submit" class="btn btn-info" value="Logout"/>
+        </form>
+
 
         <div style="height: 4px;"></div>
 

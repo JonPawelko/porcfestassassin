@@ -31,7 +31,7 @@ var dbConn  = require('./lib/db');   // database object
 // var logger = require('morgan');
 // var flash = require('express-flash'); - stopped using
 
-// Global Confirm Code constants
+// Global Code constants
 global.STRING_LENGTH = 45;  // set 45 char length for strings in mysql
 global.ONE_PHOTO = "one";
 global.MORE_THAN_ONE_PHOTO = "more";
@@ -63,6 +63,7 @@ global.CONFIRM_RETURN_BREAK = 4;
 global.CONFIRM_QUIT = 5;
 global.CONFIRM_REMOVE_PHONE = 6;
 global.CONFIRM_FORCE_SHIFT = 7;
+global.CONFIRM_BOMB = 8;
 
 // Global Event Code constants for Alerts
 global.EVENT_ASSASSINATION = 1;
