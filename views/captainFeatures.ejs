@@ -104,8 +104,19 @@
                       case "Inactive":
                           %>
                               <hr>
-                              <%- include('paypal'); %>
-                              <div style="height: 16px;"></div>
+
+                          <% if ((paypalFlag == 1) && (teamBountiesOwed == 0))
+                              {
+                          %>
+                                  Pay again through Paypal and you will be credited with a bounty and can then Rebuy.
+                                  <div style="height: 14px;"></div>
+
+                                  <%- include('paypal'); %>
+                                  <div style="height: 6px;"></div>
+
+                          <% } %>
+
+                              <div style="height: 6px;"></div>
                           <%
                             if (teamBountiesOwed >= 1)
                             {
@@ -128,7 +139,7 @@
                             %>
                                 <hr>
                                 <%- include('paypal'); %>
-                                <div style="height: 8px;"></div>
+                                <div style="height: 6px;"></div>
                             <%
                             }
                                 break;
