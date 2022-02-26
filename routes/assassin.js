@@ -2651,7 +2651,7 @@ router.post('/viewTeamHistory', function(req, res, next)
         {
             // get_team_history worked, now inspect data
             console.log("get_team_history successful rpc call.");
-
+            console.log(rows);
             // show the rows
             res.render('viewHistory',
             {
