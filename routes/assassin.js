@@ -180,7 +180,7 @@ router.get('/', function(req, res, next) {
                               } else
                               {
                                   console.log("Successful Get Teammate Info RPC call.");
-                                  console.log(rows2[0]);
+                                  console.log("Paypal flag: " + PAYPAL_FLAG);                                console.log()
 
                                   // not going to do addl error checking here. We already know this player has at least 1 teammate.
 
@@ -235,6 +235,8 @@ router.get('/', function(req, res, next) {
                       }
                       else // Player has no teammates, don't send data that defaults to the Captain
                       {
+                          console.log("Paypal flag: " + PAYPAL_FLAG);                                console.log()
+
                           res.render('home', {
                           adminPlayerCode: CREDENTIALS.ADMIN_PLAYER_CODE,
                           paypalFlag: PAYPAL_FLAG,
