@@ -105,7 +105,7 @@
                           %>
                               <hr>
 
-                          <% if ((paypalFlag == 1) && (teamBountiesOwed == 0))
+                          <% if ((paypalFlag != "Paypal Off") && (teamBountiesOwed == 0))
                               {
                           %>
                                   Pay $5 through Paypal and you will be credited with a bounty and can then Rebuy. Paypal email must match Assassin email.
@@ -134,7 +134,7 @@
                         case "Registered":
                         case "Pics Approved":
 
-                            if (paypalFlag == 1)
+                            if (paypalFlag != "Paypal Off")
                             {
                               if (playerCelebStatus == 1)
                               {
@@ -147,7 +147,7 @@
                             <%} else
                               {%>
                                   <hr>
-                                  Pay $10 Team Fee through Paypal (Paypal email must match Assassin email.:
+                                  Pay $10 Team Fee through Paypal (Paypal email must match Assassin email):
                                   <%- include('paypalInitialRegular'); %>
                                   <div style="height: 6px;"></div>
                             <%}

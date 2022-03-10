@@ -34,7 +34,7 @@
 							<li>No assassinations are valid overnight between 9 PM and 9 AM.</li>
 							<li>Contact the Admin through the website after reading through these rules if you have any questions.</li>
 
-							<% if (paypalFlag == 1)
+							<% if (paypalFlag != "Paypal Off")
 								{ %>
 									<li>Players can register, upload their photo, and pay for their Team ($10) at any time without Admin assistance or you can register in person with the Admin at Porcfest.  Team fees will be refunded if the team doesn’t play.</li>
 						<% 	} else
@@ -69,7 +69,7 @@
 							<li>Please try to mediate disagreements between assassin and target before involving the Admin.</li>
 							<li>Assassin will not share any player data.</li>
 
-							<% if (paypalFlag == 1)
+							<% if (paypalFlag != "Paypal Off")
 								{ %>
 									<li>Paypal's acceptable use policy: <a href="https://www.paypal.com/en/webapps/mpp/ua/acceptableuse-full" target="_blank">Acceptable Use</a></li>
 								<% 	} %>
