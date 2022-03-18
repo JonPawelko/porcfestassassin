@@ -3536,7 +3536,6 @@ router.post('/systemStartCronScripts', function(req, res, next)
 function startGameCronFunction()
 {
     console.log('startGameCronFunction started');
-    return;
 
     // call stored procedure
     dbConn.query('CALL `assassin`.`system_start_game`()', function(err,rows)
@@ -3578,8 +3577,7 @@ function startGameCronFunction()
 function endGameCronFunction()
 {
     console.log('endGameCronFunction started');
-    return;
-
+    
     // call stored procedure
     dbConn.query('CALL `assassin`.`system_end_game`()', function(err,rows)
     {

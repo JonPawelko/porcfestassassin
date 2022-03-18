@@ -80,13 +80,6 @@
 
         <form autocomplete="off" action="cronManager" method="post" onsubmit="return waitCursor()" encType="multipart/form-data">
             <input type="submit" class="btn btn-info" value="Cron Scheduler"/>
-            <div style="height: 16px;"></div>
-        </form>
-
-        <form autocomplete="off" action="systemCheckForceShiftChange" onsubmit="return confirmChoice(<%= CONFIRM_FORCE_SHIFT %>)" method="post" encType="multipart/form-data">
-            Hours To Go: <input type="search" size="1" name="hoursToGo" value="2" autocomplete="off">
-            &nbsp&nbsp
-            <input type="submit" class="btn btn-info" value="Force Shifts"/>
             <div style="height: 2px;"></div>
         </form>
 
