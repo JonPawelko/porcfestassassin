@@ -7,16 +7,14 @@ var CONFIRM_REMOVE_PHONE = 6;
 var CONFIRM_FORCE_SHIFT = 7;
 var CONFIRM_BOMB = 8;
 
-//
-// document.addEventListener("keypress", function(event) {
-// 	console.log("Key pressed");
-// });
+// -----------------------------------------------------------------
 
-// Shift-L on any page logs out User
-addEventListener('keydown', function (event) {
-    if (event.shiftKey && event.code === 'KeyL') {
-        window.location.href = '/logout';
-    }
+// Control-l (little l), logs off user from any screen`
+document.addEventListener('keydown', e => {
+  if (e.ctrlKey && e.key === 'l') {
+    e.preventDefault();
+    window.location.href = '/logout';
+  }
 });
 
 // -------------------------------------------

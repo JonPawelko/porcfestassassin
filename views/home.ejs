@@ -203,7 +203,22 @@
 
 					<% if (teamStatus != "0") { %>
 
-						My Last Shift:  <%= myLastShiftTimeStamp %>
+						My Last Shift:
+
+						<%
+								var g1 = new Date(myLastShiftTimeStamp);
+								var g2 = new Date("2000-01-01 00:00:00");
+						    if (g1.getTime() === g2.getTime())
+								{ %>
+
+						 <% }
+						    else
+								{ %>
+
+									<%= myLastShiftTimeStamp %>
+
+							<% } %>
+
 						<div style="height: 9px;"></div>
 
 						Your Team Name:  <%= playerTeamName %>
@@ -214,13 +229,32 @@
 
 						Team Shift Start:
 							<%
-									if (numTeammates == 0)
-							{%>
-									<%= myLastShiftTimeStamp %>
-							<%}	else
-							{%>
-								<%= teamCurrentShiftStart %>
-							<%}%>
+								if (numTeammates == 0)
+								{
+										var g1 = new Date(myLastShiftTimeStamp);
+										var g2 = new Date("2000-01-01 00:00:00");
+								    if (g1.getTime() === g2.getTime())
+										{ %>
+
+								 <% }
+								    else
+										{ %>
+											<%= myLastShiftTimeStamp %>
+									<% }
+
+							}	else
+							{
+								var g1 = new Date(teamCurrentShiftStart);
+								var g2 = new Date("2000-01-01 00:00:00");
+								if (g1.getTime() === g2.getTime())
+								{ %>
+
+								<% }
+								else
+								{ %>
+									<%= teamCurrentShiftStart %>
+								<% }
+							}%>
 
 							<div style="height: 9px;"></div>
 
