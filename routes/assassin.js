@@ -2727,14 +2727,17 @@ router.post('/sendAdminMessage', function(req, res, next)
             // Combine all info into 1 text for admin
             var tempMessage = req.body.playerName + " - " + req.body.playerCode + " - " +  req.body.message + " - " + tempPlayerPhone;
 
-            // Send text
-            twilio.messages.create(
-              {
-                 body: tempMessage,
-                 from: CREDENTIALS.TWILIO_PHONE_NUMBER,
-                 to: rows[0][0].adminPhone
-              })
-            .then(message => console.log("Twilio return sid: " + message.sid));
+            if (TWILIO_FLAG == TWILIO_PROD)
+            {
+              // Send text
+              twilio.messages.create(
+                {
+                   body: tempMessage,
+                   from: CREDENTIALS.TWILIO_PHONE_NUMBER,
+                   to: rows[0][0].adminPhone
+                })
+              .then(message => console.log("Twilio return sid: " + message.sid));
+            }
 
             // Log event to DB just in case Admin doesn't get the text
             dbConn.query('CALL `assassin`.`log_event`(?,?,?,?,?,?)', [EVENT_ADMIN_MESSAGE, req.body.playerCode, 0, 0, 0, 0], function(err,rows)
@@ -3043,13 +3046,16 @@ function send_text_alerts(rows)
             decodedMessage = "Assassin event, log in to view any changes.";
         }
 
-      // twilio.messages
-      //   .create({
-      //      body: decodedMessage,
-      //      from: CREDENTIALS.TWILIO_PHONE_NUMBER,
-      //      to: rows[0][i+1].phone
-      //  })
-      // .then(message => console.log(message.sid));
+        if (TWILIO_FLAG == TWILIO_PROD)
+        {
+            twilio.messages
+              .create({
+                 body: decodedMessage,
+                 from: CREDENTIALS.TWILIO_PHONE_NUMBER,
+                 to: rows[0][i+1].phone
+             })
+            .then(message => console.log(message.sid));
+        }
 
     } // end for loop
 }
@@ -3577,7 +3583,7 @@ function startGameCronFunction()
 function endGameCronFunction()
 {
     console.log('endGameCronFunction started');
-    
+
     // call stored procedure
     dbConn.query('CALL `assassin`.`system_end_game`()', function(err,rows)
     {
@@ -3802,16 +3808,18 @@ function checkHowManyPhotosCronFunction(maxPhotos)
 
             if (rows[0][0].numPhotosWaiting >= maxPhotos)
             {
+                console.log("Text sent to admin");
 
-              console.log("Text sent to admin");
-
-              // twilio.messages
-              // .create({
-              //      body: rows[0][0].numPhotosWaiting + " photos require approval."
-              //      from: CREDENTIALS.TWILIO_PHONE_NUMBER,
-              //      to: rows[0][0].adminPhone
-              //  })
-              // .then(message => console.log(message.sid));
+                if (TWILIO_FLAG == TWILIO_PROD)
+                {
+                  twilio.twilio.messages
+                  .create({
+                       body: rows[0][0].numPhotosWaiting + " photos require approval.",
+                       from: CREDENTIALS.TWILIO_PHONE_NUMBER,
+                       to: rows[0][0].adminPhone
+                   })
+                  .then(message => console.log(message.sid));
+                }
             }
 
         } // end else
@@ -3848,15 +3856,17 @@ function checkOldPhotosCronFunction(photoWaitTime)
 
               console.log("Text sent to admin");
 
-              // twilio.messages
-              // .create({
-              //      body: rows[0][0].checkOldPhotos + " old photos require approval."
-              //      from: CREDENTIALS.TWILIO_PHONE_NUMBER,
-              //      to: rows[0][0].adminPhone
-              //  })
-              // .then(message => console.log(message.sid));
+              if (TWILIO_FLAG == TWILIO_PROD)
+              {
+                twilio.messages
+                .create({
+                     body: rows[0][0].checkOldPhotos + " old photos require approval.",
+                     from: CREDENTIALS.TWILIO_PHONE_NUMBER,
+                     to: rows[0][0].adminPhone
+                 })
+                .then(message => console.log(message.sid));
+              }
             }
-
 
         } // end else
 

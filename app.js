@@ -140,7 +140,11 @@ global.PAYPAL_OFF = "Paypal Off";
 global.PAYPAL_TEST = "Paypal Test";
 global.PAYPAL_PROD = "Paypal Production";
 
+global.TWILIO_OFF = "Twilio Off";
+global.TWILIO_PROD = "Twilio Production";
+
 global.PAYPAL_FLAG = PERSONAL_ENV.PAYPAL_ENVIRONMENT;
+global.TWILIO_FLAG = PERSONAL_ENV.TWILIO_ENVIRONMENT;
 
 const { auth } = require('express-openid-connect');
 
