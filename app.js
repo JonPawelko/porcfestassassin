@@ -21,7 +21,7 @@ var path = require('path');
 var session = require('express-session');
 var mysql = require('mysql2');
 var assassinRouter = require('./routes/assassin');
-const myCronModule = require(__dirname + '/public/javascripts/cronScripts.js');
+// const myCronModule = require(__dirname + '/public/javascripts/cronScripts.js');
 const cron = require('node-cron');
 var dbConn  = require('./lib/db');   // database object
 
