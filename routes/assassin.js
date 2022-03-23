@@ -3537,7 +3537,9 @@ router.post('/systemStartCronScripts', function(req, res, next)
 
 }); // end systemStartCronScripts
 
-// ---------------------------
+// -------------------------------------------------------------------------
+// Start individual cron functions -----------------------------------------
+// -------------------------------------------------------------------------
 
 function startGameCronFunction()
 {
@@ -3547,10 +3549,8 @@ function startGameCronFunction()
     dbConn.query('CALL `assassin`.`system_start_game`()', function(err,rows)
     {
         if(err)
-        {   // zzz
-            console.log("MySQL error on system_start_game call: " + err.code + " - " + err.message);
-            // Render error page, passing in error data
-            res.render('errorMessagePage', {result: ERROR_MYSQL_SYSTEM_ERROR_ON_RPC});
+        {
+            console.log("MySQL error on Cron system_start_game call: " + err.code + " - " + err.message);
             return;
         }
         else
@@ -3567,8 +3567,7 @@ function startGameCronFunction()
             }
             else
             {
-              // Render error page, passing in error code
-              res.render('errorMessagePage', {result: parseInt(rows[0][0].phone)});
+              console.log("Cron error code on system_start_game RPC call: " + rows[0][0].phone);
               return;
             }
 
@@ -3588,15 +3587,13 @@ function endGameCronFunction()
     dbConn.query('CALL `assassin`.`system_end_game`()', function(err,rows)
     {
         if(err)
-        { // zzz
-            console.log("MySQL error on system_end_game call: " + err.code + " - " + err.message);
-            // Render error page, passing in error data
-            res.render('errorMessagePage', {result: ERROR_MYSQL_SYSTEM_ERROR_ON_RPC});
+        {
+            console.log("MySQL error on Cron system_end_game call: " + err.code + " - " + err.message);
             return;
         }
         else
         {
-            console.log("Successful endGameCronFunction RPC call.");
+            console.log("Successful system_end_game RPC call.");
             console.log(rows);
 
             if (rows[0][0].phone == CALL_SUCCESS)
@@ -3608,8 +3605,7 @@ function endGameCronFunction()
             }
             else
             {
-              // Render error page, passing in error code
-              res.render('errorMessagePage', {result: parseInt(rows[0][0].phone)});
+              console.log("Cron error code on system_end_game RPC call: " + rows[0][0].phone);
               return;
             }
 
@@ -3623,22 +3619,19 @@ function endGameCronFunction()
 
 function morningStartCronFunction()
 {
-    console.log('morningStartCronFunction started');
-    return;
+    console.log('morningStartCronFunction started');  // zzzz
 
     // call stored procedure
     dbConn.query('CALL `assassin`.`system_morning_start`()', function(err,rows)
     {
         if(err)
         {
-            console.log("MySQL error on system_morning_start call: " + err.code + " - " + err.message);
-            // Render error page, passing in error data
-            res.render('errorMessagePage', {result: ERROR_MYSQL_SYSTEM_ERROR_ON_RPC});
+            console.log("MySQL error on Cron system_morning_start call: " + err.code + " - " + err.message);
             return;
         }
         else
         {
-            console.log("Successful morningStartCronFunction RPC call.");
+            console.log("Successful system_morning_start RPC call.");
             console.log(rows);
 
             if (rows[0][0].phone == CALL_SUCCESS)
@@ -3650,8 +3643,7 @@ function morningStartCronFunction()
             }
             else
             {
-              // Render error page, passing in error code
-              res.render('errorMessagePage', {result: parseInt(rows[0][0].phone)});
+              console.log("Cron error code on system_morning_start RPC call: " + rows[0][0].phone);
               return;
             }
 
@@ -3672,14 +3664,12 @@ function nightEndCronFunction()
     {
         if(err)
         {
-            console.log("MySQL error on system_night_end call: " + err.code + " - " + err.message);
-            // Render error page, passing in error data
-            res.render('errorMessagePage', {result: ERROR_MYSQL_SYSTEM_ERROR_ON_RPC});
+            console.log("MySQL error on Cron system_night_end call: " + err.code + " - " + err.message);
             return;
         }
         else
         {
-            console.log("Successful nightEndCronFunction RPC call.");
+            console.log("Successful system_night_end RPC call.");
             console.log(rows);
 
             if (rows[0][0].phone == CALL_SUCCESS)
@@ -3691,8 +3681,7 @@ function nightEndCronFunction()
             }
             else
             {
-              // Render error page, passing in error code
-              res.render('errorMessagePage', {result: parseInt(rows[0][0].phone)});
+              console.log("Cron error code on system_night_end RPC call: " + rows[0][0].phone);
               return;
             }
 
@@ -3713,14 +3702,12 @@ function twoHoursToGoCronFunction()
     {
         if(err)
         {
-            console.log("MySQL error on system_check_for_forced_shift_changes call: " + err.code + " - " + err.message);
-            // Render error page, passing in error data
-            res.render('errorMessagePage', {result: ERROR_MYSQL_SYSTEM_ERROR_ON_RPC});
+            console.log("MySQL error on Cron system_check_for_forced_shift_changes call: " + err.code + " - " + err.message);
             return;
         }
         else
         {
-            console.log("Successful twoHoursToGoCronFunction RPC call.");
+            console.log("Successful system_check_for_forced_shift_changes2 RPC call.");
             console.log(rows);
 
             if (rows[0][0].phone == CALL_SUCCESS)
@@ -3732,8 +3719,7 @@ function twoHoursToGoCronFunction()
             }
             else
             {
-              // Render error page, passing in error code
-              res.render('errorMessagePage', {result: parseInt(rows[0][0].phone)});
+              console.log("Cron error code on system_check_for_forced_shift_changes2 RPC call: " + rows[0][0].phone);
               return;
             }
 
@@ -3754,14 +3740,12 @@ function oneHourToGoCronFunction()
     {
         if(err)
         {
-            console.log("MySQL error on system_check_for_forced_shift_changes call: " + err.code + " - " + err.message);
-            // Render error page, passing in error data
-            res.render('errorMessagePage', {result: ERROR_MYSQL_SYSTEM_ERROR_ON_RPC});
+            console.log("MySQL error on Cron system_check_for_forced_shift_changes call: " + err.code + " - " + err.message);
             return;
         }
         else
         {
-            console.log("Successful oneHourToGoCronFunction RPC call.");
+            console.log("Successful system_check_for_forced_shift_changes1 RPC call.");
             console.log(rows);
 
             if (rows[0][0].phone == CALL_SUCCESS)
@@ -3773,8 +3757,7 @@ function oneHourToGoCronFunction()
             }
             else
             {
-              // Render error page, passing in error code
-              res.render('errorMessagePage', {result: parseInt(rows[0][0].phone)});
+              console.log("Cron error code on system_check_for_forced_shift_changes1 RPC call: " + rows[0][0].phone);
               return;
             }
 
@@ -3796,14 +3779,12 @@ function checkHowManyPhotosCronFunction(maxPhotos)
     {
         if(err)
         {
-            console.log("MySQL error on system_check_how_many_photos call: " + err.code + " - " + err.message);
-            // Render error page, passing in error data
-            res.render('errorMessagePage', {result: ERROR_MYSQL_SYSTEM_ERROR_ON_RPC});
+            console.log("MySQL error on Cron system_check_how_many_photos call: " + err.code + " - " + err.message);
             return;
         }
         else
         {
-            console.log("Successful checkHowManyPhotosCronFunction RPC call.");
+            console.log("Successful system_check_how_many_photos RPC call.");
             console.log(rows[0][0].numPhotosWaiting + " photos waiting for approval.");
 
             if (rows[0][0].numPhotosWaiting >= maxPhotos)
@@ -3840,14 +3821,12 @@ function checkOldPhotosCronFunction(photoWaitTime)
     {
         if(err)
         {
-            console.log("MySQL error on system_check_old_photos call: " + err.code + " - " + err.message);
-            // Render error page, passing in error data
-            res.render('errorMessagePage', {result: ERROR_MYSQL_SYSTEM_ERROR_ON_RPC});
+            console.log("MySQL error on Cron system_check_old_photos call: " + err.code + " - " + err.message);
             return;
         }
         else
         {
-            console.log("Successful checkOldPhotosCronFunction RPC call.");
+            console.log("Successful system_check_old_photos RPC call.");
             console.log(rows);
             console.log(rows[0][0].numOldPhotos + " old photos waiting for approval.");
 
@@ -3885,9 +3864,7 @@ function checkOldPhotosCronFunction(photoWaitTime)
       {
           if(err)
           {
-              console.log("MySQL error on contestCheckerCronFunction call: " + err.code + " - " + err.message);
-              // Render error page, passing in error data
-              res.render('errorMessagePage', {result: ERROR_MYSQL_SYSTEM_ERROR_ON_RPC});
+              console.log("MySQL error on Cron contestCheckerCronFunction call: " + err.code + " - " + err.message);
               return;
           }
           else
