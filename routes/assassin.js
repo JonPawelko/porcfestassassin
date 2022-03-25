@@ -3478,9 +3478,9 @@ router.post('/systemStartCronScripts', function(req, res, next)
     // ------------------------------------
     if (req.body.checkHowManyPhotosCheckbox == "on")
     {
-      console.log("checkHowManyPhotosCheckbox is on");
+      console.log("checkHowManyPhotosCheckbox is on for " + req.body.checkHowManyPhotos);
 
-      if (!Number.isInteger(req.body.checkHowManyPhotos) || (req.body.checkHowManyPhotos <= 0))
+      if (!Number.isInteger(parseInt(req.body.checkHowManyPhotos)) || (parseInt(req.body.checkHowManyPhotos) <= 0))
       {
           // Render error page, passing in error code
           res.render('errorMessagePage', {result: ERROR_INVALID_INTEGER_INPUT});
@@ -3500,7 +3500,7 @@ router.post('/systemStartCronScripts', function(req, res, next)
     {
       console.log("checkOldPhotosCheckbox is on");
 
-      if (!Number.isInteger(req.body.checkOldPhotosCheckbox) || (req.body.checkOldPhotosCheckbox <= 0))
+      if (!Number.isInteger(parseInt(req.body.checkOldPhotos)) || (parseInt(req.body.checkOldPhotos) <= 0))
       {
           // Render error page, passing in error code
           res.render('errorMessagePage', {result: ERROR_INVALID_INTEGER_INPUT});
