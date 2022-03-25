@@ -3315,9 +3315,24 @@ router.post('/systemStartCronScripts', function(req, res, next)
         CRON_START_GAME_SCRIPT_RUNNING = 1;
         req.app.locals.startGameCronScript = cron.schedule(cronString, startGameCronFunction);
         // req.app.locals.startGameCronScript = cron.schedule('*/10 * * * * *', startGameCronFunction);
-      }
 
-    }
+        dbConn.query('CALL `assassin`.`admin_update_game_data`(?,?)', ["game-start-time", req.body.startGameTimestamp], function(err,rows)
+        {
+            if(err)
+            {
+                console.log("MySQL error on admin_update_game_data CRON_START_GAME_SCRIPT_RUNNING call: " + err.code + " - " + err.message);
+                // Render error page, passing in error data
+                res.render('errorMessagePage', {result: ERROR_MYSQL_SYSTEM_ERROR_ON_RPC});
+                return;
+            } else
+            {
+                console.log("Successful admin_update_game_data CRON_START_GAME_SCRIPT_RUNNING RPC call.");
+            } // end else
+
+        }); // end query
+      } // end check cron script if
+
+    } // end if start game checkbox
 
     // ------------------------------------
     if (req.body.endGameCheckbox == "on")
@@ -3347,6 +3362,21 @@ router.post('/systemStartCronScripts', function(req, res, next)
       {
         CRON_END_GAME_SCRIPT_RUNNING = 1;
         req.app.locals.endGameCronScript = cron.schedule(cronString, endGameCronFunction);
+
+        dbConn.query('CALL `assassin`.`admin_update_game_data`(?,?)', ["game-end-time", req.body.endGameTimestamp], function(err,rows)
+        {
+            if(err)
+            {
+                console.log("MySQL error on admin_update_game_data CRON_END_GAME_SCRIPT_RUNNING call: " + err.code + " - " + err.message);
+                // Render error page, passing in error data
+                res.render('errorMessagePage', {result: ERROR_MYSQL_SYSTEM_ERROR_ON_RPC});
+                return;
+            } else
+            {
+                console.log("Successful admin_update_game_data CRON_END_GAME_SCRIPT_RUNNING RPC call.");
+            } // end else
+
+        }); // end query
       }
 
     }
@@ -3376,8 +3406,23 @@ router.post('/systemStartCronScripts', function(req, res, next)
       if (CRON_MORNING_START_SCRIPT_RUNNING == 0)
       {
         CRON_MORNING_START_SCRIPT_RUNNING = 1;
-        //req.app.locals.morningStartCronScript = cron.schedule('55 18 28-31 1 *', morningStartCronFunction);
         req.app.locals.morningStartCronScript = cron.schedule(cronString, morningStartCronFunction);
+
+        dbConn.query('CALL `assassin`.`admin_update_game_data`(?,?)', ["morning-start-time", req.body.morningStartTime], function(err,rows)
+        {
+            if(err)
+            {
+                console.log("MySQL error on admin_update_game_data CRON_MORNING_START_SCRIPT_RUNNING call: " + err.code + " - " + err.message);
+                // Render error page, passing in error data
+                res.render('errorMessagePage', {result: ERROR_MYSQL_SYSTEM_ERROR_ON_RPC});
+                return;
+            } else
+            {
+                console.log("Successful admin_update_game_data CRON_MORNING_START_SCRIPT_RUNNING RPC call.");
+            } // end else
+
+        }); // end query
+
       }
 
     }
@@ -3407,8 +3452,23 @@ router.post('/systemStartCronScripts', function(req, res, next)
       if (CRON_NIGHT_END_SCRIPT_RUNNING == 0)
       {
         CRON_NIGHT_END_SCRIPT_RUNNING = 1;
-        // req.app.locals.nightEndCronScript = cron.schedule('55 18 28-31 1 *', nightEndCronFunction);
         req.app.locals.nightEndCronScript = cron.schedule(cronString, nightEndCronFunction);
+
+        dbConn.query('CALL `assassin`.`admin_update_game_data`(?,?)', ["night-end-time", req.body.nightEndTime], function(err,rows)
+        {
+            if(err)
+            {
+                console.log("MySQL error on admin_update_game_data CRON_NIGHT_END_SCRIPT_RUNNING call: " + err.code + " - " + err.message);
+                // Render error page, passing in error data
+                res.render('errorMessagePage', {result: ERROR_MYSQL_SYSTEM_ERROR_ON_RPC});
+                return;
+            } else
+            {
+                console.log("Successful admin_update_game_data CRON_NIGHT_END_SCRIPT_RUNNING RPC call.");
+            } // end else
+
+        }); // end query
+
       }
 
     }
@@ -3439,7 +3499,6 @@ router.post('/systemStartCronScripts', function(req, res, next)
       {
           CRON_2_HOURS_TO_TO_SCRIPT_RUNNING = 1;
           req.app.locals.twoHoursToGoCronScript = cron.schedule(cronString, twoHoursToGoCronFunction);
-          //req.app.locals.twoHoursToGoCronScript = cron.schedule("47 10 1 2 *", twoHoursToGoCronFunction);
       }
 
     }
@@ -3470,7 +3529,6 @@ router.post('/systemStartCronScripts', function(req, res, next)
       {
           CRON_1_HOUR_TO_GO_SCRIPT_RUNNING = 1;
           req.app.locals.oneHourToGoCronScript = cron.schedule(cronString, oneHourToGoCronFunction);
-          // req.app.locals.oneHourToGoCronScript = cron.schedule("49 10 1 2 *", oneHourToGoCronFunction);
       }
 
     }
@@ -3519,10 +3577,6 @@ router.post('/systemStartCronScripts', function(req, res, next)
     if (req.body.contestCheckerCheckbox == "on")
     {
       console.log("contestCheckerCheckbox is on");
-
-      // var cronString = "*****";  // every minute
-      //
-      // console.log("Final cron string is " + cronString);
 
       // run every minute
       if (CRON_BONUS_CONTEST_CHECKER_SCRIPT_RUNNING == 0)
