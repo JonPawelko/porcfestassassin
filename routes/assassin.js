@@ -2499,6 +2499,130 @@ router.post('/adminDropBomb', function(req, res, next)
 }); // end post(drop bomb)
 
 // -------------------------------------------------------------
+
+// -------------------------------------------------------------
+// checkNotPaid called by admin to find teams that have registered, but not paid
+
+router.post('/checkNotPaid', function(req, res, next)
+{
+  console.log("Got into new checkNotPaid call");
+
+  // Check authentication status
+  if (!req.oidc.isAuthenticated())
+  {
+      console.log("Not authenticated");
+      res.render('landing');
+      return;
+  }
+
+  // Call stored procedure to search for the teams not paid
+  dbConn.query('CALL `assassin`.`admin_search_for_not_paid`()', function(err,rows)
+  {
+      if(err)
+      {
+          console.log("MySQL error on admin_search_for_not_paid call: " + err.code + " - " + err.message);
+          // Render error page, passing in error data
+          res.render('errorMessagePage', {result: ERROR_MYSQL_SYSTEM_ERROR_ON_RPC});
+          return;
+      } else
+      {
+          // admin_search_for_not_paid rpc worked
+          console.log("admin_search_for_not_paid successful rpc call.");
+
+          // Check results,
+          console.log(rows);
+
+          if (rows[0].length == 1)
+          {
+              // Only 1 team found, go to Team Home
+              res.render('adminTeamHome',
+              {
+                  teamCode: rows[0][0]['team-code'],
+                  teamName: rows[0][0]['team-name'],
+                  teamStatus: rows[0][0]['team-status'],
+                  bountiesOwed: rows[0][0]['bounties-owed'],
+                  captainCode: rows[0][0]['player-code'],
+                  captainName: rows[0][0]['player-name']
+              });
+
+          }
+          else
+          {
+              // more than 1 team found, show Team List
+              if (rows[0].length > 1)
+              {
+                  console.log("-----------------------");
+                  console.log(rows[0]);
+
+                  res.render('adminTeamListNotPaid',
+                  {
+                      teams: rows[0]
+                  });
+
+              }
+              else
+              {
+                  // Render error page, passing in error code
+                  res.render('errorMessagePage', {result: ERROR_TEAM_NOT_FOUND_OR_QUIT});
+                  return;
+              }
+
+          } // end else either 0 or more than 1 team found
+
+      } // end else successful rpc
+
+  }); // end stored proc call
+
+}); // end post(drop bomb)
+
+// -------------------------------------------------------------
+// sendNotPaidMessage called by admin to find teams that have registered, but not paid
+
+router.post('/sendNotPaidMessage', function(req, res, next)
+{
+  console.log("Got into new sendNotPaidMessage call");
+
+  // Check authentication status
+  if (!req.oidc.isAuthenticated())
+  {
+      console.log("Not authenticated");
+      res.render('landing');
+      return;
+  }
+
+  // Call stored procedure to search for the teams not paid
+  dbConn.query('CALL `assassin`.`admin_search_for_not_paid`()', function(err,rows)
+  {
+      if(err)
+      {
+          console.log("MySQL error on admin_search_for_not_paid call: " + err.code + " - " + err.message);
+          // Render error page, passing in error data
+          res.render('errorMessagePage', {result: ERROR_MYSQL_SYSTEM_ERROR_ON_RPC});
+          return;
+      } else
+      {
+          // admin_search_for_not_paid rpc worked
+          console.log("admin_search_for_not_paid successful rpc call.");
+
+          // Check results,
+          console.log(rows);
+
+          var i;
+
+          for (i=0; i<rows[0].length; i++)
+          {
+              if (rows[0][i]['phone-number'] != null)
+                send_text(req.body.message, rows[0][i]['phone-number']);
+          }
+
+          res.oidc.login();
+      }
+
+  }); // end stored proc call
+
+}); // end post
+
+// -------------------------------------------------------------
 // systemCheckForceShiftChange called by "system" to force shift changes
 
 router.post('/systemCheckForceShiftChange', function(req, res, next)
@@ -3046,18 +3170,29 @@ function send_text_alerts(rows)
             decodedMessage = "Assassin event, log in to view any changes.";
         }
 
-        if (TWILIO_FLAG == TWILIO_PROD)
-        {
-            twilio.messages
-              .create({
-                 body: decodedMessage,
-                 from: CREDENTIALS.TWILIO_PHONE_NUMBER,
-                 to: rows[0][i+1].phone
-             })
-            .then(message => console.log(message.sid));
-        }
+        send_text(decodedMessage, rows[0][i+1].phone);  // zzzz
 
     } // end for loop
+}
+
+// ------------------------------------------------------------
+
+function send_text(text, phone)
+{
+
+  console.log("Got into send text: " + text + "  to: " + phone);
+
+  if (TWILIO_FLAG == TWILIO_PROD)
+  {
+      twilio.messages
+        .create({
+           body: text,
+           from: CREDENTIALS.TWILIO_PHONE_NUMBER,
+           to: phone
+       })
+      .then(message => console.log(message.sid));
+  }
+
 }
 
 // ------------------------------------------------------------
@@ -3673,7 +3808,7 @@ function endGameCronFunction()
 
 function morningStartCronFunction()
 {
-    console.log('morningStartCronFunction started');  // zzzz
+    console.log('morningStartCronFunction started');
 
     // call stored procedure
     dbConn.query('CALL `assassin`.`system_morning_start`()', function(err,rows)

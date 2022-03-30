@@ -50,27 +50,28 @@
 
         <form autocomplete="off" action="adminBulkPictureApprove" method="post" encType="multipart/form-data">
             <input type="submit" class="btn btn-info" value="Bulk Picture Approve"/>
-            &nbsp&nbsp&nbsp
+            &nbsp&nbsp&nbsp&nbsp&nbsp
             <input type="submit" class="btn btn-info" formaction="viewRules" value="View Rules"/>
 
-            <div style="height: 20px;"></div>
+            <div style="height: 22px;"></div>
             <input type="submit" class="btn btn-info" formaction="adminShowCreatePrepsPage" onsubmit="return waitCursor()" value="Create Prep Templates"/>
-            &nbsp&nbsp&nbsp&nbsp
+            &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
             <input type="submit" class="btn btn-info" formaction="resetDatabase" onsubmit="return waitCursor()" value="Reset DB"/>
-            <div style="height: 20px;"></div>
+            <div style="height: 22px;"></div>
 
         </form>
+
+        <form autocomplete="off" action="checkNotPaid" method="post" encType="multipart/form-data">
+            <input type="submit" class="btn btn-info" value="Check Paid"/>
+            &nbsp&nbsp&nbsp&nbsp&nbsp
+            <input type="submit" class="btn btn-info" formaction="assassinLogout" value="Logout"/>
+        </form>
+
+        <div style="height: 22px;"></div>
 
         <form autocomplete="off" action="adminDropBomb" onsubmit="return confirmChoice(<%= CONFIRM_BOMB %>)" method="post" encType="multipart/form-data">
             <input type="submit" class="btn btn-info" value="Drop Bomb"/>
         </form>
-
-        <div style="height: 20px;"></div>
-
-        <form autocomplete="off" action="assassinLogout" method="post" encType="multipart/form-data">
-            <input type="submit" class="btn btn-info" value="Logout"/>
-        </form>
-
 
         <div style="height: 4px;"></div>
 
