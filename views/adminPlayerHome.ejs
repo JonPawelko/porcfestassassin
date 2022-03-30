@@ -121,6 +121,27 @@
 
 						<% } %>
 
+						<hr>
+
+						<% if ((playerPhone != "") && (playerPhone != null))
+						{ %>
+
+							<form autocomplete="off" action="sendPlayerMessage" method="post" onsubmit="return confirmAdminMessageSize()" encType="multipart/form-data">
+
+									<input type="hidden" name="phoneNumber" value="<%= playerPhone %>">
+									<div style="height: 2px;"></div>
+									Message (100 character limit):
+									<div style="height: 6px;"></div>
+									<textarea name="message" style="width:300px;height:100px;" value="" autocomplete="off"></textarea>
+									<div style="height: 14px;"></div>
+									<input type="submit" class="btn btn-info" value="Send Message"/>
+
+							</form>
+
+							<hr>
+
+						<% } %>
+
 						<form autocomplete="off" action="adminEditPlayerData" method="post" onsubmit="return waitCursor()" encType="multipart/form-data">
 								<input type="hidden" name="playerCode" value="<%= playerCode %>">
 	              <input type="hidden" name="playerName" value="<%= playerName %>">
