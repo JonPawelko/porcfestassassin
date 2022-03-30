@@ -2578,9 +2578,9 @@ router.post('/checkNotPaid', function(req, res, next)
 // -------------------------------------------------------------
 // sendNotPaidMessage called by admin to find teams that have registered, but not paid
 
-router.post('/sendNotPaidMessage', function(req, res, next)
+router.post('/sendAllNotPaidMessages', function(req, res, next)
 {
-  console.log("Got into new sendNotPaidMessage call");
+  console.log("Got into new sendAllNotPaidMessages call");
 
   // Check authentication status
   if (!req.oidc.isAuthenticated())
@@ -2619,6 +2619,27 @@ router.post('/sendNotPaidMessage', function(req, res, next)
       }
 
   }); // end stored proc call
+
+}); // end post
+
+// -------------------------------------------------------------
+// sendPlayerMessage called by admin to find teams that have registered, but not paid
+
+router.post('/sendPlayerMessage', function(req, res, next)
+{
+  console.log("Got into sendPlayerMessage call");
+
+  // Check authentication status
+  if (!req.oidc.isAuthenticated())
+  {
+      console.log("Not authenticated");
+      res.render('landing');
+      return;
+  }
+
+  send_text(req.body.message, req.body.phoneNumber);
+
+  res.oidc.login();
 
 }); // end post
 
@@ -3170,7 +3191,9 @@ function send_text_alerts(rows)
             decodedMessage = "Assassin event, log in to view any changes.";
         }
 
-        send_text(decodedMessage, rows[0][i+1].phone);  // zzzz
+        send_text(decodedMessage, rows[0][i+1].phone);
+
+        res.oidc.login(); // send back home to refresh page
 
     } // end for loop
 }
