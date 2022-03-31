@@ -141,7 +141,12 @@ global.PAYPAL_TEST = "Paypal Test";
 global.PAYPAL_PROD = "Paypal Production";
 
 global.TWILIO_OFF = "Twilio Off";
-global.TWILIO_PROD = "Twilio Production";
+global.TWILIO_PROD_ALL = "Twilio Production All";
+global.TWILIO_PROD_LOW = "Twilio Production Low";
+
+global.TWILIO_TEXTS_TODAY = 0;
+global.TWILIO_DATE = new Date();
+global.TWILIO_MAX = 3000;
 
 global.PAYPAL_FLAG = PERSONAL_ENV.PAYPAL_ENVIRONMENT;
 global.TWILIO_FLAG = PERSONAL_ENV.TWILIO_ENVIRONMENT;
