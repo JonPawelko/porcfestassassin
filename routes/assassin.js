@@ -229,8 +229,8 @@ router.get('/', function(req, res, next) {
                                   myTeamTotalKills: rowsStats[0][0].myTeamTotalKills,
                                   myTeamTodayKills: rowsStats[0][0].myTeamTodayKills,
                                   myPersonalKillsWeek: rowsStats[0][0].myPersonalKillsWeek,
-                                  myPersonalKillsDay: rowsStats[0][0].myPersonalKillsDay});
-
+                                  myPersonalKillsDay: rowsStats[0][0].myPersonalKillsDay,
+                                  textsSent: TWILIO_TEXTS_TODAY});
                               }
                           }); // end get_teammate_info rpc call
                       }
@@ -282,7 +282,8 @@ router.get('/', function(req, res, next) {
                           myTeamTotalKills: rowsStats[0][0].myTeamTotalKills,
                           myTeamTodayKills: rowsStats[0][0].myTeamTodayKills,
                           myPersonalKillsWeek: rowsStats[0][0].myPersonalKillsWeek,
-                          myPersonalKillsDay: rowsStats[0][0].myPersonalKillsDay});
+                          myPersonalKillsDay: rowsStats[0][0].myPersonalKillsDay,
+                          textsSent: TWILIO_TEXTS_TODAY});
                       } // end else, no teammates
 
                   }  // end else - Successful get_statistics RPC call
@@ -535,6 +536,7 @@ router.post('/validateKill', function(req, res, next)
           {
               if (rows[0].length > 1)
               {
+                if (TWILIO_FLAG != TWILIO_OFF)
                   send_text_alerts(rows);
               }
               res.oidc.login(); // send back home to refresh page with new target
@@ -586,6 +588,7 @@ router.post('/rebuy', function(req, res, next)
           {
                 if (rows[0].length > 1)
                 {
+                  if (TWILIO_FLAG == TWILIO_PROD_ALL)
                     send_text_alerts(rows);
                 }
                 res.oidc.login(); // send back home to refresh page, may now be on a new Team
@@ -636,7 +639,8 @@ router.post('/goLive', function(req, res, next)
           {
                 if (rows[0].length > 1)
                 {
-                    send_text_alerts(rows);
+                    if (TWILIO_FLAG == TWILIO_PROD_ALL)
+                      send_text_alerts(rows);
                 }
                 res.oidc.login(); // send back home to refresh page, may now be on a new Team
           }
@@ -697,6 +701,7 @@ router.post('/joinTeam', function(req, res, next)
           {
                 if (rows[0].length > 1)
                 {
+                  if (TWILIO_FLAG == TWILIO_PROD_ALL)
                     send_text_alerts(rows);
                 }
                 res.oidc.login(); // send back home to refresh page, may now be on a new Team
@@ -801,6 +806,7 @@ router.post('/takeBreak', function(req, res, next)
           {
                 if (rows[0].length > 1)
                 {
+                  if (TWILIO_FLAG != TWILIO_OFF)
                     send_text_alerts(rows);
                 }
                 res.oidc.login(); // send back home to refresh page, may now be on a new Team
@@ -851,6 +857,7 @@ router.post('/returnFromBreak', function(req, res, next)
           {
                 if (rows[0].length > 1)
                 {
+                  if (TWILIO_FLAG == TWILIO_PROD_ALL)
                     send_text_alerts(rows);
                 }
                 res.oidc.login(); // send back home to refresh page, may now be on a new Team
@@ -910,6 +917,7 @@ router.post('/addPlayer', function(req, res, next)
           {
                 if (rows[0].length > 1)
                 {
+                  if (TWILIO_FLAG == TWILIO_PROD_ALL)
                     send_text_alerts(rows);
                 }
                 res.oidc.login(); // send back home to refresh page, may now be on a new Team
@@ -971,6 +979,7 @@ router.post('/removePlayerFromTeam', function(req, res, next)
           {
               if (rows[0].length > 1)
               {
+                if (TWILIO_FLAG == TWILIO_PROD_ALL)
                   send_text_alerts(rows);
               }
               res.oidc.login(); // send back home to refresh page, may now be on a new Team
@@ -1021,6 +1030,7 @@ router.post('/quitGame', function(req, res, next)
           {
               if (rows[0].length > 1)
               {
+                if (TWILIO_FLAG != TWILIO_OFF)
                   send_text_alerts(rows);
               }
               res.oidc.login(); // send back home to refresh page, may now be on a new Team
@@ -1792,6 +1802,7 @@ router.post('/adminApprovePicture', function(req, res, next)
             {
                   if (rows[0].length > 1)
                   {
+                    if (TWILIO_FLAG == TWILIO_PROD_ALL)
                       send_text_alerts(rows);
                   }
 
@@ -1848,6 +1859,7 @@ router.post('/adminRejectPicture', function(req, res, next)
             {
                   if (rows[0].length > 1)
                   {
+                    if (TWILIO_FLAG != TWILIO_OFF)
                       send_text_alerts(rows);
                   }
 
@@ -2054,10 +2066,6 @@ router.post('/adminMarkPaid', function(req, res, next)
 
           if (rows[0][0].phone == CALL_SUCCESS)
           {
-                if (rows[0].length > 1)
-                {
-                    send_text_alerts(rows);
-                }
                 res.oidc.login(); // send back home to refresh page, may now be on a new Team
           }
           else
@@ -2127,6 +2135,7 @@ router.post('/adminMarkPaidAndApprovePhoto', function(req, res, next)
                       {
                             if (rows[0].length > 1)
                             {
+                              if (TWILIO_FLAG == TWILIO_PROD_ALL)
                                 send_text_alerts(rows);
                             }
                             res.oidc.login(); // send back home to refresh page
@@ -2489,6 +2498,7 @@ router.post('/adminDropBomb', function(req, res, next)
           // No addl error checking if call succeeded.  First row is success code, then phone #'s'
           if (rows[0].length > 1)
           {
+            if (TWILIO_FLAG != TWILIO_OFF)
               send_text_alerts(rows);
           }
 
@@ -2614,7 +2624,10 @@ router.post('/sendAllNotPaidMessages', function(req, res, next)
           for (i=0; i<rows[0].length; i++)
           {
               if (rows[0][i]['phone-number'] != null)
-                send_text(req.body.message, rows[0][i]['phone-number']);
+              {
+                if (TWILIO_FLAG != TWILIO_OFF)
+                  send_text(req.body.message, rows[0][i]['phone-number']);
+              }
           }
 
           res.oidc.login();
@@ -2639,7 +2652,8 @@ router.post('/sendPlayerMessage', function(req, res, next)
       return;
   }
 
-  send_text(req.body.message, req.body.phoneNumber);
+  if (TWILIO_FLAG != TWILIO_OFF)
+    send_text(req.body.message, req.body.phoneNumber);
 
   res.oidc.login();
 
@@ -2686,6 +2700,7 @@ router.post('/systemCheckForceShiftChange', function(req, res, next)
           {
               if (rows[0].length > 1)
               {
+                if (TWILIO_FLAG != TWILIO_OFF)
                   send_text_alerts(rows);
               }
               res.oidc.login(); // send back home to refresh page
@@ -2874,16 +2889,9 @@ router.post('/sendAdminMessage', function(req, res, next)
             // Combine all info into 1 text for admin
             var tempMessage = req.body.playerName + " - " + req.body.playerCode + " - " +  req.body.message + " - " + tempPlayerPhone;
 
-            if (TWILIO_FLAG == TWILIO_PROD)
+            if (TWILIO_FLAG != TWILIO_OFF)
             {
-              // Send text
-              twilio.messages.create(
-                {
-                   body: tempMessage,
-                   from: CREDENTIALS.TWILIO_PHONE_NUMBER,
-                   to: rows[0][0].adminPhone
-                })
-              .then(message => console.log("Twilio return sid: " + message.sid));
+              send_text(tempMessage, rows[0][0].adminPhone);
             }
 
             // Log event to DB just in case Admin doesn't get the text
@@ -3024,6 +3032,7 @@ router.post('/adminStartContest', function(req, res, next)
             {
                 if (rows[0].length > 1)
                 {
+                  if (TWILIO_FLAG != TWILIO_OFF)
                     send_text_alerts(rows);
                 }
                 res.oidc.login(); // send back home to refresh page with new target
@@ -3128,8 +3137,8 @@ function send_text_alerts(rows)
               break;
 
             case EVENT_BOMB_DROPPED:
-              console.log("A Bomb was dropped!");
-              decodedMessage = "A Bomb was dropped. Log into Assassin to view your new Target.";
+              console.log("The Assassin Admin dropped a Bomb!");
+              decodedMessage = "The Assassin Admin dropped a Bomb. Log into Assassin to view your new Target.";
               break;
 
             case EVENT_PHOTO_REJECTED:
@@ -3195,8 +3204,6 @@ function send_text_alerts(rows)
 
         send_text(decodedMessage, rows[0][i+1].phone);
 
-        res.oidc.login(); // send back home to refresh page
-
     } // end for loop
 }
 
@@ -3204,21 +3211,38 @@ function send_text_alerts(rows)
 
 function send_text(text, phone)
 {
-
   console.log("Got into send text: " + text + "  to: " + phone);
 
-  if (TWILIO_FLAG == TWILIO_PROD)
+  TWILIO_TEXTS_TODAY++;
+  var tempDate = new Date();
+
+  if (TWILIO_DATE.getDate() != tempDate.getDate())
   {
-      twilio.messages
-        .create({
-           body: text,
-           from: CREDENTIALS.TWILIO_PHONE_NUMBER,
-           to: phone
-       })
-      .then(message => console.log(message.sid));
+    TWILIO_DATE = new Date();
+    TWILIO_TEXTS_TODAY = 1;
+    TWILIO_FLAG = TWILIO_PROD_ALL;
   }
 
-}
+  console.log("Twilio Flag: " + TWILIO_FLAG + " - Twilio day: " + TWILIO_DATE.getDate() + " - Number of texts today: " + TWILIO_TEXTS_TODAY);
+
+  if (TWILIO_TEXTS_TODAY > (.95*TWILIO_MAX))
+  {
+    TWILIO_FLAG = TWILIO_OFF;
+  }
+  else if (TWILIO_TEXTS_TODAY > (.7*TWILIO_MAX))
+  {
+    TWILIO_FLAG = TWILIO_PROD_LOW;
+  }
+
+  twilio.messages
+    .create({
+       body: text,
+       from: CREDENTIALS.TWILIO_PHONE_NUMBER,
+       to: phone
+   })
+  .then(message => console.log(message.sid));
+
+} // end send text
 
 // ------------------------------------------------------------
 
@@ -3776,6 +3800,7 @@ function startGameCronFunction()
             {
                   if (rows[0].length > 1)
                   {
+                    if (TWILIO_FLAG != TWILIO_OFF)
                       send_text_alerts(rows);
                   }
             }
@@ -3814,6 +3839,7 @@ function endGameCronFunction()
             {
                   if (rows[0].length > 1)
                   {
+                    if (TWILIO_FLAG != TWILIO_OFF)
                       send_text_alerts(rows);
                   }
             }
@@ -3852,6 +3878,7 @@ function morningStartCronFunction()
             {
                   if (rows[0].length > 1)
                   {
+                    if (TWILIO_FLAG != TWILIO_OFF)
                       send_text_alerts(rows);
                   }
             }
@@ -3890,6 +3917,7 @@ function nightEndCronFunction()
             {
                   if (rows[0].length > 1)
                   {
+                    if (TWILIO_FLAG != TWILIO_OFF)
                       send_text_alerts(rows);
                   }
             }
@@ -3928,6 +3956,7 @@ function twoHoursToGoCronFunction()
             {
                   if (rows[0].length > 1)
                   {
+                    if (TWILIO_FLAG != TWILIO_OFF)
                       send_text_alerts(rows);
                   }
             }
@@ -3966,6 +3995,7 @@ function oneHourToGoCronFunction()
             {
                   if (rows[0].length > 1)
                   {
+                    if (TWILIO_FLAG != TWILIO_OFF)
                       send_text_alerts(rows);
                   }
             }
@@ -4003,17 +4033,9 @@ function checkHowManyPhotosCronFunction(maxPhotos)
 
             if (rows[0][0].numPhotosWaiting >= maxPhotos)
             {
-                console.log("Text sent to admin");
-
-                if (TWILIO_FLAG == TWILIO_PROD)
+                if (TWILIO_FLAG != TWILIO_OFF)
                 {
-                  twilio.twilio.messages
-                  .create({
-                       body: rows[0][0].numPhotosWaiting + " photos require approval.",
-                       from: CREDENTIALS.TWILIO_PHONE_NUMBER,
-                       to: rows[0][0].adminPhone
-                   })
-                  .then(message => console.log(message.sid));
+                  send_text(rows[0][0].numPhotosWaiting + " photos require approval.", rows[0][0].adminPhone);
                 }
             }
 
@@ -4047,17 +4069,9 @@ function checkOldPhotosCronFunction(photoWaitTime)
             if (rows[0][0].numOldPhotos > 0)
             {
 
-              console.log("Text sent to admin");
-
-              if (TWILIO_FLAG == TWILIO_PROD)
+              if (TWILIO_FLAG != TWILIO_OFF)
               {
-                twilio.messages
-                .create({
-                     body: rows[0][0].checkOldPhotos + " old photos require approval.",
-                     from: CREDENTIALS.TWILIO_PHONE_NUMBER,
-                     to: rows[0][0].adminPhone
-                 })
-                .then(message => console.log(message.sid));
+                send_text(rows[0][0].checkOldPhotos + " old photos require approval.", rows[0][0].adminPhone);
               }
             }
 
