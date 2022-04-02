@@ -4,8 +4,7 @@ var CONFIRM_TAKE_BREAK = 3;
 var CONFIRM_RETURN_BREAK = 4;
 var CONFIRM_QUIT = 5;
 var CONFIRM_REMOVE_PHONE = 6;
-var CONFIRM_FORCE_SHIFT = 7;
-var CONFIRM_BOMB = 8;
+var CONFIRM_BOMB = 7;
 
 // -----------------------------------------------------------------
 
@@ -65,10 +64,6 @@ document.addEventListener('keydown', e => {
 
         case CONFIRM_REMOVE_PHONE:
               message = "Are you sure you want to remove your phone number?";
-          break;
-
-        case CONFIRM_FORCE_SHIFT:
-              message = "Are you sure you want to force shift changes?";
           break;
 
         case CONFIRM_BOMB:

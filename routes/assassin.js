@@ -93,7 +93,6 @@ router.get('/', function(req, res, next) {
       } else
       {
           console.log("Successful Get Info RPC call.");
-          console.log("Game status is " + rows[0][0].gameStatus);
           console.log(rows);
 
           // Check to see if Player exists in the database already, if not, redirect to landing2
@@ -183,7 +182,6 @@ router.get('/', function(req, res, next) {
                                   console.log("Paypal flag: " + PAYPAL_FLAG);                                console.log()
 
                                   // not going to do addl error checking here. We already know this player has at least 1 teammate.
-
                                   // route to home page passing Player info and teammate info
                                   res.render('home', {
                                   adminPlayerCode: CREDENTIALS.ADMIN_PLAYER_CODE,
