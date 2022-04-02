@@ -13,23 +13,16 @@ var express = require("express");
 var bodyParser = require('body-parser');
 
 var app = express();
-app.use(bodyParser.json({ limit: "10mb", extended: true }));
-app.use(bodyParser.urlencoded({ limit: "10mb", extended: true }));
+app.use(bodyParser.json({ limit: "15mb", extended: true }));
+app.use(bodyParser.urlencoded({ limit: "15mb", extended: true }));
 
 const fileUpload = require('express-fileupload');
 var path = require('path');
 var session = require('express-session');
 var mysql = require('mysql2');
 var assassinRouter = require('./routes/assassin');
-// const myCronModule = require(__dirname + '/public/javascripts/cronScripts.js');
 const cron = require('node-cron');
 var dbConn  = require('./lib/db');   // database object
-
-// Removed these from tutorials, not using
-// require('dotenv').config();
-// var cookieParser = require('cookie-parser');
-// var logger = require('morgan');
-// var flash = require('express-flash'); - stopped using
 
 // Global Code constants
 global.STRING_LENGTH = 45;  // set 45 char length for strings in mysql
@@ -62,8 +55,7 @@ global.CONFIRM_TAKE_BREAK = 3;
 global.CONFIRM_RETURN_BREAK = 4;
 global.CONFIRM_QUIT = 5;
 global.CONFIRM_REMOVE_PHONE = 6;
-global.CONFIRM_FORCE_SHIFT = 7;
-global.CONFIRM_BOMB = 8;
+global.CONFIRM_BOMB = 7;
 
 // Global Event Code constants for Alerts
 global.EVENT_ASSASSINATION = 1;
@@ -141,13 +133,15 @@ global.PAYPAL_TEST = "Paypal Test";
 global.PAYPAL_PROD = "Paypal Production";
 
 global.TWILIO_OFF = "Twilio Off";
-global.TWILIO_PROD_ALL = "Twilio Production All";
+global.TWILIO_PROD_ALL = "Twilio Production All";  // see below limit
 global.TWILIO_PROD_LOW = "Twilio Production Low";
 
+// limit of 300 twilio texts per day, use throttle approach
 global.TWILIO_TEXTS_TODAY = 0;
 global.TWILIO_DATE = new Date();
 global.TWILIO_MAX = 3000;
 
+// set global paypal and twilio flags
 global.PAYPAL_FLAG = PERSONAL_ENV.PAYPAL_ENVIRONMENT;
 global.TWILIO_FLAG = PERSONAL_ENV.TWILIO_ENVIRONMENT;
 
@@ -184,7 +178,7 @@ switch (PERSONAL_ENV.AUTH0_ENVIRONMENT)
 {
 		case TEST_ENVIRONMENT:
 
-					console.log("Auth0 Test");
+					console.log("Auth0 Test Environment");
 
           config = {
             authRequired: false,
@@ -199,7 +193,7 @@ switch (PERSONAL_ENV.AUTH0_ENVIRONMENT)
 
 		case PRODUCTION_ENVIRONMENT:
 
-					console.log("Auth0 Prod");
+					console.log("Auth0 Production Environment");
 
           config = {
             authRequired: false,
@@ -236,10 +230,7 @@ app.set('view engine', 'ejs');
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-
 app.use(express.static('public'));
-// app.use(express.static('upload'));
-//app.use('/static', express.static(path.join(__dirname, 'public')))
 
 app.use(session({
     cookie: { maxAge: 60000 },
