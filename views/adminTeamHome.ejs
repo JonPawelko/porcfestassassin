@@ -25,7 +25,19 @@
 			<div style="height: 10px;"></div>
       Team Status:&nbsp<%= teamStatus %>
 			<div style="height: 10px;"></div>
-      Captain:&nbsp<%= captainName %> - <%= captainCode %>
+
+      Captain:&nbsp<%= captainName %> -
+
+			<form autocomplete='off' action='adminSearchForPlayer' method='post' onsubmit="return waitCursor()" encType='multipart/form-data'>
+					<input type='hidden' name='teamName' value=''>
+					<input type='hidden' name='playerName' value=''>
+					<input type='hidden' name='playerCode' value='<%= captainCode %>'>
+					<input type='hidden' name='teamCode' value=''>
+					<input type='hidden' name='celeb' value=''>
+					<input type='submit' class='link-button' value='<%= captainCode %>'/>
+					<div style="height: 3px;"></div>
+			</form>
+
 			<div style="height: 10px;"></div>
 			Bounties Owed:&nbsp<%= bountiesOwed %>
 			<div style="height: 10px;"></div>
