@@ -2188,9 +2188,10 @@ router.post('/adminUpdatePlayerData', function(req, res, next)
   var tempCeleb = CHECKBOX_OFF;  // req.body.celebritarian is being passed in as undefined when unchecked
 
   // helper var to check and format phone number
-  var tempPlayerPhone;
+  var tempPlayerPhone = "";
 
   console.log("Got into updatePlayerData");
+  // console.log("Phone is: " + req.body.playerPhone);
 
   // Check authentication status
   if (!req.oidc.isAuthenticated())
@@ -2203,13 +2204,23 @@ router.post('/adminUpdatePlayerData', function(req, res, next)
   if (req.body.celebritarian == CHECKBOX_ON)
     tempCeleb = CHECKBOX_ON;
 
-  tempPlayerPhone = validatePhone(req.body.playerPhone); // comes back formatted
-
-  if (tempPlayerPhone == null)
+  if (req.body.playerPhone != "")
   {
-      // Render error page, passing in error code
-      res.render('errorMessagePage', {result: ERROR_INVALID_PHONE_NUMBER});
-      return;
+    console.log("Phone not blank, checking phone");
+
+    tempPlayerPhone = validatePhone(req.body.playerPhone); // comes back formatted
+
+    if (tempPlayerPhone == null)
+    {
+        // Render error page, passing in error code
+        res.render('errorMessagePage', {result: ERROR_INVALID_PHONE_NUMBER});
+        return;
+    }
+  }
+  else
+  {
+    console.log("Phone blank.");
+    // tempPlayerPhone = "";
   }
 
   if (validateString(req.body.playerName) == false)
