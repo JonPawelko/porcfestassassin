@@ -10,6 +10,8 @@ var app  = require('../app');   // database object
 // var app = express();
 const cron = require('node-cron');
 var CREDENTIALS = require('../credentials/credentials.json');
+var PERSONAL_ENV = require('../personal/personal_env.json');
+
 const twilio = require('twilio')(CREDENTIALS.TWILIO_ACCOUNT_SID, CREDENTIALS.TWILIO_AUTH_TOKEN);
 
 // -------------------------------------------------------------
@@ -2788,13 +2790,25 @@ router.post('/viewRules', function(req, res, next)
     }
 
     // No stored procedure needed, just display rules page
-    res.render('rules', {paypalFlag: PAYPAL_FLAG});
+    res.render('rules', {paypalFlag: PAYPAL_FLAG, userType: "Internal", nodeJSFlag: PERSONAL_ENV.NODEJS_ENVIRONMENT});
 
 });  // end router - viewRules
 
-
-
 // -------------------------------------------------------------
+// viewExternalRules called by player to view the Assassin game rule
+
+router.post('/viewExternalRules', function(req, res, next)
+{
+    console.log("Got into viewviewExternalRulesRules call");
+
+    // no auth
+
+    // No stored procedure needed, just display rules page
+    res.render('rules', {paypalFlag: PAYPAL_FLAG, userType: "External", nodeJSFlag: PERSONAL_ENV.NODEJS_ENVIRONMENT});
+
+});  // end router - viewRules
+
+// ------------------------------------------------------
 // viewTeamHistory called by player to view their teams history
 
 router.post('/viewTeamHistory', function(req, res, next)
