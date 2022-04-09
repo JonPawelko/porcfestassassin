@@ -295,7 +295,7 @@
 								if	(gameStatus != "Over")
 								    {
 								%>
-												<form action="managePicture" method="post"onsubmit="return waitCursor()">
+												<form action="managePicture" method="post" onsubmit="return waitCursor()">
 															<input type="hidden" name="myPlayerCode" value="<%= playerCode %>">
 															<input type="hidden" name="playerPic" value="<%= playerPic %>">
 															<input type="hidden" name="picFeature" value="Edit">
@@ -308,7 +308,7 @@
 
 					<% 	if (((playerPhone == "") || (playerPhone == null)) && (gameStatus != "Over")) { %>
 
-						<form action="addPlayerPhoneNumber" method="post"onsubmit="return waitCursor()">
+						<form action="addPlayerPhoneNumber" method="post" onsubmit="return waitCursor()">
 									<input type="hidden" name="myPlayerCode" value="<%= playerCode %>">
 									<input type="submit" class="btn btn-info" value="Add Phone Number"/>
 									<div style="height: 18px;"></div>
@@ -319,7 +319,7 @@
 							if	(gameStatus != "Over")
 									{
 							%>
-											<form action="editPlayerPhoneNumber" method="post"onsubmit="return waitCursor()">
+											<form action="editPlayerPhoneNumber" method="post" onsubmit="return waitCursor()">
 														<input type="hidden" name="myPlayerCode" value="<%= playerCode %>">
 														<input type="hidden" name="myPhoneNumber" value="<%= playerPhone %>">
 														<input type="submit" class="btn btn-info" value="Edit Phone Number"/>
@@ -351,7 +351,7 @@
 
 								<div style="height: 18px;"></div>
 
-								<form action="assassinLogout" method="post"onsubmit="return waitCursor()">
+								<form action="assassinLogout" method="post" onsubmit="return waitCursor()">
 									<input type="hidden" name="myPlayerCode" value="<%= playerCode %>">
 									<input type="hidden" name="myTeamCode" value="<%= playerTeamCode %>">
 									<input type="submit" class="btn btn-info" value="Logout"/>
