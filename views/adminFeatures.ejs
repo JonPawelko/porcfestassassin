@@ -64,8 +64,13 @@
         <form autocomplete="off" action="checkNotPaid" method="post" encType="multipart/form-data">
             <input type="submit" class="btn btn-info" value="Check Paid"/>
             &nbsp&nbsp&nbsp&nbsp&nbsp
-            <input type="submit" class="btn btn-info" formaction="assassinLogout" value="Logout"/>
+            <input type="submit" class="btn btn-info" formaction="checkPlayersWithNoTeam" value="Check No Team"/>
+            <!-- <input type="submit" class="btn btn-info" formaction="assassinLogout" value="Logout"/> -->
         </form>
+
+        <form action="assassinLogout" method="post"onsubmit="return waitCursor()">
+
+        <!-- <input type="submit" class="btn btn-info" formaction="assassinLogout" value="Logout"/> -->
 
         <div style="height: 22px;"></div>
 

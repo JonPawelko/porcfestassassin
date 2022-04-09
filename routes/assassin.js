@@ -2596,7 +2596,79 @@ router.post('/checkNotPaid', function(req, res, next)
 
   }); // end stored proc call
 
-}); // end post(drop bomb)
+}); // end post(admin check not paid)
+
+// -------------------------------------------------------------
+// checkPlayersWithNoTeam called by admin to find teams that have registered, but not paid
+
+router.post('/checkPlayersWithNoTeam', function(req, res, next)
+{
+  console.log("Got into new checkPlayersWithNoTeam call");
+
+  // Check authentication status
+  if (!req.oidc.isAuthenticated())
+  {
+      console.log("Not authenticated");
+      res.render('landing');
+      return;
+  }
+
+  // Call stored procedure to search for the teams not paid
+  dbConn.query('CALL `assassin`.`admin_search_for_players_no_team`()', function(err,rows)
+  {
+      if(err)
+      {
+          console.log("MySQL error on admin_search_for_players_no_team call: " + err.code + " - " + err.message);
+          // Render error page, passing in error data
+          res.render('errorMessagePage', {result: ERROR_MYSQL_SYSTEM_ERROR_ON_RPC});
+          return;
+      } else
+      {
+          // admin_search_for_not_paid rpc worked
+          console.log("admin_search_for_players_no_team successful rpc call.");
+
+          // Check results,
+          console.log(rows);
+
+          if (rows[0].length == 1)
+          {
+            // Only 1 player found, go to player Home zzzz
+            res.render('adminPlayerHome',
+            {
+                playerCode: rows[0][0]['player-code'],
+                playerName: rows[0][0]['player-name'],
+                playerPhone: rows[0][0]['phone-number']
+            });
+
+          }
+          else
+          {
+              // more than 1 player found, show Player List
+              if (rows[0].length > 1)
+              {
+                  console.log("-----------------------");
+                  console.log(rows[0]);
+
+                  res.render('adminPlayersWithNoTeam',
+                  {
+                      players: rows[0]
+                  });
+
+              }
+              else
+              {
+                  // Render error page, passing in error code
+                  res.render('errorMessagePage', {result: ERROR_TEAM_NOT_FOUND_OR_QUIT});
+                  return;
+              }
+
+          } // end else either 0 or more than 1 team found
+
+      } // end else successful rpc
+
+  }); // end stored proc call
+
+}); // end admin check player no team
 
 // -------------------------------------------------------------
 // sendNotPaidMessage called by admin to find teams that have registered, but not paid
