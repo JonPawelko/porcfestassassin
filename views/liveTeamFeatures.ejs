@@ -35,7 +35,7 @@
 
           <form action="validateKill" method="post" onsubmit="return waitCursor()">
               <div style="height: 6px;"></div>
-              My Target's Target's Name: &nbsp<input type="search" name="myKillName" size="10" autocomplete="off">
+              <%= targetName %>'s Target's Name: &nbsp<input type="search" name="myKillName" size="10" autocomplete="off">
               <input type="hidden" name="myTeamCode" value="<%= playerTeamCode %>">
               <div style="height: 12px;"></div>
               <input type="submit" class="btn btn-info" value="Confirm Kill"/>
