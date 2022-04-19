@@ -6,11 +6,22 @@
     {
 %>
       <div style="height: 2px;"></div>
-      You must either join or create a Team to play Assassin.
-      <div style="height: 11px;"></div>
-      <%- include('joinTeamFeatures'); %>
+      You are currently a "Free Agent".&nbsp&nbspTo play Assassin, you must be on a Team and have 3 options:
+      <div style="height: 4px;"></div>
+      1) A Team Captain can add you to their team if you send them your 8-digit Player Code.
+      <div style="height: 10px;"></div>
       -OR-
-      <div style="height: 12px;"></div>
+      <div style="height: 14px;"></div>
+
+      2) A Team Captain can send you their 8-digit Team Code and you can join their existing Team.
+      <div style="height: 4px;"></div>
+      <%- include('joinTeamFeatures'); %>
+      <div style="height: 2px;"></div>
+      -OR-
+      <div style="height: 10px;"></div>
+
+      3) You can Create a new Team as Captain.
+      <div style="height: 10px;"></div>
 
       <%- include('createTeamFeatures'); %>
 

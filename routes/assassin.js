@@ -106,17 +106,17 @@ router.get('/', function(req, res, next) {
           }
           else  // Player exists, continue logic checks
           {
-              // Get and save game statistics
-              console.log("Just before get stats call");
-
               if (rows[0][0].teamStatus == '0')
               {
                   tempTeamCode = 0;
               }
               else
               {
-                tempTeamCode = rows[0][0].teamCode;
+                tempTeamCode = rows[0][0].playerTeamCode;
               }
+
+              // Get and save game statistics
+              console.log("Just before get stats call. Player code is " + rows[0][0].playerCode + "  Team code is " + tempTeamCode);
 
               dbConn.query('CALL `assassin`.`get_statistics`(?,?)', [rows[0][0].playerCode, tempTeamCode], function(err,rowsStats)
               {
@@ -3296,6 +3296,8 @@ function send_text_alerts(rows)
             console.log("Unkown event. Code = " + rows[0][i].eventCode);
             decodedMessage = "Assassin event, log in to view any changes.";
         }
+
+        decodedMessage += " www.PorcfestAssassin.com";
 
         send_text(decodedMessage, rows[0][i+1].phone);
 
