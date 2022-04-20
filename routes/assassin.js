@@ -2637,13 +2637,12 @@ router.post('/checkPlayersWithNoTeam', function(req, res, next)
             let tempPath = "photos/" + rows[0][0]['picture-url'];
             playerPicPath = tempPath.replace(/ /g, "%20");
 
-            // Only 1 player found, go to player Home zzzz
+            // Only 1 player found, go to player Home
             res.render('adminPlayerHome',
             {
                 teamCode: 0,
                 teamName: "",
                 teamStatus: "",
-
                 playerCode: rows[0][0]['player-code'],
                 playerName: rows[0][0]['player-name'],
                 playerPhone: rows[0][0]['phone-number'],
@@ -2970,6 +2969,15 @@ router.post('/sendAdminMessage', function(req, res, next)
     {
         console.log("Not authenticated");
         res.render('landing');
+        return;
+    }
+
+    // zzzz
+    // Check if photo file was passed in correctly
+    if (req.body.message == '')
+    {
+        // Render error page, passing in error code
+        res.render('errorMessagePage', {result: MISSING_ADMIN_MESSAGE});
         return;
     }
 
