@@ -11,84 +11,88 @@
 
 <body class="container" style="margin-top: 10px;">
 
-  <div class="card" style="width:21rem;">
+	<div class="row justify-content-center">
 
-    <div class="card-header">
-        Enter Player and Team Data
-				<div style="height: 5px;"></div>
-    </div>
+	  <div class="card" style="width:21rem;">
 
-		<div class="card-body">
-
-		    <form autocomplete="off" action="adminActivateTeam" method="post" onsubmit="return waitCursor()" encType="multipart/form-data">
+	    <div class="card-header">
+	        Enter Player and Team Data
 					<div style="height: 5px;"></div>
-	        Team Code:&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<%= teamCode %>
-					<div style="height: 5px;"></div>
-	        <input type="hidden" name="activatedTeamCode" value="<%= teamCode %>">
-	        New Team Name: <input type="search" size="12" name="teamName" value="" autocomplete="off">
+	    </div>
+
+			<div class="card-body">
+
+			    <form autocomplete="off" action="adminActivateTeam" method="post" onsubmit="return waitCursor()" encType="multipart/form-data">
+						<div style="height: 5px;"></div>
+		        Team Code:&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<%= teamCode %>
+						<div style="height: 5px;"></div>
+		        <input type="hidden" name="activatedTeamCode" value="<%= teamCode %>">
+		        New Team Name: <input type="search" size="12" name="teamName" value="" autocomplete="off">
+						<hr>
+
+						Player 1 (Captain) Code:&nbsp&nbsp<%= p1Code %>
+						<div style="height: 10px;"></div>
+		        <input type="hidden" name="captainCode" value="<%= p1Code %>">
+		        Player 1 (Captain) Name: <input type="search" size="10" name="captainName" value="" autocomplete="off">
+						<div style="height: 10px;"></div>
+		        Player 1 Phone: &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<input type="search" size="10" name="captainPhone" value="" autocomplete="off">
+		        <div style="height: 10px;"></div>
+		        Player 1 Photo:
+						<div style="height: 4px;"></div>
+						<input type="file" size="15" name="captainPhotoFile" accept="image/*" />
+		        <div style="height: 12px;"></div>
+		        Player 1 Celebritarian:&nbsp <input type="checkbox" name="captainCeleb" unchecked>
+		        <div style="height: 4px;"></div>
+
+						<hr>
+
+		        Player 2 Code:&nbsp&nbsp&nbsp<%= p2Code %>
+						<div style="height: 10px;"></div>
+						<input type="hidden" name="player2Code" value="<%= p2Code %>">
+		        Player 2 Name:&nbsp&nbsp<input type="search" size="12" name="player2Name" value="" autocomplete="off">
+						<div style="height: 10px;"></div>
+		        Player 2 Phone: <input type="search" size="12" name="player2Phone" value="" autocomplete="off">
+						<div style="height: 10px;"></div>
+		        Player 2 Photo:
+						<div style="height: 4px;"></div>
+						<input type="file" size="15" name="player2PhotoFile" accept="image/*" />
+						<div style="height: 12px;"></div>
+		        Player 2 Celebritarian:&nbsp
+		        <input type="checkbox" name="player2Celeb" unchecked>
+						<div style="height: 4px;"></div>
+
+						<hr>
+
+		        Player 3 Code:&nbsp&nbsp&nbsp&nbsp<%= p3Code %>
+						<div style="height: 10px;"></div>
+						<input type="hidden" name="player3Code" value="<%= p3Code %>">
+		        Player 3 Name:&nbsp&nbsp<input type="search" size="12" name="player3Name" value="" autocomplete="off">
+						<div style="height: 10px;"></div>
+		        Player 3 Phone:&nbsp<input type="search" size="12" name="player3Phone" value="" autocomplete="off">
+						<div style="height: 10px;"></div>
+		        Player 3 Photo:
+						<div style="height: 4px;"></div>
+		        <input type="file" size="15" name="player3PhotoFile" accept="image/*" />
+						<div style="height: 12px;"></div>
+		        Player 3 Celebritarian:&nbsp
+		        <input type="checkbox" name="player3Celeb" unchecked>
+						<div style="height: 14px;"></div>
+
+		        <input type="submit" class="btn btn-info" value="Activate Team"/>
+						<div style="height: 2px;"></div>
+
+		      </form>
+
 					<hr>
 
-					Player 1 (Captain) Code:&nbsp&nbsp<%= p1Code %>
-					<div style="height: 10px;"></div>
-	        <input type="hidden" name="captainCode" value="<%= p1Code %>">
-	        Player 1 (Captain) Name: <input type="search" size="10" name="captainName" value="" autocomplete="off">
-					<div style="height: 10px;"></div>
-	        Player 1 Phone: &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<input type="search" size="10" name="captainPhone" value="" autocomplete="off">
-	        <div style="height: 10px;"></div>
-	        Player 1 Photo:
-					<div style="height: 4px;"></div>
-					<input type="file" size="15" name="captainPhotoFile" accept="image/*" />
-	        <div style="height: 12px;"></div>
-	        Player 1 Celebritarian:&nbsp <input type="checkbox" name="captainCeleb" unchecked>
-	        <div style="height: 4px;"></div>
+					<form autocomplete="off" action="assassinLogin" method="post" onsubmit="return waitCursor()" encType="multipart/form-data">
+								<input type="submit" class="btn btn-info" value="Home"/>
+								<div style="height: 6px;"></div>
+					</form>
 
-					<hr>
+		  </div>
 
-	        Player 2 Code:&nbsp&nbsp&nbsp<%= p2Code %>
-					<div style="height: 10px;"></div>
-					<input type="hidden" name="player2Code" value="<%= p2Code %>">
-	        Player 2 Name:&nbsp&nbsp<input type="search" size="12" name="player2Name" value="" autocomplete="off">
-					<div style="height: 10px;"></div>
-	        Player 2 Phone: <input type="search" size="12" name="player2Phone" value="" autocomplete="off">
-					<div style="height: 10px;"></div>
-	        Player 2 Photo:
-					<div style="height: 4px;"></div>
-					<input type="file" size="15" name="player2PhotoFile" accept="image/*" />
-					<div style="height: 12px;"></div>
-	        Player 2 Celebritarian:&nbsp
-	        <input type="checkbox" name="player2Celeb" unchecked>
-					<div style="height: 4px;"></div>
-
-					<hr>
-
-	        Player 3 Code:&nbsp&nbsp&nbsp&nbsp<%= p3Code %>
-					<div style="height: 10px;"></div>
-					<input type="hidden" name="player3Code" value="<%= p3Code %>">
-	        Player 3 Name:&nbsp&nbsp<input type="search" size="12" name="player3Name" value="" autocomplete="off">
-					<div style="height: 10px;"></div>
-	        Player 3 Phone:&nbsp<input type="search" size="12" name="player3Phone" value="" autocomplete="off">
-					<div style="height: 10px;"></div>
-	        Player 3 Photo:
-					<div style="height: 4px;"></div>
-	        <input type="file" size="15" name="player3PhotoFile" accept="image/*" />
-					<div style="height: 12px;"></div>
-	        Player 3 Celebritarian:&nbsp
-	        <input type="checkbox" name="player3Celeb" unchecked>
-					<div style="height: 14px;"></div>
-
-	        <input type="submit" class="btn btn-info" value="Activate Team"/>
-					<div style="height: 2px;"></div>
-
-	      </form>
-
-				<hr>
-				
-				<form autocomplete="off" action="assassinLogin" method="post" onsubmit="return waitCursor()" encType="multipart/form-data">
-							<input type="submit" class="btn btn-info" value="Home"/>
-							<div style="height: 6px;"></div>
-				</form>
-
-	  </div>
+		</div>
 
 	</div>
 

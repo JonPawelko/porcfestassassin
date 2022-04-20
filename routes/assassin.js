@@ -1737,7 +1737,7 @@ router.post('/adminSearchForPlayer', function(req, res, next)
                     playerStatus: rows[0][0]['player-status'],
                     playerPhone: rows[0][0]['phone-number'],
                     photoStatus: rows[0][0]['picture-status'],
-                    celebritarian: rows[0][0]['celeb']
+                    celebritarian: rows[0][0]['celebritarian']
                 });
 
             }
@@ -2605,6 +2605,8 @@ router.post('/checkPlayersWithNoTeam', function(req, res, next)
 {
   console.log("Got into new checkPlayersWithNoTeam call");
 
+  var playerPicPath; // helper var to replace any spaces from file names with code
+
   // Check authentication status
   if (!req.oidc.isAuthenticated())
   {
@@ -2632,12 +2634,24 @@ router.post('/checkPlayersWithNoTeam', function(req, res, next)
 
           if (rows[0].length == 1)
           {
+            let tempPath = "photos/" + rows[0][0]['picture-url'];
+            playerPicPath = tempPath.replace(/ /g, "%20");
+
             // Only 1 player found, go to player Home zzzz
             res.render('adminPlayerHome',
             {
+                teamCode: 0,
+                teamName: "",
+                teamStatus: "",
+
                 playerCode: rows[0][0]['player-code'],
                 playerName: rows[0][0]['player-name'],
-                playerPhone: rows[0][0]['phone-number']
+                playerPhone: rows[0][0]['phone-number'],
+                playerPhoto: playerPicPath,
+                playerStatus: rows[0][0]['player-status'],
+                photoStatus: rows[0][0]['picture-status'],
+                celebritarian: rows[0][0]['celeb']
+
             });
 
           }
