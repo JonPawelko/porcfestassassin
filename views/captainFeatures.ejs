@@ -7,158 +7,162 @@
 %>
       <div style="height: 14px;"></div>
 
-      <div class="card" style="width:21rem;">
+    <div class="row justify-content-center">
 
-        <div class="card-header">
-          You are the Captain of your Team.
-          <div style="height: 4px;"></div>
-        </div>
+        <div class="card" style="width:21rem;">
 
-        <div class="card-body">
+          <div class="card-header">
+            You are the Captain of your Team.
+            <div style="height: 4px;"></div>
+          </div>
 
-              <div style="height: 8px;"></div>
+          <div class="card-body">
 
-              <% if (numTeammates > 0)	{%>
+                <div style="height: 8px;"></div>
 
-                    <% if (playerStatus == "Bench")
+                <% if (numTeammates > 0)	{%>
+
+                      <% if (playerStatus == "Bench")
+                          {%>
+                            <%- include('benchFeatures'); %>
+                          <%}
+                      %>
+
+                      <%-  include('teammateList'); %>
+
+                      <hr>
+                      <form action="removePlayerFromTeam" method="post" onsubmit="return waitCursor()">
+
+                        <% if (numTeammates < 2)
                         {%>
-                          <%- include('benchFeatures'); %>
-                        <%}
-                    %>
+                            8-digit Player Code to add or remove:
+                      <%}
+                        else
+                        {%>
+                            8-digit Player Code to remove:
+                      <%}%>
 
-                    <%-  include('teammateList'); %>
+                          <div style="height: 12px;"></div>
+                          <input type="search" size="7" name="playerCode" autocomplete="off">
+                          &nbsp&nbsp&nbsp
+                          <input type="hidden" name="myPlayerCode" value="<%= playerCode %>">
+                          <input type="hidden" name="myTeamCode" value="<%= playerTeamCode %>">
 
-                    <hr>
-                    <form action="removePlayerFromTeam" method="post" onsubmit="return waitCursor()">
+                          <% if (numTeammates < 2)	{%>
 
-                      <% if (numTeammates < 2)
-                      {%>
-                          8-digit Player Code to add or remove:
-                    <%}
-                      else
-                      {%>
-                          8-digit Player Code to remove:
-                    <%}%>
+                              <input type="submit" class="btn btn-info" formaction="addPlayer" onsubmit="return waitCursor()" value="Add"/>
+                              &nbsp&nbsp&nbsp
+                          <%}%>
 
-                        <div style="height: 12px;"></div>
+                          <input type="submit" class="btn btn-info" value="Remove"/>
+
+                      </form>
+                      <div style="height: 5px;"></div>
+
+                <% } %>
+
+                <% if (numTeammates == 0)
+                {%>
+
+                    <form action="addPlayer" method="post" onsubmit="return waitCursor()">
+                        Enter 8-digit Player Code to add:
+                        <div style="height: 10px;"></div>
                         <input type="search" size="7" name="playerCode" autocomplete="off">
-                        &nbsp&nbsp&nbsp
-                        <input type="hidden" name="myPlayerCode" value="<%= playerCode %>">
                         <input type="hidden" name="myTeamCode" value="<%= playerTeamCode %>">
-
-                        <% if (numTeammates < 2)	{%>
-
-                            <input type="submit" class="btn btn-info" formaction="addPlayer" onsubmit="return waitCursor()" value="Add"/>
-                            &nbsp&nbsp&nbsp
-                        <%}%>
-
-                        <input type="submit" class="btn btn-info" value="Remove"/>
-
+                        <input type="hidden" name="myPlayerCode" value="<%= playerCode %>">
+                        &nbsp&nbsp&nbsp<input type="submit" class="btn btn-info" value="Add"/>
                     </form>
                     <div style="height: 5px;"></div>
 
-              <% } %>
+              <%}%>
 
-              <% if (numTeammates == 0)
-              {%>
+                <% 	switch(teamStatus)
+          					{
+          						  case "Live": case "Waiting":
+          										%>
+                                  <hr>
+                                  <form action="takeBreak" method="post" onsubmit="return confirmChoice(<%= CONFIRM_TAKE_BREAK %>)">
+                                      <input type="hidden" name="myPlayerCode" value="<%= playerCode %>">
+                                      <input type="hidden" name="myTeamCode" value="<%= playerTeamCode %>">
+                                      <input type="submit" class="btn btn-info" value="Take a Break"/>
+                                      <div style="height: 8px;"></div>
+                                  </form>
+          										<%
+          										break;
 
-                  <form action="addPlayer" method="post" onsubmit="return waitCursor()">
-                      Enter 8-digit Player Code to add:
-                      <div style="height: 10px;"></div>
-                      <input type="search" size="7" name="playerCode" autocomplete="off">
-                      <input type="hidden" name="myTeamCode" value="<%= playerTeamCode %>">
-                      <input type="hidden" name="myPlayerCode" value="<%= playerCode %>">
-                      &nbsp&nbsp&nbsp<input type="submit" class="btn btn-info" value="Add"/>
-                  </form>
-                  <div style="height: 5px;"></div>
+          							case "Break":
+          										%>
+                                  <hr>
+                                  <form action="returnFromBreak" method="post" onsubmit="return confirmChoice(<%= CONFIRM_RETURN_BREAK %>)">
+                                      <input type="hidden" name="playerCode" value="<%= playerCode %>">
+                                      <input type="hidden" name="teamCode" value="<%= playerTeamCode %>">
+                                      <input type="submit" class="btn btn-info" value="Return From Break"/>
+                                      <div style="height: 8px;"></div>
+                                  </form>
 
-            <%}%>
+          										<%
+          										break;
 
-              <% 	switch(teamStatus)
-        					{
-        						  case "Live": case "Waiting":
-        										%>
-                                <hr>
-                                <form action="takeBreak" method="post" onsubmit="return confirmChoice(<%= CONFIRM_TAKE_BREAK %>)">
-                                    <input type="hidden" name="myPlayerCode" value="<%= playerCode %>">
-                                    <input type="hidden" name="myTeamCode" value="<%= playerTeamCode %>">
-                                    <input type="submit" class="btn btn-info" value="Take a Break"/>
-                                    <div style="height: 8px;"></div>
-                                </form>
-        										<%
-        										break;
-
-        							case "Break":
-        										%>
-                                <hr>
-                                <form action="returnFromBreak" method="post" onsubmit="return confirmChoice(<%= CONFIRM_RETURN_BREAK %>)">
-                                    <input type="hidden" name="playerCode" value="<%= playerCode %>">
-                                    <input type="hidden" name="teamCode" value="<%= playerTeamCode %>">
-                                    <input type="submit" class="btn btn-info" value="Return From Break"/>
-                                    <div style="height: 8px;"></div>
-                                </form>
-
-        										<%
-        										break;
-
-                      case "Inactive":
-                          %>
-                              <hr>
-
-                          <% if ((paypalFlag != "Paypal Off") && (teamBountiesOwed == 0))
-                              {
-                          %>
-                                  Pay $5 through Paypal and you will be credited with a bounty and can then Rebuy. Paypal email must match Assassin email.
-                                  <div style="height: 14px;"></div>
-
-                                  <%- include('paypalRebuy'); %>
-                                  <div style="height: 6px;"></div>
-
-                          <% } %>
-
-                              <div style="height: 6px;"></div>
-                          <%
-                            if (teamBountiesOwed >= 1)
-                            {
+                        case "Inactive":
                             %>
+                                <hr>
 
-                                <form action="rebuy" method="post" onsubmit="return confirmChoice(<%=CONFIRM_REBUY%>)">
-                                    <input type="hidden" name="myTeamCode" value="<%= playerTeamCode %>">
-                                    <input type="hidden" name="myPlayerCode" value="<%= playerCode %>">
-                                    <input type="submit" class="btn btn-info" value="Rebuy"/>
-                                </form>
-                                <div style="height: 8px;"></div>
-                            <%}
+                            <% if ((paypalFlag != "Paypal Off") && (teamBountiesOwed == 0))
+                                {
+                            %>
+                                    Pay $5 through Paypal and you will be credited with a bounty and can then Rebuy. Paypal email must match Assassin email.
+                                    <div style="height: 14px;"></div>
+
+                                    <%- include('paypalRebuy'); %>
+                                    <div style="height: 6px;"></div>
+
+                            <% } %>
+
+                                <div style="height: 6px;"></div>
+                            <%
+                              if (teamBountiesOwed >= 1)
+                              {
+                              %>
+
+                                  <form action="rebuy" method="post" onsubmit="return confirmChoice(<%=CONFIRM_REBUY%>)">
+                                      <input type="hidden" name="myTeamCode" value="<%= playerTeamCode %>">
+                                      <input type="hidden" name="myPlayerCode" value="<%= playerCode %>">
+                                      <input type="submit" class="btn btn-info" value="Rebuy"/>
+                                  </form>
+                                  <div style="height: 8px;"></div>
+                              <%}
+                                break;
+
+                          case "Registered":
+                          case "Pics Approved":
+
+                              if (paypalFlag != "Paypal Off")
+                              {
+                                if (playerCelebStatus == 1)
+                                {
+                              %>
+                                    <hr>
+                                    Pay $5 Celebritarian Fee through Paypal (Paypal email must match Assassin email):
+                                    <div style="height: 14px;"></div>
+                                    <%- include('paypalInitialCeleb'); %>
+                                    <div style="height: 6px;"></div>
+                              <%} else
+                                {%>
+                                    <hr>
+                                    Pay $10 Team Fee through Paypal (Paypal email must match Assassin email):
+                                    <%- include('paypalInitialRegular'); %>
+                                    <div style="height: 6px;"></div>
+                              <%}
+                              }
                               break;
 
-                        case "Registered":
-                        case "Pics Approved":
+          							default:
+          						    // code block
+          					}%>
 
-                            if (paypalFlag != "Paypal Off")
-                            {
-                              if (playerCelebStatus == 1)
-                              {
-                            %>
-                                  <hr>
-                                  Pay $5 Celebritarian Fee through Paypal (Paypal email must match Assassin email):
-                                  <div style="height: 14px;"></div>
-                                  <%- include('paypalInitialCeleb'); %>
-                                  <div style="height: 6px;"></div>
-                            <%} else
-                              {%>
-                                  <hr>
-                                  Pay $10 Team Fee through Paypal (Paypal email must match Assassin email):
-                                  <%- include('paypalInitialRegular'); %>
-                                  <div style="height: 6px;"></div>
-                            <%}
-                            }
-                            break;
-
-        							default:
-        						    // code block
-        					}%>
-
+          </div>
         </div>
-      </div>
+
+    </div> <!-- end Card  -->
 
 <% } %>

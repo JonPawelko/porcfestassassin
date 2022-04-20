@@ -11,39 +11,43 @@
 
 <body class="container" style="margin-top: 10px;">
 
-  <div class="card" style="width:21rem;">
+<div class="row justify-content-center">
 
-    <div class="card-header">
-        Edit Player&nbsp<%= playerCode %>
-				<div style="height: 3px;"></div>
-    </div>
+	  <div class="card" style="width:21rem;">
 
-    <div class="card-body">
+	    <div class="card-header">
+	        Edit Player&nbsp<%= playerCode %>
+					<div style="height: 3px;"></div>
+	    </div>
 
-      <form autocomplete="off" action="adminUpdatePlayerData" method="post" onsubmit="return waitCursor()" encType="multipart/form-data">
-          <input type="hidden" name="playerCode" value="<%= playerCode %>">
-					<div style="height: 10px;"></div>
-          Player Name: &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<input type="search" size="12" name="playerName" value="<%= playerName %>" autocomplete="off">
-					<div style="height: 14px;"></div>
-          Player Phone Number: <input type="search" size="12" name="playerPhone" value="<%= playerPhone %>" autocomplete="off">
+	    <div class="card-body">
 
-					<div style="height: 1px;"></div>
-					&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
-					<small>### - ### - ####</small>
+	      <form autocomplete="off" action="adminUpdatePlayerData" method="post" onsubmit="return waitCursor()" encType="multipart/form-data">
+	          <input type="hidden" name="playerCode" value="<%= playerCode %>">
+						<div style="height: 10px;"></div>
+	          Player Name: &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<input type="search" size="12" name="playerName" value="<%= playerName %>" autocomplete="off">
+						<div style="height: 14px;"></div>
+	          Player Phone Number: <input type="search" size="12" name="playerPhone" value="<%= playerPhone %>" autocomplete="off">
 
-					<div style="height: 10px;"></div>
+						<div style="height: 1px;"></div>
+						&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+						<small>### - ### - ####</small>
 
-					Celebritarian: <input type="checkbox" name="celebritarian" <% if (celebritarian == 1) {%> checked <%} else {%> unchecked <%}%>>
-					<div style="height: 14px;"></div>
-          <input type="submit" class="btn btn-info" value="Update Player Data"/>
-					&nbsp&nbsp&nbsp&nbsp
-					<input type="submit" class="btn btn-info" formaction="assassinLogin" onsubmit="return waitCursor()" value="Home"/>
-					<div style="height: 6px;"></div>
-        </form>
+						<div style="height: 10px;"></div>
 
-    </div>
+						Celebritarian: <input type="checkbox" name="celebritarian" <% if (celebritarian == 1) {%> checked <%} else {%> unchecked <%}%>>
+						<div style="height: 14px;"></div>
+	          <input type="submit" class="btn btn-info" value="Update Player Data"/>
+						&nbsp&nbsp&nbsp&nbsp
+						<input type="submit" class="btn btn-info" formaction="assassinLogin" onsubmit="return waitCursor()" value="Home"/>
+						<div style="height: 6px;"></div>
+	        </form>
 
-  </div>
+	    </div>
+
+	  </div>
+
+</div>
 
 </body>
 </html>
