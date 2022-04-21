@@ -1656,7 +1656,6 @@ router.post('/adminSearchForPlayer', function(req, res, next)
     var tempCeleb = CHECKBOX_OFF;  // req.body.celebritarian is being passed in as undefined when unchecked
 
     var playerPicPath; // helper var to replace any spaces from file names with code
-    var atLeastOneInput = false;
 
     if (req.body.playerCode != "")
     {
@@ -1664,43 +1663,41 @@ router.post('/adminSearchForPlayer', function(req, res, next)
     }
 
     // start error checking
-    if (validateCode(tempPlayerCode))
-    {
-        atLeastOneInput = true;
-    }
+    // if (validateCode(tempPlayerCode))
+    // {
+    //     atLeastOneInput = true;
+    // }
 
     if (validateCode(req.body.teamCode))
     {
         tempTeamCode = req.body.teamCode;
-        atLeastOneInput = true;
     }
 
     if ((req.body.playerName != "") && (validateString(req.body.playerName) == true))
     {
-      atLeastOneInput = true;
       tempPlayerName = req.body.playerName;
     }
 
     if ((req.body.teamName != "") && (validateTeamName(req.body.teamName) == true))
     {
-      atLeastOneInput = true;
       tempTeamName = req.body.teamName;
     }
 
     if (req.body.celebritarian == CHECKBOX_ON)
     {
-      atLeastOneInput = true;
       tempCeleb = CHECKBOX_ON;
     }
 
-    if (atLeastOneInput == false)
-    {
-      // Render error page, passing in error code
-      res.render('errorMessagePage', {result: ERROR_AT_LEAST_ONE_INPUT_REQUIRED});
-      return;
-    }
+    // if (atLeastOneInput == false)
+    // {
+    //   // Render error page, passing in error code
+    //   res.render('errorMessagePage', {result: ERROR_AT_LEAST_ONE_INPUT_REQUIRED});
+    //   return;
+    // }
 
     // end error checking  --------------
+
+    console.log("Test. team name: " + tempTeamName + "  player name:" + tempPlayerName + "  player code:" + tempPlayerCode + "  team code:" + tempTeamCode + "  celeb: " + tempCeleb)
 
     // Call stored procedure to search for the player
     dbConn.query('CALL `assassin`.`admin_search_for_player`(?,?,?,?,?)', [tempTeamName, tempPlayerName, tempPlayerCode, tempTeamCode, tempCeleb], function(err,rows)
@@ -1737,7 +1734,7 @@ router.post('/adminSearchForPlayer', function(req, res, next)
                     playerStatus: rows[0][0]['player-status'],
                     playerPhone: rows[0][0]['phone-number'],
                     photoStatus: rows[0][0]['picture-status'],
-                    celebritarian: rows[0][0]['celebritarian']
+                    celebritarian: rows[0][0]['celeb']
                 });
 
             }
