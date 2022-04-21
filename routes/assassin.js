@@ -1543,8 +1543,15 @@ router.post('/adminSearchForTeam', function(req, res, next)
     var tempTeamName = "";
     var tempPlayerName = "";
     var atLeastOneInput = false;
+    var tempSearchAll = CHECKBOX_OFF;
 
     // start error checking
+
+    if (req.body.searchAll == CHECKBOX_ON)
+    {
+      atLeastOneInput = true;
+      tempSearchAll = CHECKBOX_ON;
+    }
 
     if (validateCode(req.body.playerCode))
     {
@@ -1573,7 +1580,7 @@ router.post('/adminSearchForTeam', function(req, res, next)
     }
 
     // Call stored procedure to search for the team
-    dbConn.query('CALL `assassin`.`admin_search_for_team`(?,?,?,?)', [req.body.teamName, req.body.playerName, tempTeamCode, tempPlayerCode], function(err,rows)
+    dbConn.query('CALL `assassin`.`admin_search_for_team`(?,?,?,?,?)', [req.body.teamName, req.body.playerName, tempTeamCode, tempPlayerCode, tempSearchAll], function(err,rows)
     {
         if(err)
         {
@@ -1654,6 +1661,7 @@ router.post('/adminSearchForPlayer', function(req, res, next)
     var tempPlayerCode = 0;
     var tempTeamCode = 0;
     var tempCeleb = CHECKBOX_OFF;  // req.body.celebritarian is being passed in as undefined when unchecked
+    var tempSearchAll = CHECKBOX_OFF;
 
     var playerPicPath; // helper var to replace any spaces from file names with code
 
@@ -1688,6 +1696,11 @@ router.post('/adminSearchForPlayer', function(req, res, next)
       tempCeleb = CHECKBOX_ON;
     }
 
+    if (req.body.searchAll == CHECKBOX_ON)
+    {
+      tempSearchAll = CHECKBOX_ON;
+    }
+
     // if (atLeastOneInput == false)
     // {
     //   // Render error page, passing in error code
@@ -1700,7 +1713,7 @@ router.post('/adminSearchForPlayer', function(req, res, next)
     console.log("Test. team name: " + tempTeamName + "  player name:" + tempPlayerName + "  player code:" + tempPlayerCode + "  team code:" + tempTeamCode + "  celeb: " + tempCeleb)
 
     // Call stored procedure to search for the player
-    dbConn.query('CALL `assassin`.`admin_search_for_player`(?,?,?,?,?)', [tempTeamName, tempPlayerName, tempPlayerCode, tempTeamCode, tempCeleb], function(err,rows)
+    dbConn.query('CALL `assassin`.`admin_search_for_player`(?,?,?,?,?,?)', [tempTeamName, tempPlayerName, tempPlayerCode, tempTeamCode, tempCeleb, tempSearchAll], function(err,rows)
     {
         if(err)
         {
