@@ -1547,6 +1547,7 @@ router.post('/adminSearchForTeam', function(req, res, next)
 
     // start error checking
 
+
     if (req.body.searchAll == CHECKBOX_ON)
     {
       atLeastOneInput = true;
