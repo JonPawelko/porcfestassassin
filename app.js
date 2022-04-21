@@ -137,7 +137,7 @@ global.TWILIO_OFF = "Twilio Off";
 global.TWILIO_PROD_ALL = "Twilio Production All";  // see below limit
 global.TWILIO_PROD_LOW = "Twilio Production Low";
 
-// limit of 300 twilio texts per day, use throttle approach
+// limit of 3000 twilio texts per day, use throttle approach
 global.TWILIO_TEXTS_TODAY = 0;
 global.TWILIO_DATE = new Date();
 global.TWILIO_MAX = 3000;
