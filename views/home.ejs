@@ -158,25 +158,29 @@
 
 								<div style="height: 14px;"></div>
 
-								<div class="card" style="width:21rem;">
+								<div class="row justify-content-center">
 
-									<div class="card-header">
-										Teammate Details
-									</div>
+									<div class="card" style="width:21rem;">
 
-									<div class="card-body">
+										<div class="card-header">
+											Teammate Details
+										</div>
 
-											<div style="height: 6px;"></div>
-											<%-  include('teammateList'); %>
-											<div style="height: 10px;"></div>
+										<div class="card-body">
 
-											<%
-												if (playerStatus == "Bench")
-												{%>
-														<%- include('benchFeatures'); %>
-												<%}%>
+												<div style="height: 6px;"></div>
+												<%-  include('teammateList'); %>
+												<div style="height: 10px;"></div>
 
-									</div>
+												<%
+													if (playerStatus == "Bench")
+													{%>
+															<%- include('benchFeatures'); %>
+													<%}%>
+
+										</div>
+
+								</div>
 
 							</div>
 
