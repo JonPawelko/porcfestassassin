@@ -3197,137 +3197,139 @@ function send_text_alerts(rows)
 
   for (i=0; i<rows[0].length-1; i++)
   {
+      decodedMessage = "Assassin Alert!  ";
+      
       switch(rows[0][i+1].eventCode)
       {
           case EVENT_ASSASSINATION:
             console.log("Your Team has made a successful assassination!");
-            decodedMessage = "Your Team has made a successful assassination! Log into Assassin to view your new Target.";
+            decodedMessage += "Your Team has made a successful assassination! Log into Assassin to view your new Target.";
             break;
 
           case EVENT_WAITING_TO_LIVE:
             console.log("Your Team has moved from Waiting Status to Live!");
-            decodedMessage = "Your Team has moved from Waiting Status to Live! Log into Assassin to view your Target.";
+            decodedMessage += "Your Team has moved from Waiting Status to Live! Log into Assassin to view your Target.";
             break;
 
           case EVENT_ASSASSINATED:
             console.log("Your Team has been assassinated!");
-            decodedMessage = "Your Team has been assassinated. Log into Assassin to rebuy if you have available bounties.";
+            decodedMessage += "Your Team has been assassinated. Log into Assassin to rebuy if you have available bounties.";
             break;
 
             case EVENT_NEW_GO_LIVE:
               console.log("Your Team has a new Live Player.");
-              decodedMessage = "Your Team has a new Live Player. Log into Assassin to the change.";
+              decodedMessage += "Your Team has a new Live Player. Log into Assassin to the change.";
               break;
 
             case EVENT_NEW_REBUY:
               console.log("Your Team did a Rebuy and has been moved to Waiting Status.");
-              decodedMessage = "Your Team did a Rebuy and has been moved to Waiting Status!";
+              decodedMessage += "Your Team did a Rebuy and has been moved to Waiting Status!";
               break;
 
             case EVENT_RETURN_FROM_BREAK_TO_WAITING:
               console.log("Your Team has returned from Break and is in Waiting Status.");
-              decodedMessage = "Your Team has returned from Break and is in Waiting Status.";
+              decodedMessage += "Your Team has returned from Break and is in Waiting Status.";
               break;
 
             case EVENT_REMOVED_FROM_TEAM:
               console.log("You have been removed from your Team.");
-              decodedMessage = "You have been removed from your Team. You may join another Team or create a new Team.";
+              decodedMessage += "You have been removed from your Team. You may join another Team or create a new Team.";
               break;
 
             case EVENT_TEAMMATE_REMOVED:
               console.log("One of your teammates has been removed from your Team.");
-              decodedMessage = "One of your teammates has been removed from your Team. Log into Assassin to view the change.";
+              decodedMessage += "One of your teammates has been removed from your Team. Log into Assassin to view the change.";
               break;
 
             case EVENT_ADDED_TO_TEAM:
               console.log("You have been added to a Team!");
-              decodedMessage = "You have been added to a Team! Log into Assassin to view the change.";
+              decodedMessage += "You have been added to a Team! Log into Assassin to view the change.";
               break;
 
             case EVENT_NEW_TEAMMATE:
               console.log("Your Team has a new Player!");
-              decodedMessage = "Your Team has a new Player! Log into Assassin to view the change.";
+              decodedMessage += "Your Team has a new Player! Log into Assassin to view the change.";
               break;
 
             case EVENT_TEAM_ON_BREAK:
               console.log("Your Team is now on Break!");
-              decodedMessage = "Your Team is now on Break. Log into Assassin to view the change.";
+              decodedMessage += "Your Team is now on Break. Log into Assassin to view the change.";
               break;
 
             case EVENT_SOMEONE_ON_TEAM_QUIT:
               console.log("A Player on your Team has quit!");
-              decodedMessage = "A Player on your Team has quit. Log into Assassin to view the change.";
+              decodedMessage += "A Player on your Team has quit. Log into Assassin to view the change.";
               break;
 
             case EVENT_NEW_TARGET:
               console.log("Your Team has a new Target!");
-              decodedMessage = "Your Team has a new Target. Log into Assassin to view the change.";
+              decodedMessage += "Your Team has a new Target. Log into Assassin to view the change.";
               break;
 
             case EVENT_BOMB_DROPPED:
               console.log("The Assassin Admin dropped a Bomb!");
-              decodedMessage = "The Assassin Admin dropped a Bomb. Log into Assassin to view your new Target.";
+              decodedMessage += "The Assassin Admin dropped a Bomb. Log into Assassin to view your new Target.";
               break;
 
             case EVENT_PHOTO_REJECTED:
               console.log("Your photo was rejected!");
-              decodedMessage = "Your photo was rejected. Please upload a new one.";
+              decodedMessage += "Your photo was rejected. Please upload a new one.";
               break;
 
             case EVENT_GAME_START:
               console.log("The Assassin Game has started!");
-              decodedMessage = "The Assassin Game has started!";
+              decodedMessage += "The Assassin Game has started!";
               break;
 
             case EVENT_GAME_END:
               console.log("The Assassin Game has ended!");
-              decodedMessage = "The Assassin Game has ended!  Please see the Admin as soon as possible if you have a payout.";
+              decodedMessage += "The Assassin Game has ended!  Please see the Admin as soon as possible if you have a payout.";
               break;
 
             case EVENT_MOVED_TO_WAITING:
               console.log("Your Team has been moved to the Waiting Area!");
-              decodedMessage = "Your Team has been moved to the Waiting Area!  You will enter the Game on the next major event.";
+              decodedMessage += "Your Team has been moved to the Waiting Area!  You will enter the Game on the next major event.";
               break;
 
             case EVENT_MORNING_START:
               console.log("Morning start.");
-              decodedMessage = "Good morning! Assassin has started.";
+              decodedMessage += "Good morning! Assassin has started.";
               break;
 
             case EVENT_MARK_NIGHT_END:
               console.log("Night end");
-              decodedMessage = "Assassin has ended for the night.";
+              decodedMessage += "Assassin has ended for the night.";
               break;
 
             case CONTEST_NEXT_KILL:
               console.log("Contest next kill");
-              decodedMessage = "Bonus! Next assassination +1 bounty. Expires " + formatDate(dt);
+              decodedMessage += "Bonus! Next assassination +1 bounty. Expires " + formatDate(dt);
               console.log(decodedMessage);
               break;
 
             case CONTEST_NEXT_CELEB_TARGET:
               console.log("Contest next celeb target");
-              decodedMessage = "Bonus! Next Celebritarian assassinated +1 bounty. Expires " + formatDate(dt);
+              decodedMessage += "Bonus! Next Celebritarian assassinated +1 bounty. Expires " + formatDate(dt);
               break;
 
             case CONTEST_NEXT_CELEB_ASSASSIN:
               console.log("The Assassin Game has ended!");
-              decodedMessage = "Bonus! Next assassination by a Celebritarian +1 bounty. Expires " + formatDate(dt);
+              decodedMessage += "Bonus! Next assassination by a Celebritarian +1 bounty. Expires " + formatDate(dt);
               break;
 
             case CONTEST_FIRST_MORNING_KILL:
               console.log("Your Team has been moved to the Waiting Area!");
-              decodedMessage = "Bonus! First assassination today +1 bounty. Doesn't expire.";
+              decodedMessage += "Bonus! First assassination today +1 bounty. Doesn't expire.";
               break;
 
             case CONTEST_LAST_NIGHT_KILL:
               console.log("Morning start.");
-              decodedMessage = "Bonus! Last assassination tonight +1 bounty.";
+              decodedMessage += "Bonus! Last assassination tonight +1 bounty.";
               break;
 
           default:
             console.log("Unkown event. Code = " + rows[0][i].eventCode);
-            decodedMessage = "Assassin event, log in to view any changes.";
+            decodedMessage += "Assassin event, log in to view any changes.";
         }
 
         decodedMessage += " www.PorcfestAssassin.com";
