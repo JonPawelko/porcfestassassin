@@ -2517,14 +2517,23 @@ router.post('/adminDropBomb', function(req, res, next)
           console.log("adminDropBomb rpc worked.");
           console.log(rows);
 
-          // No addl error checking if call succeeded.  First row is success code, then phone #'s'
-          if (rows[0].length > 1)
+          if (rows[0][0].phone == CALL_SUCCESS)
           {
-            if (TWILIO_FLAG != TWILIO_OFF)
-              send_text_alerts(rows);
-          }
+              // send texts if nec.
+              if (rows[0].length > 1)
+              {
+                if (TWILIO_FLAG != TWILIO_OFF)
+                  send_text_alerts(rows);
+              }
 
-          res.oidc.login();
+              res.oidc.login(); // send back home to refresh page
+          }
+          else
+          {
+              // Render error page, passing in error code
+              res.render('errorMessagePage', {result: parseInt(rows[0][0].phone)});
+              return;
+          }
 
       } // end else
 
@@ -3198,7 +3207,7 @@ function send_text_alerts(rows)
   for (i=0; i<rows[0].length-1; i++)
   {
       decodedMessage = "Assassin Alert!  ";
-      
+
       switch(rows[0][i+1].eventCode)
       {
           case EVENT_ASSASSINATION:
