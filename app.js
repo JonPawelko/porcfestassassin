@@ -59,7 +59,7 @@ global.CONFIRM_BOMB = 7;
 
 // Global Event Code constants for Alerts
 global.EVENT_ASSASSINATION = 1;
-global.EVENT_WAITING_TO_LIVE = 2;
+global.EVENT_NOW_LIVE = 2;
 global.EVENT_ASSASSINATED = 3;
 global.EVENT_NEW_GO_LIVE = 4;
 global.EVENT_NEW_REBUY = 5;
@@ -140,7 +140,7 @@ global.TWILIO_PROD_LOW = "Twilio Production Low";
 // limit of 3000 twilio texts per day, use throttle approach
 global.TWILIO_TEXTS_TODAY = 0;
 global.TWILIO_DATE = new Date();
-global.TWILIO_MAX = 3000;
+global.TWILIO_MAX = 3000;  // 3000 is daily max
 
 // set global paypal and twilio flags
 global.PAYPAL_FLAG = PERSONAL_ENV.PAYPAL_ENVIRONMENT;

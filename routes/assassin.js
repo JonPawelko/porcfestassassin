@@ -230,7 +230,8 @@ router.get('/', function(req, res, next) {
                                   myTeamTodayKills: rowsStats[0][0].myTeamTodayKills,
                                   myPersonalKillsWeek: rowsStats[0][0].myPersonalKillsWeek,
                                   myPersonalKillsDay: rowsStats[0][0].myPersonalKillsDay,
-                                  textsSent: TWILIO_TEXTS_TODAY});
+                                  textsSent: TWILIO_TEXTS_TODAY,
+                                  twilioStatus: TWILIO_FLAG});
                               }
                           }); // end get_teammate_info rpc call
                       }
@@ -283,7 +284,8 @@ router.get('/', function(req, res, next) {
                           myTeamTodayKills: rowsStats[0][0].myTeamTodayKills,
                           myPersonalKillsWeek: rowsStats[0][0].myPersonalKillsWeek,
                           myPersonalKillsDay: rowsStats[0][0].myPersonalKillsDay,
-                          textsSent: TWILIO_TEXTS_TODAY});
+                          textsSent: TWILIO_TEXTS_TODAY,
+                          twilioStatus: TWILIO_FLAG});
                       } // end else, no teammates
 
                   }  // end else - Successful get_statistics RPC call
@@ -2635,7 +2637,7 @@ router.post('/checkPlayersWithNoTeam', function(req, res, next)
       return;
   }
 
-  // Call stored procedure to search for the teams not paid
+  // Call stored procedure to search for players with no team
   dbConn.query('CALL `assassin`.`admin_search_for_players_no_team`()', function(err,rows)
   {
       if(err)
@@ -2748,6 +2750,57 @@ router.post('/sendAllNotPaidMessages', function(req, res, next)
 
           res.oidc.login();
       }
+
+  }); // end stored proc call
+
+}); // end post
+
+// -------------------------------------------------------------
+// sendAllNoTeamMessages called by admin to find players not on a team
+
+router.post('/sendAllNoTeamMessages', function(req, res, next)
+{
+  console.log("Got into new sendAllNoTeamMessages call");
+
+  // Check authentication status
+  if (!req.oidc.isAuthenticated())
+  {
+      console.log("Not authenticated");
+      res.render('landing');
+      return;
+  }
+
+  // Call stored procedure to search for players with no team
+  dbConn.query('CALL `assassin`.`admin_search_for_players_no_team`()', function(err,rows)
+  {
+      if(err)
+      {
+          console.log("MySQL error on admin_search_for_players_no_team call: " + err.code + " - " + err.message);
+          // Render error page, passing in error data
+          res.render('errorMessagePage', {result: ERROR_MYSQL_SYSTEM_ERROR_ON_RPC});
+          return;
+      } else
+      {
+          // admin_search_for_not_paid rpc worked
+          console.log("admin_search_for_players_no_team successful rpc call.");
+
+          // Check results,
+          console.log(rows);
+
+          var i;
+
+          for (i=0; i<rows[0].length; i++)
+          {
+              if (rows[0][i]['phone-number'] != null)
+              {
+                if (TWILIO_FLAG != TWILIO_OFF)
+                  send_text(req.body.message, rows[0][i]['phone-number']);
+              }
+          }
+
+          res.oidc.login();
+
+      } // end else successful rpc
 
   }); // end stored proc call
 
@@ -3215,9 +3268,9 @@ function send_text_alerts(rows)
             decodedMessage += "Your Team has made a successful assassination! Log into Assassin to view your new Target.";
             break;
 
-          case EVENT_WAITING_TO_LIVE:
-            console.log("Your Team has moved from Waiting Status to Live!");
-            decodedMessage += "Your Team has moved from Waiting Status to Live! Log into Assassin to view your Target.";
+          case EVENT_NOW_LIVE:
+            console.log("Your Team is Live with a new target!");
+            decodedMessage += "Your Team is Live! Log into Assassin to view your new Target.";
             break;
 
           case EVENT_ASSASSINATED:
@@ -3312,28 +3365,23 @@ function send_text_alerts(rows)
 
             case CONTEST_NEXT_KILL:
               console.log("Contest next kill");
-              decodedMessage += "Bonus! Next assassination +1 bounty. Expires " + formatDate(dt);
+              decodedMessage += "The next assassination earns +1 bounty. Expires " + formatDate(dt);
               console.log(decodedMessage);
               break;
 
             case CONTEST_NEXT_CELEB_TARGET:
               console.log("Contest next celeb target");
-              decodedMessage += "Bonus! Next Celebritarian assassinated +1 bounty. Expires " + formatDate(dt);
+              decodedMessage += "The next Celebritarian assassinated earns +1 bounty. Expires " + formatDate(dt);
               break;
 
             case CONTEST_NEXT_CELEB_ASSASSIN:
-              console.log("The Assassin Game has ended!");
-              decodedMessage += "Bonus! Next assassination by a Celebritarian +1 bounty. Expires " + formatDate(dt);
+              console.log("Contest next celeb assassin");
+              decodedMessage += "The next assassination by a Celebritarian earns +1 bounty. Expires " + formatDate(dt);
               break;
 
             case CONTEST_FIRST_MORNING_KILL:
-              console.log("Your Team has been moved to the Waiting Area!");
-              decodedMessage += "Bonus! First assassination today +1 bounty. Doesn't expire.";
-              break;
-
-            case CONTEST_LAST_NIGHT_KILL:
-              console.log("Morning start.");
-              decodedMessage += "Bonus! Last assassination tonight +1 bounty.";
+              console.log("Contest first morning kill!");
+              decodedMessage += "The first assassination today earns +1 bounty. Doesn't expire.";
               break;
 
           default:
@@ -3724,7 +3772,7 @@ router.post('/systemStartCronScripts', function(req, res, next)
       var day = (tempDate.getDate()+1) + "-" + (tempDate.getDate()+3);  // mornings June 23 - 25
       var month = tempDate.getMonth()+1;
 
-      var cronString = "*" + " " + hour + " " + day + " " + month + " *";
+      var cronString = "0" + " " + hour + " " + day + " " + month + " *";
 
       console.log("Final cron string is " + cronString);
 
@@ -3770,7 +3818,7 @@ router.post('/systemStartCronScripts', function(req, res, next)
       var day = (tempDate.getDate()) + "-" + (tempDate.getDate()+2);  // nights 22 - 24
       var month = tempDate.getMonth()+1;
 
-      var cronString = "*" + " " + hour + " " + day + " " + month + " *";
+      var cronString = "0" + " " + hour + " " + day + " " + month + " *";
 
       console.log("Final cron string is " + cronString);
 
@@ -3816,12 +3864,13 @@ router.post('/systemStartCronScripts', function(req, res, next)
       var day = (tempDate.getDate()) + "-" + (tempDate.getDate()+3);  // nights 22 - 25
       var month = tempDate.getMonth()+1;
 
-      var cronString = "*" + " " + hour + " " + day + " " + month + " *";
+      var cronString = "0" + " " + hour + " " + day + " " + month + " *";
 
       console.log("Final cron string is " + cronString);
 
       if (CRON_2_HOURS_TO_TO_SCRIPT_RUNNING == 0)
       {
+          console.log("Turning on 2 hours to go cron script ");
           CRON_2_HOURS_TO_TO_SCRIPT_RUNNING = 1;
           req.app.locals.twoHoursToGoCronScript = cron.schedule(cronString, twoHoursToGoCronFunction);
       }
@@ -3846,12 +3895,13 @@ router.post('/systemStartCronScripts', function(req, res, next)
       var day = (tempDate.getDate()) + "-" + (tempDate.getDate()+3);  // nights 22 - 25
       var month = tempDate.getMonth()+1;
 
-      var cronString = "*" + " " + hour + " " + day + " " + month + " *";
+      var cronString = "0" + " " + hour + " " + day + " " + month + " *";
 
       console.log("Final cron string is " + cronString);
 
       if (CRON_1_HOUR_TO_GO_SCRIPT_RUNNING == 0)
       {
+          console.log("Turning on 1 hour to go cron script ");
           CRON_1_HOUR_TO_GO_SCRIPT_RUNNING = 1;
           req.app.locals.oneHourToGoCronScript = cron.schedule(cronString, oneHourToGoCronFunction);
       }

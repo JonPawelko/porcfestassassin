@@ -5,8 +5,8 @@
 <%  if	((gameStatus == "Live") || (gameStatus == "Overnight"))
     {
 %>
-        Your team status is Waiting.
-        <br>Your individual status is <%= playerStatus %>.
+        Your team status is <b>Waiting</b>.
+        <br>Your individual status is <b><%= playerStatus %></b>.
         <br>Your team will enter the game on the next major event.
         <br>
 <% } %>
@@ -14,8 +14,8 @@
 <%  if	(gameStatus == "Not Started")
     {
 %>
-        Your team status is Waiting.
-        <br>Your individual status is <%= playerStatus %>.
+        Your team status is <b>Waiting</b>.
+        <br>Your individual status is <b><%= playerStatus %></b>.
         <br>Your team will be Live when the game starts.
         <br>
 <% } %>
