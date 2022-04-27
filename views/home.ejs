@@ -39,7 +39,7 @@
 				<div style="height: 3px;"></div>
 				<h5>Welcome to Assassin <%= playerName %>!</h5>
 
-				<% if (playerMessage != "")
+				<% if ((playerMessage != null) && (playerMessage != ""))
 				{%>
 					<div style="height: 2px;"></div>
 					<%= playerMessage %>
@@ -49,22 +49,29 @@
 				<!-- check game status here -->
 				<% switch(gameStatus)
 				{
+						case "Live":
+							%>
+							The game is <b>Live</b>.
+							<div style="height: 6px;"></div>
+							<%
+							break;
+
 						case "Not Started":
 								%>
-								The game has not started yet.
+								The game has not started.
 								<div style="height: 6px;"></div>
 								<%
 								break;
 
 						case "Overnight":
 								%>
-								The game is on overnight break.
+								The game is on <b>overnight break</b>.
 								<div style="height: 6px;"></div>
 								<%break;
 
 						case "Over":
 								%>
-								The game is over.
+								The game is <b>over</b>.
 								<div style="height: 6px;"></div>
 								<%
 								break;
