@@ -186,7 +186,12 @@ switch (PERSONAL_ENV.AUTH0_ENVIRONMENT)
             auth0Logout: true,
             secret: CREDENTIALS.AUTH0_SECRET_TEST,
             baseURL: tempNodeJSEnvHelper,
-            clientID: CREDENTIALS.AUTH0_CLIENT_ID_TEST,
+						// session: {
+						//     cookie: {
+						//       domain: '.porcfestassassin.com'
+						//     }
+						//   },
+					  clientID: CREDENTIALS.AUTH0_CLIENT_ID_TEST,
             issuerBaseURL: CREDENTIALS.AUTH0_ISSUER_BASE_URL_TEST
           };
 
