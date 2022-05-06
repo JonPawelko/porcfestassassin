@@ -92,17 +92,25 @@
 	                  <input type="submit" class="btn btn-info" value="Home"/>
 	                  <div style="height: 6px;"></div>
 	            </form>
-					<% 	} else
-					{
-						 	if (nodeJSFlag == "Production Environment")
-							{ %>
-								<input type="button" onclick="window.open('https://www.porcfestassassin.com')" value="Home">
-					<% 	} else
-							{ %>
-								<input type="button" onclick="window.open('http://localhost:3000/')" value="Home">
-							<% 	} %>
+				<%  } else
+						{
 
-					<%} %>
+							 	if (nodeJSFlag == "Production Environment")
+								{ %>
+									<input type="button" onclick="window.open('https://www.porcfestassassin.com')" value="Home">
+						<% 	} else
+								{
+									if (nodeJSFlag == "Test Environment")
+									{ %>
+										<input type="button" onclick="window.open('http://159.65.180.75')" value="Home">
+								<%} else
+									{ %>
+										<input type="button" onclick="window.open('http://localhost:3000/')" value="Home">
+								<%} %>
+
+							<%}
+
+						} %>
 
 						<div style="height: 16px;"></div>
 
