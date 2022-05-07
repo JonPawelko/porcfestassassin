@@ -47,6 +47,7 @@ global.CRON_1_HOUR_TO_GO_SCRIPT_RUNNING = 0;
 global.CRON_CHECK_MANY_PHOTOS_SCRIPT_RUNNING = 0;
 global.CRON_CHECK_OLD_PHOTOS_SCRIPT_RUNNING = 0;
 global.CRON_BONUS_CONTEST_CHECKER_SCRIPT_RUNNING = 0;
+global.CRON_DB_CONNECTION_PINGER_SCRIPT_RUNNING = 0;
 
 // Global Confirm Code constants
 global.CONFIRM_GO_LIVE = 1;
@@ -186,11 +187,6 @@ switch (PERSONAL_ENV.AUTH0_ENVIRONMENT)
             auth0Logout: true,
             secret: CREDENTIALS.AUTH0_SECRET_TEST,
             baseURL: tempNodeJSEnvHelper,
-						// session: {
-						//     cookie: {
-						//       domain: '.porcfestassassin.com'
-						//     }
-						//   },
 					  clientID: CREDENTIALS.AUTH0_CLIENT_ID_TEST,
             issuerBaseURL: CREDENTIALS.AUTH0_ISSUER_BASE_URL_TEST
           };

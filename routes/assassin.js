@@ -86,7 +86,7 @@ router.get('/', function(req, res, next) {
   {
       if(err)
       {
-        console.log("MySQL error on get_player_info_and_game_status call: " + err.code + " - " + err.message);
+        console.log("MySQL error on get_player_info_and_game_status call: " + err.code + " - " + err.message + " " + (new Date()).toLocaleString());
 
         // Render error page, passing in error data
         res.render('errorMessagePage', {result: ERROR_MYSQL_SYSTEM_ERROR_ON_RPC});
@@ -122,7 +122,7 @@ router.get('/', function(req, res, next) {
               {
                   if(err)
                   {
-                      console.log("MySQL error on get_statistics call: " + err.code + " - " + err.message);
+                      console.log("MySQL error on get_statistics call: " + err.code + " - " + err.message + " " + (new Date()).toLocaleString());
                       // Render error page, passing in error data
                       res.render('errorMessagePage', {result: ERROR_MYSQL_SYSTEM_ERROR_ON_RPC});
                       return;
@@ -174,7 +174,7 @@ router.get('/', function(req, res, next) {
                           {
                               if(err)
                               {
-                                  console.log("MySQL error on get_teammate_info call: " + err.code + " - " + err.message);
+                                  console.log("MySQL error on get_teammate_info call: " + err.code + " - " + err.message + " " + (new Date()).toLocaleString());
                                   // Render error page, passing in error data
                                   res.render('errorMessagePage', {result: ERROR_MYSQL_SYSTEM_ERROR_ON_RPC});
                                   return;
@@ -372,7 +372,7 @@ router.post('/newAssassin', function(req, res, next)
     {
         if(err)
         {
-            console.log("MySQL error on create_player_from_email call: " + err.code + " - " + err.message);
+            console.log("MySQL error on create_player_from_email call: " + err.code + " - " + err.message + " " + (new Date()).toLocaleString());
             // Render error page, passing in error data
             res.render('errorMessagePage', {result: ERROR_MYSQL_SYSTEM_ERROR_ON_RPC});
             return;
@@ -390,7 +390,7 @@ router.post('/newAssassin', function(req, res, next)
                     if (err)
                     {
                       // zzz
-                      console.log("File upload error in create_player_from_email call: " + err.code + " - " + err.message);
+                      console.log("File upload error in create_player_from_email call: " + err.code + " - " + err.message + " " + (new Date()).toLocaleString());
                       // Render error page, passing in error data
                       res.render('errorMessagePage', {result: ERROR_ON_FILE_UPLOAD});
                       return;
@@ -404,7 +404,7 @@ router.post('/newAssassin', function(req, res, next)
                         {
                             if(err)
                             {
-                                console.log("MySQL error on update_photo_status_to_uploaded call: " + err.code + " - " + err.message);
+                                console.log("MySQL error on update_photo_status_to_uploaded call: " + err.code + " - " + err.message + " " + (new Date()).toLocaleString());
                                 // Render error page, passing in error data
                                 res.render('errorMessagePage', {result: ERROR_MYSQL_SYSTEM_ERROR_ON_RPC});
                                 return;
@@ -472,7 +472,7 @@ router.post('/activateAssassin', function(req, res, next)
   {
       if(err)
       {
-          console.log("MySQL error on activate_player call: " + err.code + " - " + err.message);
+          console.log("MySQL error on activate_player call: " + err.code + " - " + err.message + " " + (new Date()).toLocaleString());
           // Render error page, passing in error data
           res.render('errorMessagePage', {result: ERROR_MYSQL_SYSTEM_ERROR_ON_RPC});
           return;
@@ -525,7 +525,7 @@ router.post('/validateKill', function(req, res, next)
   dbConn.query('CALL `assassin`.`validate_kill`(?,?)', [req.body.myTeamCode, req.body.myKillName], function(err,rows)
   {
       if(err) {
-          console.log("MySQL error on validate_kill call: " + err.code + " - " + err.message);
+          console.log("MySQL error on validate_kill call: " + err.code + " - " + err.message + " " + (new Date()).toLocaleString());
           // Render error page, passing in error data
           res.render('errorMessagePage', {result: ERROR_MYSQL_SYSTEM_ERROR_ON_RPC});
           return;
@@ -576,7 +576,7 @@ router.post('/rebuy', function(req, res, next)
   dbConn.query('CALL `assassin`.`rebuy`(?,?)', [req.body.myPlayerCode, req.body.myTeamCode], function(err,rows)
   {
       if(err) {
-          console.log("MySQL error on rebuy call: " + err.code + " - " + err.message);
+          console.log("MySQL error on rebuy call: " + err.code + " - " + err.message + " " + (new Date()).toLocaleString());
           // Render error page, passing in error data
           res.render('errorMessagePage', {result: ERROR_MYSQL_SYSTEM_ERROR_ON_RPC});
           return;
@@ -628,7 +628,7 @@ router.post('/goLive', function(req, res, next)
   {
       if(err)
       {
-          console.log("MySQL error on go_live call: " + err.code + " - " + err.message);
+          console.log("MySQL error on go_live call: " + err.code + " - " + err.message + " " + (new Date()).toLocaleString());
           // Render error page, passing in error data
           res.render('errorMessagePage', {result: ERROR_MYSQL_SYSTEM_ERROR_ON_RPC});
           return;
@@ -689,7 +689,7 @@ router.post('/joinTeam', function(req, res, next)
   {
       if(err)
       {
-          console.log("MySQL error on join_team call: " + err.code + " - " + err.message);
+          console.log("MySQL error on join_team call: " + err.code + " - " + err.message + " " + (new Date()).toLocaleString());
           // Render error page, passing in error data
           res.render('errorMessagePage', {result: ERROR_MYSQL_SYSTEM_ERROR_ON_RPC});
           return;
@@ -748,7 +748,7 @@ router.post('/createTeam', function(req, res, next)
   {
       if(err)
       {
-          console.log("MySQL error on create_team call: " + err.code + " - " + err.message);
+          console.log("MySQL error on create_team call: " + err.code + " - " + err.message + " " + (new Date()).toLocaleString());
           // Render error page, passing in error data
           res.render('errorMessagePage', {result: ERROR_MYSQL_SYSTEM_ERROR_ON_RPC});
           return;
@@ -795,7 +795,7 @@ router.post('/takeBreak', function(req, res, next)
   {
       if(err)
       {
-          console.log("MySQL error on leave_game call: " + err.code + " - " + err.message);
+          console.log("MySQL error on leave_game call: " + err.code + " - " + err.message + " " + (new Date()).toLocaleString());
           // Render error page, passing in error data
           res.render('errorMessagePage', {result: ERROR_MYSQL_SYSTEM_ERROR_ON_RPC});
           return;
@@ -846,7 +846,7 @@ router.post('/returnFromBreak', function(req, res, next)
   {
       if(err)
       {
-          console.log("MySQL error on return_from_break call: " + err.code + " - " + err.message);
+          console.log("MySQL error on return_from_break call: " + err.code + " - " + err.message + " " + (new Date()).toLocaleString());
           // Render error page, passing in error data
           res.render('errorMessagePage', {result: ERROR_MYSQL_SYSTEM_ERROR_ON_RPC});
           return;
@@ -907,7 +907,7 @@ router.post('/addPlayer', function(req, res, next)
   {
       if(err)
       {
-          console.log("MySQL error on add_player_to_team call: " + err.code + " - " + err.message);
+          console.log("MySQL error on add_player_to_team call: " + err.code + " - " + err.message + " " + (new Date()).toLocaleString());
           // Render error page, passing in error data
           res.render('errorMessagePage', {result: ERROR_MYSQL_SYSTEM_ERROR_ON_RPC});
           return;
@@ -967,7 +967,7 @@ router.post('/removePlayerFromTeam', function(req, res, next)
   {
       if(err)
       {
-          console.log("MySQL error on remove_player_from_team call: " + err.code + " - " + err.message);
+          console.log("MySQL error on remove_player_from_team call: " + err.code + " - " + err.message + " " + (new Date()).toLocaleString());
           // Render error page, passing in error data
           res.render('errorMessagePage', {result: ERROR_MYSQL_SYSTEM_ERROR_ON_RPC});
           return;
@@ -1019,7 +1019,7 @@ router.post('/quitGame', function(req, res, next)
   {
       if(err)
       {
-          console.log("MySQL error on leave_game call: " + err.code + " - " + err.message);
+          console.log("MySQL error on leave_game call: " + err.code + " - " + err.message + " " + (new Date()).toLocaleString());
           // Render error page, passing in error data
           res.render('errorMessagePage', {result: ERROR_MYSQL_SYSTEM_ERROR_ON_RPC});
           return;
@@ -1130,7 +1130,7 @@ router.post('/adminCreatePrepTemplateData', function(req, res, next)
   {
       if(err)
       {
-          console.log("MySQL error on admin_create_prepped_teams call: " + err.code + " - " + err.message);
+          console.log("MySQL error on admin_create_prepped_teams call: " + err.code + " - " + err.message + " " + (new Date()).toLocaleString());
           // Render error page, passing in error data
           res.render('errorMessagePage', {result: ERROR_MYSQL_SYSTEM_ERROR_ON_RPC});
           return;
@@ -1182,7 +1182,7 @@ router.post('/adminActivateTeamPrep', function(req, res, next)
   {
       if(err)
       {
-          console.log("MySQL error on admin_get_prepped_team_player_codes call: " + err.code + " - " + err.message);
+          console.log("MySQL error on admin_get_prepped_team_player_codes call: " + err.code + " - " + err.message + " " + (new Date()).toLocaleString());
           // Render error page, passing in error data
           res.render('errorMessagePage', {result: ERROR_MYSQL_SYSTEM_ERROR_ON_RPC});
           return;
@@ -1410,7 +1410,7 @@ router.post('/adminActivateTeam', function(req, res, next)
     {
         if(err)
         {
-            console.log("MySQL error on admin_activate_team call: " + err.code + " - " + err.message);
+            console.log("MySQL error on admin_activate_team call: " + err.code + " - " + err.message + " " + (new Date()).toLocaleString());
             // Render error page, passing in error data
             res.render('errorMessagePage', {result: ERROR_MYSQL_SYSTEM_ERROR_ON_RPC});
             return;
@@ -1440,7 +1440,7 @@ router.post('/adminActivateTeam', function(req, res, next)
                 if (err)
                 {
                   // zzz
-                  console.log("File upload error for captain in admin_activate_team call: " + err.code + " - " + err.message);
+                  console.log("File upload error for captain in admin_activate_team call: " + err.code + " - " + err.message + " " + (new Date()).toLocaleString());
                   // Render error page, passing in error data
                   res.render('errorMessagePage', {result: ERROR_ON_FILE_UPLOAD});
                   return;
@@ -1463,7 +1463,7 @@ router.post('/adminActivateTeam', function(req, res, next)
                             if (err)
                             {
                               // zzz
-                              console.log("File upload error for player 2 in admin_activate_team call: " + err.code + " - " + err.message);
+                              console.log("File upload error for player 2 in admin_activate_team call: " + err.code + " - " + err.message + " " + (new Date()).toLocaleString());
                               // Render error page, passing in error data
                               res.render('errorMessagePage', {result: ERROR_ON_FILE_UPLOAD});
                               return;
@@ -1486,7 +1486,7 @@ router.post('/adminActivateTeam', function(req, res, next)
                                         if (err)
                                         {
                                           // zzz
-                                            console.log("File upload error for player 3 in admin_activate_team call: " + err.code + " - " + err.message);
+                                            console.log("File upload error for player 3 in admin_activate_team call: " + err.code + " - " + err.message + " " + (new Date()).toLocaleString());
                                             // Render error page, passing in error data
                                             res.render('errorMessagePage', {result: ERROR_ON_FILE_UPLOAD});
                                             return;
@@ -1587,7 +1587,7 @@ router.post('/adminSearchForTeam', function(req, res, next)
     {
         if(err)
         {
-            console.log("MySQL error on admin_search_for_team call: " + err.code + " - " + err.message);
+            console.log("MySQL error on admin_search_for_team call: " + err.code + " - " + err.message + " " + (new Date()).toLocaleString());
             // Render error page, passing in error data
             res.render('errorMessagePage', {result: ERROR_MYSQL_SYSTEM_ERROR_ON_RPC});
             return;
@@ -1720,7 +1720,7 @@ router.post('/adminSearchForPlayer', function(req, res, next)
     {
         if(err)
         {
-            console.log("MySQL error on admin_search_for_player call: " + err.code + " - " + err.message);
+            console.log("MySQL error on admin_search_for_player call: " + err.code + " - " + err.message + " " + (new Date()).toLocaleString());
             // Render error page, passing in error data
             res.render('errorMessagePage', {result: ERROR_MYSQL_SYSTEM_ERROR_ON_RPC});
             return;
@@ -1802,7 +1802,7 @@ router.post('/adminApprovePicture', function(req, res, next)
     {
         if(err)
         {
-            console.log("MySQL error on admin_approve_picture call: " + err.code + " - " + err.message);
+            console.log("MySQL error on admin_approve_picture call: " + err.code + " - " + err.message + " " + (new Date()).toLocaleString());
             // Render error page, passing in error data
             res.render('errorMessagePage', {result: ERROR_MYSQL_SYSTEM_ERROR_ON_RPC});
             return;
@@ -1858,7 +1858,7 @@ router.post('/adminRejectPicture', function(req, res, next)
     {
         if(err)
         {
-            console.log("MySQL error on admin_reject_picture call: " + err.code + " - " + err.message);
+            console.log("MySQL error on admin_reject_picture call: " + err.code + " - " + err.message + " " + (new Date()).toLocaleString());
             // Render error page, passing in error data
             res.render('errorMessagePage', {result: ERROR_MYSQL_SYSTEM_ERROR_ON_RPC});
             return;
@@ -1944,7 +1944,7 @@ router.post('/uploadPhoto', function(req, res, next)
     {
         if(err)
         {
-            console.log("MySQL error on upload_photo_data call: " + err.code + " - " + err.message);
+            console.log("MySQL error on upload_photo_data call: " + err.code + " - " + err.message + " " + (new Date()).toLocaleString());
             // Render error page, passing in error data
             res.render('errorMessagePage', {result: ERROR_MYSQL_SYSTEM_ERROR_ON_RPC});
             return;
@@ -1972,7 +1972,7 @@ router.post('/uploadPhoto', function(req, res, next)
                 if (err)
                 {
                   // zzz
-                  console.log("File upload error in upload_photo_data call: " + err.code + " - " + err.message);
+                  console.log("File upload error in upload_photo_data call: " + err.code + " - " + err.message + " " + (new Date()).toLocaleString());
                   // Render error page, passing in error data
                   res.render('errorMessagePage', {result: ERROR_ON_FILE_UPLOAD});
                   return;
@@ -2021,7 +2021,7 @@ router.post('/adminPayBounties', function(req, res, next)
   {
       if(err)
       {
-          console.log("MySQL error on admin_pay_bounties call: " + err.code + " - " + err.message);
+          console.log("MySQL error on admin_pay_bounties call: " + err.code + " - " + err.message + " " + (new Date()).toLocaleString());
           // Render error page, passing in error data
           res.render('errorMessagePage', {result: ERROR_MYSQL_SYSTEM_ERROR_ON_RPC});
           return;
@@ -2067,7 +2067,7 @@ router.post('/adminMarkPaid', function(req, res, next)
   {
       if(err)
       {
-          console.log("MySQL error on admin_mark_paid call: " + err.code + " - " + err.message);
+          console.log("MySQL error on admin_mark_paid call: " + err.code + " - " + err.message + " " + (new Date()).toLocaleString());
           // Render error page, passing in error data
           res.render('errorMessagePage', {result: ERROR_MYSQL_SYSTEM_ERROR_ON_RPC});
           return;
@@ -2115,7 +2115,7 @@ router.post('/adminMarkPaidAndApprovePhoto', function(req, res, next)
   {
       if(err)
       {
-          console.log("MySQL error on admin_mark_paid call: " + err.code + " - " + err.message);
+          console.log("MySQL error on admin_mark_paid call: " + err.code + " - " + err.message + " " + (new Date()).toLocaleString());
           // Render error page, passing in error data
           res.render('errorMessagePage', {result: ERROR_MYSQL_SYSTEM_ERROR_ON_RPC});
           return;
@@ -2134,7 +2134,7 @@ router.post('/adminMarkPaidAndApprovePhoto', function(req, res, next)
               {
                   if(err)
                   {
-                      console.log("MySQL error on admin_approve_picture call: " + err.code + " - " + err.message);
+                      console.log("MySQL error on admin_approve_picture call: " + err.code + " - " + err.message + " " + (new Date()).toLocaleString());
                       // Render error page, passing in error data
                       res.render('errorMessagePage', {result: ERROR_MYSQL_SYSTEM_ERROR_ON_RPC});
                       return;
@@ -2250,7 +2250,7 @@ router.post('/adminUpdatePlayerData', function(req, res, next)
   {
       if(err)
       {
-          console.log("MySQL error on admin_update_player_data call: " + err.code + " - " + err.message);
+          console.log("MySQL error on admin_update_player_data call: " + err.code + " - " + err.message + " " + (new Date()).toLocaleString());
           // Render error page, passing in error data
           res.render('errorMessagePage', {result: ERROR_MYSQL_SYSTEM_ERROR_ON_RPC});
           return;
@@ -2304,7 +2304,7 @@ router.post('/adminUpdateTeamName', function(req, res, next)
   {
       if(err)
       {
-          console.log("MySQL error on admin_update_team_name call: " + err.code + " - " + err.message);
+          console.log("MySQL error on admin_update_team_name call: " + err.code + " - " + err.message + " " + (new Date()).toLocaleString());
           // Render error page, passing in error data
           res.render('errorMessagePage', {result: ERROR_MYSQL_SYSTEM_ERROR_ON_RPC});
           return;
@@ -2398,7 +2398,7 @@ router.post('/updatePlayerPhone', function(req, res, next)
   {
       if(err)
       {
-          console.log("MySQL error on update_player_phone call: " + err.code + " - " + err.message);
+          console.log("MySQL error on update_player_phone call: " + err.code + " - " + err.message + " " + (new Date()).toLocaleString());
           // Render error page, passing in error data
           res.render('errorMessagePage', {result: ERROR_MYSQL_SYSTEM_ERROR_ON_RPC});
           return;
@@ -2444,7 +2444,7 @@ router.post('/removePlayerPhoneNumber', function(req, res, next)
   {
       if(err)
       {
-          console.log("MySQL error on remove_player_phone call: " + err.code + " - " + err.message);
+          console.log("MySQL error on remove_player_phone call: " + err.code + " - " + err.message + " " + (new Date()).toLocaleString());
           // Render error page, passing in error data
           res.render('errorMessagePage', {result: ERROR_MYSQL_SYSTEM_ERROR_ON_RPC});
           return;
@@ -2509,7 +2509,7 @@ router.post('/adminDropBomb', function(req, res, next)
   {
       if(err)
       {
-          console.log("MySQL error on admin_drop_bomb call: " + err.code + " - " + err.message);
+          console.log("MySQL error on admin_drop_bomb call: " + err.code + " - " + err.message + " " + (new Date()).toLocaleString());
           // Render error page, passing in error data
           res.render('errorMessagePage', {result: ERROR_MYSQL_SYSTEM_ERROR_ON_RPC});
           return;
@@ -2565,7 +2565,7 @@ router.post('/checkNotPaid', function(req, res, next)
   {
       if(err)
       {
-          console.log("MySQL error on admin_search_for_not_paid call: " + err.code + " - " + err.message);
+          console.log("MySQL error on admin_search_for_not_paid call: " + err.code + " - " + err.message + " " + (new Date()).toLocaleString());
           // Render error page, passing in error data
           res.render('errorMessagePage', {result: ERROR_MYSQL_SYSTEM_ERROR_ON_RPC});
           return;
@@ -2642,7 +2642,7 @@ router.post('/checkPlayersWithNoTeam', function(req, res, next)
   {
       if(err)
       {
-          console.log("MySQL error on admin_search_for_players_no_team call: " + err.code + " - " + err.message);
+          console.log("MySQL error on admin_search_for_players_no_team call: " + err.code + " - " + err.message + " " + (new Date()).toLocaleString());
           // Render error page, passing in error data
           res.render('errorMessagePage', {result: ERROR_MYSQL_SYSTEM_ERROR_ON_RPC});
           return;
@@ -2725,7 +2725,7 @@ router.post('/sendAllNotPaidMessages', function(req, res, next)
   {
       if(err)
       {
-          console.log("MySQL error on admin_search_for_not_paid call: " + err.code + " - " + err.message);
+          console.log("MySQL error on admin_search_for_not_paid call: " + err.code + " - " + err.message + " " + (new Date()).toLocaleString());
           // Render error page, passing in error data
           res.render('errorMessagePage', {result: ERROR_MYSQL_SYSTEM_ERROR_ON_RPC});
           return;
@@ -2775,7 +2775,7 @@ router.post('/sendAllNoTeamMessages', function(req, res, next)
   {
       if(err)
       {
-          console.log("MySQL error on admin_search_for_players_no_team call: " + err.code + " - " + err.message);
+          console.log("MySQL error on admin_search_for_players_no_team call: " + err.code + " - " + err.message + " " + (new Date()).toLocaleString());
           // Render error page, passing in error data
           res.render('errorMessagePage', {result: ERROR_MYSQL_SYSTEM_ERROR_ON_RPC});
           return;
@@ -2855,7 +2855,7 @@ router.post('/systemCheckForceShiftChange', function(req, res, next)
   {
       if(err)
       {   // zzz - ui?
-          console.log("MySQL error on system_check_for_forced_shift_changes call: " + err.code + " - " + err.message);
+          console.log("MySQL error on system_check_for_forced_shift_changes call: " + err.code + " - " + err.message + " " + (new Date()).toLocaleString());
           // Render error page, passing in error data
           res.render('errorMessagePage', {result: ERROR_MYSQL_SYSTEM_ERROR_ON_RPC});
           return;
@@ -2907,7 +2907,7 @@ router.post('/resetDatabase', function(req, res, next)
   {
       if(err)
       {
-          console.log("MySQL error on reset_database call: " + err.code + " - " + err.message);
+          console.log("MySQL error on reset_database call: " + err.code + " - " + err.message + " " + (new Date()).toLocaleString());
           // Render error page, passing in error data
           res.render('errorMessagePage', {result: ERROR_MYSQL_SYSTEM_ERROR_ON_RPC});
           return;
@@ -2988,7 +2988,7 @@ router.post('/viewTeamHistory', function(req, res, next)
     {
         if(err)
         {
-            console.log("MySQL error on get_team_history call: " + err.code + " - " + err.message);
+            console.log("MySQL error on get_team_history call: " + err.code + " - " + err.message + " " + (new Date()).toLocaleString());
             // Render error page, passing in error data
             res.render('errorMessagePage', {result: ERROR_MYSQL_SYSTEM_ERROR_ON_RPC});
             return;
@@ -3059,7 +3059,7 @@ router.post('/sendAdminMessage', function(req, res, next)
     {
         if(err)
         {
-            console.log("MySQL error on get_admin_phone_number call: " + err.code + " - " + err.message);
+            console.log("MySQL error on get_admin_phone_number call: " + err.code + " - " + err.message + " " + (new Date()).toLocaleString());
             // Render error page, passing in error data
             res.render('errorMessagePage', {result: ERROR_MYSQL_SYSTEM_ERROR_ON_RPC});
             return;
@@ -3089,7 +3089,7 @@ router.post('/sendAdminMessage', function(req, res, next)
             {
                 if(err)
                 {
-                    console.log("MySQL error on log_admin_message_event call: " + err.code + " - " + err.message);
+                    console.log("MySQL error on log_admin_message_event call: " + err.code + " - " + err.message + " " + (new Date()).toLocaleString());
                 } else
                 {
                     console.log("Successful log_admin_message_event RPC call.");
@@ -3127,7 +3127,7 @@ router.get('/updateDBPaidPaypal', function(req, res, next)
     {
         if(err)
         {
-            console.log("MySQL error on update_db_paid_paypal call: " + err.code + " - " + err.message);
+            console.log("MySQL error on update_db_paid_paypal call: " + err.code + " - " + err.message + " " + (new Date()).toLocaleString());
             // Render error page, passing in error data
             res.render('errorMessagePage', {result: ERROR_MYSQL_SYSTEM_ERROR_ON_RPC});
             return;
@@ -3167,7 +3167,7 @@ router.post('/systemCheckCleanData', function(req, res, next)
     {
         if(err)
         {
-            console.log("MySQL error on system_confirm_all_data_clean call: " + err.code + " - " + err.message);
+            console.log("MySQL error on system_confirm_all_data_clean call: " + err.code + " - " + err.message + " " + (new Date()).toLocaleString());
             // Render error page, passing in error data
             res.render('errorMessagePage', {result: ERROR_MYSQL_SYSTEM_ERROR_ON_RPC});
             return;
@@ -3209,7 +3209,7 @@ router.post('/adminStartContest', function(req, res, next)
     {
         if(err)
         {
-            console.log("MySQL error on admin_start_contest call: " + err.code + " - " + err.message);
+            console.log("MySQL error on admin_start_contest call: " + err.code + " - " + err.message + " " + (new Date()).toLocaleString());
             // Render error page, passing in error data
             res.render('errorMessagePage', {result: ERROR_MYSQL_SYSTEM_ERROR_ON_RPC});
             return;
@@ -3442,7 +3442,7 @@ function checkForUploadedPhotos(res)
   {
       if(err)
       {
-          console.log("MySQL error on admin_get_first_uploaded_photo_and_count call: " + err.code + " - " + err.message);
+          console.log("MySQL error on admin_get_first_uploaded_photo_and_count call: " + err.code + " - " + err.message + " " + (new Date()).toLocaleString());
           // Render error page, passing in error data
           res.render('errorMessagePage', {result: ERROR_MYSQL_SYSTEM_ERROR_ON_RPC});
           return;
@@ -3576,7 +3576,7 @@ router.post('/cronManager', function(req, res, next)
     {
         if(err)
         { // zzz
-            console.log("MySQL error on system_get_game_settings_for_cron call: " + err.code + " - " + err.message);
+            console.log("MySQL error on system_get_game_settings_for_cron call: " + err.code + " - " + err.message + " " + (new Date()).toLocaleString());
             // Render error page, passing in error data
             res.render('errorMessagePage', {result: ERROR_MYSQL_SYSTEM_ERROR_ON_RPC});
             return;
@@ -3629,6 +3629,7 @@ router.post('/cronManager', function(req, res, next)
                   checkHowManyPhotosCronScript: CRON_CHECK_MANY_PHOTOS_SCRIPT_RUNNING,
                   checkOldPhotosCronScript: CRON_CHECK_OLD_PHOTOS_SCRIPT_RUNNING,
                   contestCheckerCronScript: CRON_BONUS_CONTEST_CHECKER_SCRIPT_RUNNING,
+                  dbConnectionPingerCronScript: CRON_DB_CONNECTION_PINGER_SCRIPT_RUNNING,
                   currentContestRunning: currContest,
                   gameStart: gameStartTime,
                   gameEnd: gameEndTime,
@@ -3693,7 +3694,7 @@ router.post('/systemStartCronScripts', function(req, res, next)
         {
             if(err)
             {
-                console.log("MySQL error on admin_update_game_data CRON_START_GAME_SCRIPT_RUNNING call: " + err.code + " - " + err.message);
+                console.log("MySQL error on admin_update_game_data CRON_START_GAME_SCRIPT_RUNNING call: " + err.code + " - " + err.message + " " + (new Date()).toLocaleString());
                 // Render error page, passing in error data
                 res.render('errorMessagePage', {result: ERROR_MYSQL_SYSTEM_ERROR_ON_RPC});
                 return;
@@ -3740,7 +3741,7 @@ router.post('/systemStartCronScripts', function(req, res, next)
         {
             if(err)
             {
-                console.log("MySQL error on admin_update_game_data CRON_END_GAME_SCRIPT_RUNNING call: " + err.code + " - " + err.message);
+                console.log("MySQL error on admin_update_game_data CRON_END_GAME_SCRIPT_RUNNING call: " + err.code + " - " + err.message + " " + (new Date()).toLocaleString());
                 // Render error page, passing in error data
                 res.render('errorMessagePage', {result: ERROR_MYSQL_SYSTEM_ERROR_ON_RPC});
                 return;
@@ -3785,7 +3786,7 @@ router.post('/systemStartCronScripts', function(req, res, next)
         {
             if(err)
             {
-                console.log("MySQL error on admin_update_game_data CRON_MORNING_START_SCRIPT_RUNNING call: " + err.code + " - " + err.message);
+                console.log("MySQL error on admin_update_game_data CRON_MORNING_START_SCRIPT_RUNNING call: " + err.code + " - " + err.message + " " + (new Date()).toLocaleString());
                 // Render error page, passing in error data
                 res.render('errorMessagePage', {result: ERROR_MYSQL_SYSTEM_ERROR_ON_RPC});
                 return;
@@ -3831,7 +3832,7 @@ router.post('/systemStartCronScripts', function(req, res, next)
         {
             if(err)
             {
-                console.log("MySQL error on admin_update_game_data CRON_NIGHT_END_SCRIPT_RUNNING call: " + err.code + " - " + err.message);
+                console.log("MySQL error on admin_update_game_data CRON_NIGHT_END_SCRIPT_RUNNING call: " + err.code + " - " + err.message + " " + (new Date()).toLocaleString());
                 // Render error page, passing in error data
                 res.render('errorMessagePage', {result: ERROR_MYSQL_SYSTEM_ERROR_ON_RPC});
                 return;
@@ -3959,6 +3960,19 @@ router.post('/systemStartCronScripts', function(req, res, next)
           CRON_BONUS_CONTEST_CHECKER_SCRIPT_RUNNING = 1;
           req.app.locals.contestCheckerCronScript = cron.schedule('* * * * *', contestCheckerCronFunction);
       }
+    }
+
+    // ------------------------------------
+    if (req.body.dbConnectionPingerCheckbox == "on")
+    {
+      console.log("dbConnectionPingerCheckbox is on");
+
+      // run every minute
+      if (CRON_DB_CONNECTION_PINGER_SCRIPT_RUNNING == 0)
+      {
+          CRON_DB_CONNECTION_PINGER_SCRIPT_RUNNING = 1;
+          req.app.locals.dbConnectionPingerCronScript = cron.schedule('* * * * *', dbConnectionPingerCronFunction);
+      }
 
     }
 
@@ -3979,7 +3993,7 @@ function startGameCronFunction()
     {
         if(err)
         {
-            console.log("MySQL error on Cron system_start_game call: " + err.code + " - " + err.message);
+            console.log("MySQL error on Cron system_start_game call: " + err.code + " - " + err.message + " " + (new Date()).toLocaleString());
             return;
         }
         else
@@ -4018,7 +4032,7 @@ function endGameCronFunction()
     {
         if(err)
         {
-            console.log("MySQL error on Cron system_end_game call: " + err.code + " - " + err.message);
+            console.log("MySQL error on Cron system_end_game call: " + err.code + " - " + err.message + " " + (new Date()).toLocaleString());
             return;
         }
         else
@@ -4057,7 +4071,7 @@ function morningStartCronFunction()
     {
         if(err)
         {
-            console.log("MySQL error on Cron system_morning_start call: " + err.code + " - " + err.message);
+            console.log("MySQL error on Cron system_morning_start call: " + err.code + " - " + err.message + " " + (new Date()).toLocaleString());
             return;
         }
         else
@@ -4096,7 +4110,7 @@ function nightEndCronFunction()
     {
         if(err)
         {
-            console.log("MySQL error on Cron system_night_end call: " + err.code + " - " + err.message);
+            console.log("MySQL error on Cron system_night_end call: " + err.code + " - " + err.message + " " + (new Date()).toLocaleString());
             return;
         }
         else
@@ -4135,7 +4149,7 @@ function twoHoursToGoCronFunction()
     {
         if(err)
         {
-            console.log("MySQL error on Cron system_check_for_forced_shift_changes call: " + err.code + " - " + err.message);
+            console.log("MySQL error on Cron system_check_for_forced_shift_changes call: " + err.code + " - " + err.message + " " + (new Date()).toLocaleString());
             return;
         }
         else
@@ -4174,7 +4188,7 @@ function oneHourToGoCronFunction()
     {
         if(err)
         {
-            console.log("MySQL error on Cron system_check_for_forced_shift_changes call: " + err.code + " - " + err.message);
+            console.log("MySQL error on Cron system_check_for_forced_shift_changes call: " + err.code + " - " + err.message + " " + (new Date()).toLocaleString());
             return;
         }
         else
@@ -4214,7 +4228,7 @@ function checkHowManyPhotosCronFunction(maxPhotos)
     {
         if(err)
         {
-            console.log("MySQL error on Cron system_check_how_many_photos call: " + err.code + " - " + err.message);
+            console.log("MySQL error on Cron system_check_how_many_photos call: " + err.code + " - " + err.message + " " + (new Date()).toLocaleString());
             return;
         }
         else
@@ -4248,7 +4262,7 @@ function checkOldPhotosCronFunction(photoWaitTime)
     {
         if(err)
         {
-            console.log("MySQL error on Cron system_check_old_photos call: " + err.code + " - " + err.message);
+            console.log("MySQL error on Cron system_check_old_photos call: " + err.code + " - " + err.message + " " + (new Date()).toLocaleString());
             return;
         }
         else
@@ -4283,7 +4297,7 @@ function checkOldPhotosCronFunction(photoWaitTime)
       {
           if(err)
           {
-              console.log("MySQL error on Cron contestCheckerCronFunction call: " + err.code + " - " + err.message);
+              console.log("MySQL error on Cron contestCheckerCronFunction call: " + err.code + " - " + err.message + " " + (new Date()).toLocaleString());
               return;
           }
           else
@@ -4308,6 +4322,21 @@ function checkOldPhotosCronFunction(photoWaitTime)
       }); // end query
 
     } // contestCheckerCronFunction
+
+    // ---------------------------
+    //
+    function dbConnectionPingerCronFunction()
+    {
+        dbConn.ping(function (err) {
+          if(err) {
+            console.log("Ping error - failed at " + (new Date()).toLocaleString());
+          }
+          else {
+            console.log("Ping success at " + (new Date()).toLocaleString());
+          }
+        });
+
+    } // dbConnectionPingerCronFunction
 
 // ------------------------------------------------------------
 //
@@ -4420,6 +4449,18 @@ router.post('/systemStopCronScripts', function(req, res, next)
       {
         CRON_BONUS_CONTEST_CHECKER_SCRIPT_RUNNING = 0;
         req.app.locals.contestCheckerCronScript.stop();
+      }
+
+    }
+
+    if (req.body.dbConnectionPingerCheckbox == "on")
+    {
+      console.log("dbConnectionPingerCheckbox is on.  Going to try to stop the script now.");
+
+      if (CRON_DB_CONNECTION_PINGER_SCRIPT_RUNNING == 1)
+      {
+        CRON_DB_CONNECTION_PINGER_SCRIPT_RUNNING = 0;
+        req.app.locals.dbConnectionPingerCronScript.stop();
       }
 
     }

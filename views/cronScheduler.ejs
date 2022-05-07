@@ -180,6 +180,24 @@
             Stopped
         <%}%>
 
+				<div style="height: 3px;"></div>
+
+				<hr>
+
+				<input type="checkbox" name="dbConnectionPingerCheckbox" unchecked>&nbsp
+        DB Connection Pinger
+        <div style="height: 5px;"></div>
+        <% if (dbConnectionPingerCronScript == 1)
+        {%>
+            &nbsp&nbsp&nbsp&nbsp
+            Running
+        <%}
+        else
+        {%>
+            &nbsp&nbsp&nbsp&nbsp
+            Stopped
+        <%}%>
+
         <hr>
 
 				<div style="height: 4px;"></div>
