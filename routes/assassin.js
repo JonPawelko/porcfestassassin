@@ -2939,32 +2939,32 @@ router.post('/viewRules', function(req, res, next)
 {
     console.log("Got into viewRules call");
 
-    // Check authentication status
-    if (!req.oidc.isAuthenticated())
-    {
-        console.log("Not authenticated");
-        res.render('landing');
-        return;
-    }
+    // Check authentication status - Don't need this - anyone can view rules
+    // if (!req.oidc.isAuthenticated())
+    // {
+    //     console.log("Not authenticated");
+    //     res.render('landing');
+    //     return;
+    // }
 
     // No stored procedure needed, just display rules page
-    res.render('rules', {paypalFlag: PAYPAL_FLAG, userType: "Internal", nodeJSFlag: PERSONAL_ENV.NODEJS_ENVIRONMENT});
+    res.render('rules', {paypalFlag: PAYPAL_FLAG, nodeJSFlag: PERSONAL_ENV.NODEJS_ENVIRONMENT});
 
 });  // end router - viewRules
 
 // -------------------------------------------------------------
 // viewExternalRules called by player to view the Assassin game rule
 
-router.post('/viewExternalRules', function(req, res, next)
-{
-    console.log("Got into viewviewExternalRulesRules call");
-
-    // no auth
-
-    // No stored procedure needed, just display rules page
-    res.render('rules', {paypalFlag: PAYPAL_FLAG, userType: "External", nodeJSFlag: PERSONAL_ENV.NODEJS_ENVIRONMENT});
-
-});  // end router - viewRules
+// router.post('/viewExternalRules', function(req, res, next)
+// {
+//     console.log("Got into viewviewExternalRulesRules call");
+//
+//     // no auth
+//
+//     // No stored procedure needed, just display rules page
+//     res.render('rules', {paypalFlag: PAYPAL_FLAG, nodeJSFlag: PERSONAL_ENV.NODEJS_ENVIRONMENT});
+//
+// });  // end router - viewRules
 
 // ------------------------------------------------------
 // viewTeamHistory called by player to view their teams history
