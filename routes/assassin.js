@@ -226,6 +226,8 @@ router.get('/', function(req, res, next) {
                                   dayTeamLeader: rowsStats[0][0].dayTeamLeader,
                                   weekPlayerLeader: rowsStats[0][0].weekPlayerLeader,
                                   dayPlayerLeader: rowsStats[0][0].dayPlayerLeader,
+                                  weekCelebLeader: rowsStats[0][0].weekCelebLeader,
+                                  dayCelebLeader: rowsStats[0][0].dayCelebLeader,
                                   myTeamTotalKills: rowsStats[0][0].myTeamTotalKills,
                                   myTeamTodayKills: rowsStats[0][0].myTeamTodayKills,
                                   myPersonalKillsWeek: rowsStats[0][0].myPersonalKillsWeek,
@@ -280,6 +282,8 @@ router.get('/', function(req, res, next) {
                           dayTeamLeader: rowsStats[0][0].dayTeamLeader,
                           weekPlayerLeader: rowsStats[0][0].weekPlayerLeader,
                           dayPlayerLeader: rowsStats[0][0].dayPlayerLeader,
+                          weekCelebLeader: rowsStats[0][0].weekCelebLeader,
+                          dayCelebLeader: rowsStats[0][0].dayCelebLeader,
                           myTeamTotalKills: rowsStats[0][0].myTeamTotalKills,
                           myTeamTodayKills: rowsStats[0][0].myTeamTodayKills,
                           myPersonalKillsWeek: rowsStats[0][0].myPersonalKillsWeek,
@@ -306,6 +310,8 @@ router.get('/', function(req, res, next) {
 router.post('/newAssassin', function(req, res, next)
 {
     console.log("Got into new assassin call");
+
+    var adminPhone;
 
     // Check authentication status
     if (!req.oidc.isAuthenticated())
@@ -384,6 +390,8 @@ router.post('/newAssassin', function(req, res, next)
             // Check return code
             if (rows[0][0].phone == CALL_SUCCESS)
             {
+                adminPhone = rows[0][0].adminPhone;
+
                 // Use mv() to place file on the server
                 playerPhotoFile.mv(uploadPath, function (err)
                 {
@@ -419,6 +427,9 @@ router.post('/newAssassin', function(req, res, next)
                                     res.render('errorMessagePage', {result: rows[0][0].phone});
                                     return;
                                 }
+
+                                if (TWILIO_FLAG != TWILIO_OFF)
+                                  send_text("New registration www.PorcfestAssassin.com", adminPhone);
 
                                 res.oidc.login();  // route Player back to Home
 
@@ -2177,6 +2188,53 @@ router.post('/adminMarkPaidAndApprovePhoto', function(req, res, next)
 
 }); // end router post adminMarkPaidAndApprovePhoto
 
+// -------------------------------------------------------------
+// adminMarkPaid called by admin to mark team paid
+
+router.post('/adminAddBounty', function(req, res, next)
+{
+  console.log("Got into new adminAddBounty call");
+
+  // Check authentication status
+  if (!req.oidc.isAuthenticated())
+  {
+      console.log("Not authenticated");
+      res.render('landing');
+      return;
+  }
+
+  // Call stored procedure to mark team paid
+  dbConn.query('CALL `assassin`.`admin_add_bounty`(?)', req.body.teamCode, function(err,rows)
+  {
+      if(err)
+      {
+          console.log("MySQL error on admin_add_bounty call: " + err.code + " - " + err.message + " " + (new Date()).toLocaleString());
+          // Render error page, passing in error data
+          res.render('errorMessagePage', {result: ERROR_MYSQL_SYSTEM_ERROR_ON_RPC});
+          return;
+      } else
+      {
+          // admin_add_bounty worked
+          console.log("admin_add_bounty rpc worked.");
+          // console.log(rows);
+
+          if (rows[0][0].phone == CALL_SUCCESS)
+          {
+                res.oidc.login(); // send back home to refresh page, may now be on a new Team
+          }
+          else
+          {
+            // Render error page, passing in error code
+            res.render('errorMessagePage', {result: parseInt(rows[0][0].phone)});
+            return;
+          }
+
+      } // end else
+
+  }); // end query
+
+}); // end router post adminAddBounty
+
 // --------------------------------------------------------------------------------------------------------
 // Route called by admin to edit player data
 router.post('/adminEditPlayerData', function(req, res, next)
@@ -3045,7 +3103,6 @@ router.post('/sendAdminMessage', function(req, res, next)
         return;
     }
 
-    // zzzz
     // Check if photo file was passed in correctly
     if (req.body.message == '')
     {
@@ -3432,6 +3489,7 @@ function send_text(text, phone)
   .then(message => console.log(message.sid));
 
 } // end send text
+
 
 // ------------------------------------------------------------
 
