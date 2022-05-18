@@ -5,6 +5,7 @@ var CONFIRM_RETURN_BREAK = 4;
 var CONFIRM_QUIT = 5;
 var CONFIRM_REMOVE_PHONE = 6;
 var CONFIRM_BOMB = 7;
+var CONFIRM_ADD_BOUNTY = 8;
 
 // -----------------------------------------------------------------
 
@@ -68,6 +69,10 @@ document.addEventListener('keydown', e => {
 
         case CONFIRM_BOMB:
               message = "Are you sure you want to drop a Bomb?";
+          break;
+
+        case CONFIRM_ADD_BOUNTY:
+              message = "Are you sure you want to add a bounty?";
           break;
 
         default:

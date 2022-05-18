@@ -57,6 +57,7 @@ global.CONFIRM_RETURN_BREAK = 4;
 global.CONFIRM_QUIT = 5;
 global.CONFIRM_REMOVE_PHONE = 6;
 global.CONFIRM_BOMB = 7;
+global.CONFIRM_ADD_BOUNTY = 8;
 
 // Global Event Code constants for Alerts
 global.EVENT_ASSASSINATION = 1;

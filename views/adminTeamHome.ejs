@@ -73,6 +73,14 @@
 								<div style="height: 16px;"></div>
 				</form>
 
+				<form autocomplete="off" action="adminAddBounty" method="post" onsubmit="return confirmChoice(<%= CONFIRM_ADD_BOUNTY %>)" encType="multipart/form-data">
+							<input type="hidden" name="teamCode" value="<%= teamCode %>">
+							<input type="submit" class="btn btn-info" value="Add Bounty"/>
+							<div style="height: 6px;"></div>
+				</form>
+
+				<div style="height: 6px;"></div>
+
 				<form autocomplete="off" action="assassinLogin" method="post" onsubmit="return waitCursor()" encType="multipart/form-data">
 							<input type="submit" class="btn btn-info" value="Home"/>
 							<div style="height: 6px;"></div>
