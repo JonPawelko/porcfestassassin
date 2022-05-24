@@ -4062,6 +4062,8 @@ function startGameCronFunction()
 {
     console.log('startGameCronFunction started');
 
+    checkIncrementDailyTextCount();  // daily checker is in the send text, no send text, no check, force one here
+
     // call stored procedure
     dbConn.query('CALL `assassin`.`system_start_game`()', function(err,rows)
     {
