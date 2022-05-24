@@ -3302,6 +3302,22 @@ router.post('/adminStartContest', function(req, res, next)
 // -------------------------------------------------------------
 
 // ---------------------------------------------------
+// Function checks whether we should update the daily text count to 0
+function checkIncrementDailyTextCount()
+{
+    var tempDate = new Date();
+
+    if (TWILIO_DATE.getDate() != tempDate.getDate())
+    {
+      TWILIO_DATE = new Date();
+      TWILIO_TEXTS_TODAY = 0;
+      TWILIO_FLAG = TWILIO_PROD_ALL;
+      console.log("Reset daily text count to 0");
+    }
+
+}
+
+// ---------------------------------------------------
 // Function sends texts to the phone numbers passed in
 function send_text_alerts(rows)
 {
@@ -4123,6 +4139,8 @@ function endGameCronFunction()
 function morningStartCronFunction()
 {
     console.log('morningStartCronFunction started');
+
+    checkIncrementDailyTextCount();  // daily checker is in the send text, no send text, no check, force one here
 
     // call stored procedure
     dbConn.query('CALL `assassin`.`system_morning_start`()', function(err,rows)
