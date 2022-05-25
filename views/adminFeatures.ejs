@@ -51,7 +51,6 @@
 
           <div style="height: 5px;"></div>
 
-
           <form autocomplete="off" action="adminBulkPictureApprove" method="post" encType="multipart/form-data">
               <input type="submit" class="btn btn-info" value="Bulk Picture Approve"/>
               &nbsp&nbsp&nbsp&nbsp&nbsp
@@ -81,6 +80,17 @@
           </form>
 
           <div style="height: 4px;"></div>
+
+          <hr>
+
+          <form autocomplete="off" action="broadcastText" method="post" onsubmit="return waitCursor()" encType="multipart/form-data">
+              Message:
+              <div style="height: 5px;"></div>
+              <textarea name="message" style="width:300px;height:100px;" value="" autocomplete="off"></textarea>
+
+              <div style="height: 18px;"></div>
+              <input type="submit" class="btn btn-info" value="Broadcast Text"/>
+          </form>
 
           <hr>
 

@@ -313,6 +313,16 @@ router.post('/newAssassin', function(req, res, next)
 
     var adminPhone;
 
+    // helper vars for uploading photo file
+    let playerPhotoFile;
+    let uploadPath;
+
+    // helper var to check and format phone number
+    var tempPlayerPhone;
+
+    // helper var to check and format player name
+    var tempPlayerName;
+
     // Check authentication status
     if (!req.oidc.isAuthenticated())
     {
@@ -320,13 +330,6 @@ router.post('/newAssassin', function(req, res, next)
         res.render('landing');
         return;
     }
-
-    // helper vars for uploading photo file
-    let playerPhotoFile;
-    let uploadPath;
-
-    // helper var to check and format phone number
-    var tempPlayerPhone;
 
     // Check if photo file was passed in correctly
     if (!req.files || Object.keys(req.files).length === 0)
@@ -341,6 +344,20 @@ router.post('/newAssassin', function(req, res, next)
         // Render error page, passing in error code
         res.render('errorMessagePage', {result: ERROR_INVALID_PLAYER_NAME});
         return;
+    }
+
+    tempPlayerName = req.body.playerName;
+
+    // Check for spaces at end of name and remove them
+    while (tempPlayerName[tempPlayerName.length - 1] == ' ')
+    {
+      tempPlayerName = tempPlayerName.slice(0, tempPlayerName.length - 1);
+    }
+
+    // Check for spaces at beginning of name and remove them
+    while (tempPlayerName[0] == ' ')
+    {
+      tempPlayerName = tempPlayerName.slice(1, tempPlayerName.length);
     }
 
     // Only validate teamname if it was passed in, optional
@@ -374,7 +391,7 @@ router.post('/newAssassin', function(req, res, next)
     console.log("Upload path is: " + uploadPath);
 
     // Call stored procedure to create the player
-    dbConn.query('CALL `assassin`.`create_player_from_email`(?,?,?,?,?)', [req.oidc.user.email, req.body.playerName, tempPlayerPhone, playerPhotoFile.name, req.body.playerTeamName], function(err,rows)
+    dbConn.query('CALL `assassin`.`create_player_from_email`(?,?,?,?,?)', [req.oidc.user.email, tempPlayerName, tempPlayerPhone, playerPhotoFile.name, req.body.playerTeamName], function(err,rows)
     {
         if(err)
         {
@@ -3153,6 +3170,61 @@ router.post('/sendAdminMessage', function(req, res, next)
                 } // end else
 
             }); // end query
+
+        } // end else
+
+    }); // end query
+
+    // Route user back to Home via login
+    res.oidc.login();
+
+}); // end router post sendAdminMessage
+
+
+// --------------------------------------------------------------------------------
+// Route called by admin to send text to all players
+// --------------------------------------------------------------------------------
+router.post('/broadcastText', function(req, res, next)
+{
+    console.log("Got into broadcastText");
+    console.log(req.body);
+
+    // Check authentication status
+    if (!req.oidc.isAuthenticated())
+    {
+        console.log("Not authenticated");
+        res.render('landing');
+        return;
+    }
+
+    // Check if message passed in correctly
+    if (req.body.message == '')
+    {
+        // Render error page, passing in error code
+        res.render('errorMessagePage', {result: MISSING_ADMIN_MESSAGE});
+        return;
+    }
+
+    // First get all phone numbers
+    dbConn.query('CALL `assassin`.`admin_get_all_phone_numbers`()', function(err,rows)
+    {
+        if(err)
+        {
+            console.log("MySQL error on get_all_phone_numbers call: " + err.code + " - " + err.message + " " + (new Date()).toLocaleString());
+            // Render error page, passing in error data
+            res.render('errorMessagePage', {result: ERROR_MYSQL_SYSTEM_ERROR_ON_RPC});
+            return;
+        } else
+        {
+            console.log("get_all_phone_numbers rpc worked.");
+
+            for (i=0; i<rows[0].length-1; i++)
+            {
+                if (TWILIO_FLAG != TWILIO_OFF)
+                {
+                  send_text(req.body.message, rows[0][i+1].phone);
+                }
+            }
 
         } // end else
 
