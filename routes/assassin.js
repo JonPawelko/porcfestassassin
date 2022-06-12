@@ -407,7 +407,15 @@ router.post('/newAssassin', function(req, res, next)
             // Check return code
             if (rows[0][0].phone == CALL_SUCCESS)
             {
-                adminPhone = rows[0][0].adminPhone;
+
+                if ((req.body.playerTeamName == null) || (req.body.playerTeamName == ""))
+                {
+                  adminPhone = rows[0][0].adminPhone;
+                }
+                else
+                {
+                  adminPhone = rows[1][0].adminPhone;
+                }
 
                 // Use mv() to place file on the server
                 playerPhotoFile.mv(uploadPath, function (err)
