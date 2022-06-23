@@ -3092,6 +3092,48 @@ router.post('/viewTeamHistory', function(req, res, next)
 
 });  // end router - viewRget_team_historyules
 
+// ------------------------------------------------------
+// viewChain called by player to view their teams history
+
+router.post('/viewChain', function(req, res, next)
+{
+    console.log("Got into viewChain call");
+
+    // Check authentication status
+    if (!req.oidc.isAuthenticated())
+    {
+        console.log("Not authenticated");
+        res.render('landing');
+        return;
+    }
+
+    // validate team code and player code here zzz
+
+    // Call stored procedure to search for the player
+    dbConn.query('CALL `assassin`.`get_chain`()', function(err,rows)
+    {
+        if(err)
+        {
+            console.log("MySQL error on get_chain call: " + err.code + " - " + err.message + " " + (new Date()).toLocaleString());
+            // Render error page, passing in error data
+            res.render('errorMessagePage', {result: ERROR_MYSQL_SYSTEM_ERROR_ON_RPC});
+            return;
+        } else
+        {
+            // get_team_history worked, now inspect data
+            console.log("get_chain successful rpc call.");
+            console.log(rows);
+            // show the rows
+            res.render('viewChain',
+            {
+                rows: rows[0]
+            });
+
+        } // end else rpc worked
+
+    });  // end db query
+
+});  // end router - get chain
 
 // --------------------------------------------------------------------------------
 // Route called by player to start the contact admin process
