@@ -44,7 +44,7 @@ document.addEventListener('keydown', e => {
 
       switch (confirmCode) {
         case CONFIRM_GO_LIVE:
-              message = "Are you sure you want to try to go Live?";
+              message = "Are you sure you want to try to Go Live?";
           break;
 
         case CONFIRM_REBUY:
@@ -52,7 +52,7 @@ document.addEventListener('keydown', e => {
           break;
 
         case CONFIRM_TAKE_BREAK:
-              message = "Are you sure you want to take a Break?";
+              message = "Are you sure you want to leave the game for 4+ hours? This feature is not associated with the Go Live feature.";
           break;
 
         case CONFIRM_RETURN_BREAK:
