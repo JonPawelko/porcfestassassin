@@ -57,9 +57,9 @@
 
 				<% if ((teamStatus == "Registered") || (teamStatus == "Pics Approved") || (teamStatus == "Inactive")) { %>
 
-					<form autocomplete="off" action="adminMarkPaid" method="post" onsubmit="return waitCursor()" encType="multipart/form-data">
+					<form autocomplete="off" action="adminMarkPaid" method="post" encType="multipart/form-data">
 							<input type="hidden" name="teamCode" value="<%= teamCode %>">
-							<input type="submit" class="btn btn-info" value="Mark Paid"/>
+							<input type="submit" class="btn btn-info" value="Mark Paid" onclick="this.disabled=true;this.form.submit();"/>
 							<div style="height: 16px;"></div>
 					</form>
 

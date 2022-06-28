@@ -37,15 +37,14 @@
 
 				<% } else {  // rejected pic %>
 
-					<form autocomplete="off" action="uploadPhoto" onsubmit="return waitCursor()" method="post" encType="multipart/form-data">
+					<form autocomplete="off" action="uploadPhoto" method="post" encType="multipart/form-data">
 							<input type="hidden" name="playerCode" value="<%= playerCode %>">
 							<input type="hidden" name="userType" value="User">
 							<div style="height: 12px;"></div>
 							<input type="file" size="15" name="playerPhotoFile" accept="image/*" />
 							<div style="height: 12px;"></div>
-							<input type="submit" class="btn btn-info" value="Upload New Picture"/>
+							<input type="submit" class="btn btn-info" value="Upload New Picture" onclick="this.disabled=true;this.form.submit();/>
 					</form>
-
 
 				<%}%>
 
