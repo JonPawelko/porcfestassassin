@@ -103,9 +103,9 @@
 						<% if ((teamStatus == "Registered") || (teamStatus == "Pics Approved") || (teamStatus == "Inactive"))
 						{ %>
 
-							<form autocomplete="off" action="adminMarkPaid" method="post" onsubmit="return waitCursor()" encType="multipart/form-data">
+							<form autocomplete="off" action="adminMarkPaid" method="post"  encType="multipart/form-data">
 									<input type="hidden" name="teamCode" value="<%= teamCode %>">
-									<input type="submit" class="btn btn-info" value="Mark Team Paid"/>
+									<input type="submit" class="btn btn-info" value="Mark Team Paid" onclick="this.disabled=true;this.form.submit();"/>
 									<div style="height: 14px;"></div>
 							</form>
 
@@ -114,10 +114,10 @@
 						<% if (((teamStatus == "Registered") || (teamStatus == "Pics Approved")) && ((photoStatus == "Uploaded") || (photoStatus == "Rejected")))
 						{ %>
 
-							<form autocomplete="off" action="adminMarkPaidAndApprovePhoto" method="post" onsubmit="return waitCursor()" encType="multipart/form-data">
+							<form autocomplete="off" action="adminMarkPaidAndApprovePhoto" method="post" encType="multipart/form-data">
 									<input type="hidden" name="teamCode" value="<%= teamCode %>">
 									<input type="hidden" name="playerCode" value="<%= playerCode %>">
-									<input type="submit" class="btn btn-info" value="Mark Team Paid and Approve Photo"/>
+									<input type="submit" class="btn btn-info" value="Mark Team Paid and Approve Photo" onclick="this.disabled=true;this.form.submit();"/>
 									<div style="height: 14px;"></div>
 							</form>
 

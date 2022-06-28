@@ -21,12 +21,12 @@
 				</div>
 
 				<div class="card-body">
-					<form action="activateAssassin" method="post" onsubmit="return waitCursor()">
+					<form action="activateAssassin" method="post">
 									<div style="height: 12px;"></div>
 									8-digit Player Code:&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
 									<input type="search" size="10" name="playerCode" value="" autocomplete="off">
 									<div style="height: 15px;"></div>
-									<input type="submit" class="btn btn-info" value="Activate"/>
+									<input type="submit" class="btn btn-info" value="Activate" onclick="this.disabled=true;this.form.submit();/>
 									<div style="height: 16px;"></div>
 					</form>
 				</div>
@@ -54,7 +54,7 @@
 
 				<div class="card-body">
 					<div style="height: 14px;"></div>
-							<form autocomplete="off" action="newAssassin" onsubmit="return waitCursor()" method="post" encType="multipart/form-data">
+							<form autocomplete="off" action="newAssassin" method="post" encType="multipart/form-data">
 
 										Player Name: &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
 										<input type="search" size="10" name="playerName" value="" autocomplete="off">
@@ -74,7 +74,7 @@
 
 										<div style="height: 10px;"></div>
 
-										<input type="submit" class="btn btn-info" value="Create New Player"/>
+										<input type="submit" class="btn btn-info" value="Create New Player" onclick="this.disabled=true;this.form.submit();/>
 
 										<div style="height: 6px;"></div>
 
