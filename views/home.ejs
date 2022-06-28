@@ -177,7 +177,7 @@
 
 												<div style="height: 6px;"></div>
 												<%-  include('teammateList'); %>
-												<div style="height: 10px;"></div>
+												<div style="height: 8px;"></div>
 
 												<%
 													if (playerStatus == "Bench")
@@ -390,6 +390,9 @@
 									<div style="height: 4px;"></div>
 									<hr>
 									<div style="height: 2px;"></div>
+
+									Click the Quit button below if you want to leave the game or your team.  If you are a team captain and there are other players on your team, one will be chosen as captain.  After quitting, you will become a Free Agent and can join another team.
+									<div style="height: 10px;"></div>
 
 									<form action="quitGame" onsubmit="return confirmChoice(<%= CONFIRM_QUIT %>)" method="post">
 											<input type="hidden" name="myPlayerCode" value="<%= playerCode %>">

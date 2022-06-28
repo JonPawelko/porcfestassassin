@@ -18,7 +18,7 @@
 
           <div class="card-body">
 
-                <div style="height: 8px;"></div>
+                <div style="height: 6px;"></div>
 
                 <% if (numTeammates > 0)	{%>
 
@@ -81,6 +81,9 @@
           						  case "Live": case "Waiting":
           										%>
                                   <hr>
+                                  If you are leaving Rogers Campground for 4+ hours click the 'Leave Porcfest' button below. You can return to the Waiting Area after 4 hours.
+                                  <div style="height: 12px;"></div>
+
                                   <form action="takeBreak" method="post" onsubmit="return confirmChoice(<%= CONFIRM_TAKE_BREAK %>)">
                                       <input type="hidden" name="myPlayerCode" value="<%= playerCode %>">
                                       <input type="hidden" name="myTeamCode" value="<%= playerTeamCode %>">
