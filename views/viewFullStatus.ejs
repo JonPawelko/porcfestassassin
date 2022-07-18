@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<title>Assassin</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="\stylesheets\custom.css">
+	<script src="javascripts/utilities.js"></script>
+</head>
+
+<body class="container" style="margin-top: 10px;" onload="defaultCursor();">
+
+<div style="height: 2px;"></div>
+
+<div class="row justify-content-center">
+
+    <div class="card" style="width:21rem;">
+
+        <div class="card-header">
+          Full Game Status
+          <div style="height: 4px;"></div>
+        </div>
+
+        <div class="card-body">
+
+					<div class="rules-page">
+
+					<%
+							var i = 0;
+
+							// Chain first -------------------------
+							if ((i<rows[0].length) && (rows[0][i].field1 == "Chain"))
+							{
+								%>
+								<div style="height: 4px;"></div>
+								Chain:
+								<div style="height: 2px;"></div>
+								<ul>
+								<%
+									while ((i<rows[0].length) && (rows[0][i].field1 == "Chain"))
+									{
+											%>
+											<li><%=rows[0][i].field2%> - <%=rows[0][i].field3%> -- <%=rows[0][i].field4%> - <%=rows[0][i].field5%></li>
+										<%
+										i++;
+									}
+							%>
+							</ul>
+							<div style="height: 12px;"></div>
+							<%
+							}
+
+							// Waiting next -------------------------
+							if ((i<rows[0].length) && (rows[0][i].field1 == "Waiting"))
+							{
+								%>
+								Waiting:
+								<div style="height: 2px;"></div>
+								<ul>
+								<%
+									while ((i<rows[0].length) && (rows[0][i].field1 == "Waiting"))
+									{
+											%>
+											<li><%=rows[0][i].field2%> - <%=rows[0][i].field3%></li>
+										<%
+										i++;
+									}
+							%>
+							</ul>
+							<div style="height: 12px;"></div>
+							<%
+							}
+
+							// Inactive next -------------------------
+							if ((i<rows[0].length) && (rows[0][i].field1 == "Inactive"))
+							{
+								%>
+								Inactive:
+								<div style="height: 2px;"></div>
+								<ul>
+								<%
+									while ((i<rows[0].length) && (rows[0][i].field1 == "Inactive"))
+									{
+											%>
+											<li><%=rows[0][i].field2%> - <%=rows[0][i].field3%></li>
+										<%
+										i++;
+									}
+							%>
+							</ul>
+							<div style="height: 12px;"></div>
+							<%
+							}
+
+							// Registered Team next -------------------------
+							if ((i<rows[0].length) && (rows[0][i].field1 == "Registered Team"))
+							{
+								%>
+								Registered Teams:
+								<div style="height: 2px;"></div>
+								<ul>
+								<%
+									while ((i<rows[0].length) && (rows[0][i].field1 == "Registered Team"))
+									{
+											%>
+											<li><%=rows[0][i].field2%> - <%=rows[0][i].field3%></li>
+										<%
+										i++;
+									}
+							%>
+							</ul>
+							<div style="height: 12px;"></div>
+							<%
+							}
+
+							// Break  next -------------------------
+							if ((i<rows[0].length) && (rows[0][i].field1 == "Break"))
+							{
+								%>
+								Break Teams:
+								<div style="height: 2px;"></div>
+								<ul>
+								<%
+									while ((i<rows[0].length) && (rows[0][i].field1 == "Break"))
+									{
+											%>
+											<li><%=rows[0][i].field2%> - <%=rows[0][i].field3%></li>
+										<%
+										i++;
+									}
+							%>
+							</ul>
+							<div style="height: 12px;"></div>
+							<%
+							}
+
+							// Paid  next -------------------------
+							if ((i<rows[0].length) && (rows[0][i].field1 == "Paid"))
+							{
+								%>
+								Paid Teams:
+								<div style="height: 2px;"></div>
+								<ul>
+								<%
+									while ((i<rows[0].length) && (rows[0][i].field1 == "Paid"))
+									{
+											%>
+											<li><%=rows[0][i].field2%> - <%=rows[0][i].field3%></li>
+										<%
+										i++;
+									}
+							%>
+							</ul>
+							<div style="height: 12px;"></div>
+							<%
+							}
+
+							// Pics Approved  next -------------------------
+							if ((i<rows[0].length) && (rows[0][i].field1 == "Pics Approved"))
+							{
+								%>
+								Pics Approved Teams:
+								<div style="height: 2px;"></div>
+								<ul>
+								<%
+									while ((i<rows[0].length) && (rows[0][i].field1 == "Pics Approved"))
+									{
+											%>
+											<li><%=rows[0][i].field2%> - <%=rows[0][i].field3%></li>
+										<%
+										i++;
+									}
+							%>
+							</ul>
+							<div style="height: 12px;"></div>
+							<%
+							}
+
+							// Quit  next -------------------------
+							if ((i<rows[0].length) && (rows[0][i].field1 == "Quit"))
+							{
+								%>
+								Quit Teams:
+								<div style="height: 2px;"></div>
+								<ul>
+								<%
+									while ((i<rows[0].length) && (rows[0][i].field1 == "Quit"))
+									{
+											%>
+											<li><%=rows[0][i].field2%> - <%=rows[0][i].field3%></li>
+										<%
+										i++;
+									}
+							%>
+							</ul>
+							<div style="height: 12px;"></div>
+							<%
+							}
+
+
+							// Players  next -------------------------
+							if ((i<rows[0].length) && (rows[0][i].field1 == "Registered Player"))
+							{
+								%>
+								Registered Players:
+								<div style="height: 2px;"></div>
+								<ul>
+								<%
+									while ((i<rows[0].length) && (rows[0][i].field1 == "Registered Player"))
+									{
+											%>
+											<li><%=rows[0][i].field2%></li>
+										<%
+										i++;
+									}
+							%>
+							</ul>
+							<div style="height: 12px;"></div>
+							<%
+							}
+
+							%>
+
+
+					</div>
+
+          <form autocomplete="off" action="assassinLogin" method="post" onsubmit="return waitCursor()" encType="multipart/form-data">
+                <input type="submit" class="btn btn-info" value="Home"/>
+                <div style="height: 6px;"></div>
+          </form>
+
+					<div style="height: 10px;"></div>
+
+        </div>
+
+      </div>
+
+</div>
+
+<div style="height: 10px;"></div>
+
+</body>
+</html>

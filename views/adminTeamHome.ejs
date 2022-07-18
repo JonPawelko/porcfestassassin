@@ -55,11 +55,21 @@
 
 				<% } %>
 
-				<% if ((teamStatus == "Registered") || (teamStatus == "Pics Approved") || (teamStatus == "Inactive")) { %>
+				<% if ((teamStatus == "Registered") || (teamStatus == "Pics Approved") ) { %>
 
 					<form autocomplete="off" action="adminMarkPaid" method="post" encType="multipart/form-data">
 							<input type="hidden" name="teamCode" value="<%= teamCode %>">
 							<input type="submit" class="btn btn-info" value="Mark Paid" onclick="this.disabled=true;this.form.submit();"/>
+							<div style="height: 16px;"></div>
+					</form>
+
+				<% } %>
+
+				<% if (teamStatus == "Inactive") { %>
+
+					<form autocomplete="off" action="adminMarkPaid" method="post" encType="multipart/form-data">
+							<input type="hidden" name="teamCode" value="<%= teamCode %>">
+							<input type="submit" class="btn btn-info" value="Rebuy" onclick="this.disabled=true;this.form.submit();"/>
 							<div style="height: 16px;"></div>
 					</form>
 
