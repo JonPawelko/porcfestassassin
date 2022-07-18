@@ -232,6 +232,8 @@ router.get('/', function(req, res, next) {
                                   myTeamTodayKills: rowsStats[0][0].myTeamTodayKills,
                                   myPersonalKillsWeek: rowsStats[0][0].myPersonalKillsWeek,
                                   myPersonalKillsDay: rowsStats[0][0].myPersonalKillsDay,
+                                  teamRank: rowsStats[0][0].teamRank,
+                                  playerRank: rowsStats[0][0].playerRank,
                                   textsSent: TWILIO_TEXTS_TODAY,
                                   twilioStatus: TWILIO_FLAG});
                               }
@@ -288,6 +290,8 @@ router.get('/', function(req, res, next) {
                           myTeamTodayKills: rowsStats[0][0].myTeamTodayKills,
                           myPersonalKillsWeek: rowsStats[0][0].myPersonalKillsWeek,
                           myPersonalKillsDay: rowsStats[0][0].myPersonalKillsDay,
+                          teamRank: rowsStats[0][0].teamRank,
+                          playerRank: rowsStats[0][0].playerRank,
                           textsSent: TWILIO_TEXTS_TODAY,
                           twilioStatus: TWILIO_FLAG});
                       } // end else, no teammates
@@ -3093,11 +3097,11 @@ router.post('/viewTeamHistory', function(req, res, next)
 });  // end router - viewRget_team_historyules
 
 // ------------------------------------------------------
-// viewChain called by player to view their teams history
+// Called by admin to view full status of game
 
-router.post('/viewChain', function(req, res, next)
+router.post('/admin_get_full_status', function(req, res, next)
 {
-    console.log("Got into viewChain call");
+    console.log("Got into get_full_status call");
 
     // Check authentication status
     if (!req.oidc.isAuthenticated())
@@ -3110,23 +3114,65 @@ router.post('/viewChain', function(req, res, next)
     // validate team code and player code here zzz
 
     // Call stored procedure to search for the player
-    dbConn.query('CALL `assassin`.`get_chain`()', function(err,rows)
+    dbConn.query('CALL `assassin`.`admin_get_full_status`()', function(err,rows)
     {
         if(err)
         {
-            console.log("MySQL error on get_chain call: " + err.code + " - " + err.message + " " + (new Date()).toLocaleString());
+            console.log("MySQL error on get_full_status call: " + err.code + " - " + err.message + " " + (new Date()).toLocaleString());
             // Render error page, passing in error data
             res.render('errorMessagePage', {result: ERROR_MYSQL_SYSTEM_ERROR_ON_RPC});
             return;
         } else
         {
             // get_team_history worked, now inspect data
-            console.log("get_chain successful rpc call.");
+            console.log("get_full_status successful rpc call.");
             console.log(rows);
             // show the rows
-            res.render('viewChain',
+            res.render('viewFullStatus',
             {
-                rows: rows[0]
+                rows: rows
+            });
+
+        } // end else rpc worked
+
+    });  // end db query
+
+});  // end router - get full status
+
+
+// ------------------------------------------------------
+// Called by admin to view team and player rankings
+
+router.post('/adminViewRankings', function(req, res, next)
+{
+    console.log("Got into adminViewRankings call");
+
+    // Check authentication status
+    if (!req.oidc.isAuthenticated())
+    {
+        console.log("Not authenticated");
+        res.render('landing');
+        return;
+    }
+
+    // Call stored procedure to search for the player
+    dbConn.query('CALL `assassin`.`admin_view_rankings`()', function(err,rows)
+    {
+        if(err)
+        {
+            console.log("MySQL error on admin_view_rankings call: " + err.code + " - " + err.message + " " + (new Date()).toLocaleString());
+            // Render error page, passing in error data
+            res.render('errorMessagePage', {result: ERROR_MYSQL_SYSTEM_ERROR_ON_RPC});
+            return;
+        } else
+        {
+            // get_team_history worked, now inspect data
+            console.log("admin_view_rankings successful rpc call.");
+            console.log(rows);
+            // show the rows
+            res.render('viewRankings',
+            {
+                rows: rows
             });
 
         } // end else rpc worked
@@ -3134,6 +3180,8 @@ router.post('/viewChain', function(req, res, next)
     });  // end db query
 
 });  // end router - get chain
+
+
 
 // --------------------------------------------------------------------------------
 // Route called by player to start the contact admin process

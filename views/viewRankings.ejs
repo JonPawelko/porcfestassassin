@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<title>Assassin</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="\stylesheets\custom.css">
+	<script src="javascripts/utilities.js"></script>
+</head>
+
+<body class="container" style="margin-top: 10px;" onload="defaultCursor();">
+
+<div style="height: 2px;"></div>
+
+<div class="row justify-content-center">
+
+    <div class="card" style="width:21rem;">
+
+        <div class="card-header">
+          Full Game Rankings
+          <div style="height: 4px;"></div>
+        </div>
+
+        <div class="card-body">
+
+					<div class="rules-page">
+
+					<%
+							var i = 0;
+
+							// Teams first -------------------------
+							if ((i<rows[0].length) && (rows[0][i].field1 == "Team"))
+							{
+								%>
+								<div style="height: 4px;"></div>
+								Teams:
+								<ol style="margin:13px; padding:0px">
+								<%
+									while ((i<rows[0].length) && (rows[0][i].field1 == "Team"))
+									{
+											%>
+											<li>&nbsp<%=rows[0][i].field2%> - <%=rows[0][i].field3%> - <%=rows[0][i].field4%></li>
+										<%
+										i++;
+									}
+							%>
+							</ol>
+							<div style="height: 6px;"></div>
+							<%
+							}
+
+							// Players next -------------------------
+							if ((i<rows[0].length) && (rows[0][i].field1 == "Player"))
+							{
+								%>
+								Players:
+								<ol style="margin:13px; padding:0px">
+								<%
+									while ((i<rows[0].length) && (rows[0][i].field1 == "Player"))
+									{
+											%>
+											<li>&nbsp<%=rows[0][i].field2%> - <%=rows[0][i].field3%></li>
+										<%
+										i++;
+									}
+							%>
+							</ol>
+							<div style="height: 2px;"></div>
+							<%
+							}
+              %>
+					</div>
+          <div style="height: 6px;"></div>
+          <form autocomplete="off" action="assassinLogin" method="post" onsubmit="return waitCursor()" encType="multipart/form-data">
+                <input type="submit" class="btn btn-info" value="Home"/>
+                <div style="height: 6px;"></div>
+          </form>
+
+
+
+        </div>
+
+      </div>
+
+</div>
+
+<div style="height: 2px;"></div>
+
+</body>
+</html>
