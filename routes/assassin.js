@@ -3096,6 +3096,48 @@ router.post('/viewTeamHistory', function(req, res, next)
 
 });  // end router - viewRget_team_historyules
 
+
+// ------------------------------------------------------
+// Admin view events
+
+router.post('/adminViewEvents', function(req, res, next)
+{
+    console.log("Got into adminViewEvents call");
+
+    // Check authentication status
+    if (!req.oidc.isAuthenticated())
+    {
+        console.log("Not authenticated");
+        res.render('landing');
+        return;
+    }
+
+    // Call stored procedure to search for the player
+    dbConn.query('CALL `assassin`.`admin_get_events`(?,?)', [req.body.myTeamCode, req.body.myPlayerCode], function(err,rows)
+    {
+        if(err)
+        {
+            console.log("MySQL error on admin_get_events call: " + err.code + " - " + err.message + " " + (new Date()).toLocaleString());
+            // Render error page, passing in error data
+            res.render('errorMessagePage', {result: ERROR_MYSQL_SYSTEM_ERROR_ON_RPC});
+            return;
+        } else
+        {
+            // get_team_history worked, now inspect data
+            console.log("admin_get_events successful rpc call.");
+            console.log(rows);
+            // show the rows
+            // res.render('viewEvents',
+            // {
+            //     rows: rows[0]
+            // });
+
+        } // end else rpc worked
+
+    });  // end db query
+
+});  // end router - admin view events
+
 // ------------------------------------------------------
 // Called by admin to view full status of game
 
@@ -3791,11 +3833,26 @@ function formatDate(inDate)
 
   var hh = ("0" + dt.getHours()).slice(-2);
 
+  var amOrPm = " AM"; // default
+
+  if (hh > 12)
+  {
+      amOrPm = " PM";
+      hh-=12;
+  }
+  else
+  {
+    if (hh == 12)
+    {
+        amOrPm = " PM";
+    }
+  }
+
   var mm = ("0" + dt.getMinutes()).slice(-2);
 
   var ss = ("0" + dt.getSeconds()).slice(-2);
 
-  var date_string = YYYY + "-" + MM + "-" + DD + " " + hh + ":" + mm + ":" + ss;
+  var date_string = YYYY + "-" + MM + "-" + DD + " " + hh + ":" + mm + ":" + ss + amOrPm;
 
   // will output something like "2019-02-14 11:04:42"
   return date_string;
