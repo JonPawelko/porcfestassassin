@@ -24,7 +24,7 @@ module.exports = router;
 //
 router.post('/assassinLogin', function(req, res, next)
 {
-  console.log("Got into assassinLogin");
+  // console.log("Got into assassinLogin at " + new Date());
   res.oidc.login();
 
 }); // end router post assassinLogin
@@ -34,7 +34,7 @@ router.post('/assassinLogin', function(req, res, next)
 //
 router.post('/assassinRegister', function(req, res, next) {
 
-  console.log("Got into assassinRegister");
+  //console.log("Got into assassinRegister");
 
   res.oidc.login(
   {
@@ -51,7 +51,7 @@ router.post('/assassinRegister', function(req, res, next) {
 //
 router.post('/assassinLogout', function(req, res, next)
 {
-  console.log("Got into assassinLogout");
+  //console.log("Got into assassinLogout");
 
   res.oidc.logout();
 
@@ -62,7 +62,7 @@ router.post('/assassinLogout', function(req, res, next)
 
 router.get('/', function(req, res, next) {
 
-  console.log("Root called");
+  // console.log("Root called at " + new Date());
   var tempMyLastShift;  // helper for null last shifts and formatting
   var tempTeamLastShift;  // helper for null last shifts and formatting
 
@@ -74,12 +74,12 @@ router.get('/', function(req, res, next) {
   // Check authentication status, route to landing page if not authenticated
   if (!req.oidc.isAuthenticated())
   {
-      console.log("Not authenticated");
+      //console.log("Not authenticated");
       res.render('landing');
       return;
   }
 
-  console.log("User Authenticated - Email in Root index is " + req.oidc.user.email);
+  console.log("User Authenticated at " + formatDate(new Date()) + " - Email in Root index is " + req.oidc.user.email);
 
   // Retrieve User info passing in email
   dbConn.query('CALL `assassin`.`get_player_info_and_game_status`(?)', req.oidc.user.email, function(err,rows)
@@ -94,13 +94,13 @@ router.get('/', function(req, res, next) {
 
       } else
       {
-          console.log("Successful Get Info RPC call.");
-          console.log(rows);
+          //console.log("Successful Get Info RPC call.");
+          //console.log(rows);
 
           // Check to see if Player exists in the database already, if not, redirect to landing2
           if (rows[0][0].playerCode == null)
           {
-              console.log("Player code does not exist");
+              //console.log("Player code does not exist");
               res.render('landing2');
               return;
           }
@@ -116,7 +116,7 @@ router.get('/', function(req, res, next) {
               }
 
               // Get and save game statistics
-              console.log("Just before get stats call. Player code is " + rows[0][0].playerCode + "  Team code is " + tempTeamCode);
+              //console.log("Just before get stats call. Player code is " + rows[0][0].playerCode + "  Team code is " + tempTeamCode);
 
               dbConn.query('CALL `assassin`.`get_statistics`(?,?)', [rows[0][0].playerCode, tempTeamCode], function(err,rowsStats)
               {
@@ -128,8 +128,8 @@ router.get('/', function(req, res, next) {
                       return;
                   } else
                   {
-                      console.log("Successful get_statistics RPC call.");
-                      console.log(rowsStats[0]);
+                      //console.log("Successful get_statistics RPC call.");
+                      //console.log(rowsStats[0]);
 
                       // check error code here and log, but don't return
                       if (rowsStats[0][0].returnCode != CALL_SUCCESS)
@@ -158,16 +158,16 @@ router.get('/', function(req, res, next) {
                       // update pic path and replace any spaces in file names with code
                       let tempPic = "photos/" + rows[0][0].playerPic;
                       tempPlayerPic = tempPic.replace(/ /g, "%20");
-                      console.log("tempPlayerPic is " + tempPlayerPic);
+                      //console.log("tempPlayerPic is " + tempPlayerPic);
 
                       let tempPic2 = "photos/" + rows[0][0].targetPic;
                       tempTargetPic = tempPic2.replace(/ /g, "%20");
-                      console.log("tempPlayerPic2 is " + tempTargetPic);
+                      //console.log("tempPlayerPic2 is " + tempTargetPic);
 
                       // Check if Player has any teammates
                       if (rows[0][0].numTeammates > 0)
                       {
-                          console.log("At least 1 teammate");
+                          //console.log("At least 1 teammate");
 
                           // get teammate info, could be multiple rows returned
                           dbConn.query('CALL `assassin`.`get_teammate_info`(?,?)', [rows[0][0].playerCode, rows[0][0].playerTeamCode], function(err,rows2)
@@ -180,8 +180,8 @@ router.get('/', function(req, res, next) {
                                   return;
                               } else
                               {
-                                  console.log("Successful Get Teammate Info RPC call.");
-                                  console.log("Paypal flag: " + PAYPAL_FLAG);                                console.log()
+                                  //console.log("Successful Get Teammate Info RPC call.");
+                                  //console.log("Paypal flag: " + PAYPAL_FLAG);                                console.log()
 
                                   // not going to do addl error checking here. We already know this player has at least 1 teammate.
                                   // route to home page passing Player info and teammate info
@@ -241,7 +241,7 @@ router.get('/', function(req, res, next) {
                       }
                       else // Player has no teammates, don't send data that defaults to the Captain
                       {
-                          console.log("Paypal flag: " + PAYPAL_FLAG);                                console.log()
+                          //console.log("Paypal flag: " + PAYPAL_FLAG);                                console.log()
 
                           res.render('home', {
                           adminPlayerCode: CREDENTIALS.ADMIN_PLAYER_CODE,
@@ -313,7 +313,7 @@ router.get('/', function(req, res, next) {
 //
 router.post('/newAssassin', function(req, res, next)
 {
-    console.log("Got into new assassin call");
+    //console.log("Got into new assassin call");
 
     var adminPhone;
 
@@ -330,7 +330,7 @@ router.post('/newAssassin', function(req, res, next)
     // Check authentication status
     if (!req.oidc.isAuthenticated())
     {
-        console.log("Not authenticated");
+        //console.log("Not authenticated");
         res.render('landing');
         return;
     }
@@ -392,7 +392,7 @@ router.post('/newAssassin', function(req, res, next)
     playerPhotoFile = req.files.playerPhotoFile;
     uploadPath = __dirname + '/../public/photos/' + playerPhotoFile.name;  // might want to clean up this directory logic
 
-    console.log("Upload path is: " + uploadPath);
+    //console.log("Upload path is: " + uploadPath);
 
     // Call stored procedure to create the player
     dbConn.query('CALL `assassin`.`create_player_from_email`(?,?,?,?,?)', [req.oidc.user.email, tempPlayerName, tempPlayerPhone, playerPhotoFile.name, req.body.playerTeamName], function(err,rows)
@@ -406,7 +406,7 @@ router.post('/newAssassin', function(req, res, next)
         } else
         {
             // Create Player worked, now upload photo
-            console.log("Create Player RPC worked, now check return code.");
+            //console.log("Create Player RPC worked, now check return code.");
 
             // Check return code
             if (rows[0][0].phone == CALL_SUCCESS)
@@ -434,7 +434,7 @@ router.post('/newAssassin', function(req, res, next)
                     }
                     else
                     {
-                        console.log("Successful file upload");
+                        //console.log("Successful file upload");
 
                         // Update status of player picture to Uploaded, use email because we don't know playerCode here
                         dbConn.query('CALL `assassin`.`update_photo_status_to_uploaded`(?)', req.oidc.user.email, function(err,rows)
@@ -448,7 +448,7 @@ router.post('/newAssassin', function(req, res, next)
                             } else
                             {
                                 // update_photo_status_to_uploaded worked, check return code
-                                console.log("update_photo_status_to_uploaded rpc worked");
+                                //console.log("update_photo_status_to_uploaded rpc worked");
 
                                 if (rows[0][0].phone != CALL_SUCCESS)
                                 {
@@ -487,12 +487,12 @@ router.post('/newAssassin', function(req, res, next)
 
 router.post('/activateAssassin', function(req, res, next)
 {
-  console.log("Got into activateAssassin call");
+  //console.log("Got into activateAssassin call");
 
   // Check authentication status
   if (!req.oidc.isAuthenticated())
   {
-      console.log("Not authenticated");
+      //console.log("Not authenticated");
       res.render('landing');
       return;
   }
@@ -518,8 +518,8 @@ router.post('/activateAssassin', function(req, res, next)
           return;
       } else
       {
-          console.log("Successful activate player RPC call, now check return code.");
-          console.log(rows);
+          //console.log("Successful activate player RPC call, now check return code.");
+          //console.log(rows);
 
           // No alerts, only check result
           if (rows[0][0].phone != CALL_SUCCESS)
@@ -530,7 +530,7 @@ router.post('/activateAssassin', function(req, res, next)
           }
           else // success
           {
-            console.log("Full activate player RPC call success.");
+            //console.log("Full activate player RPC call success.");
             res.oidc.login();  // route Player back to Home
           }
       } // end else
@@ -544,12 +544,12 @@ router.post('/activateAssassin', function(req, res, next)
 //
 router.post('/validateKill', function(req, res, next)
 {
-  console.log("Validate Kill called.");
+  //console.log("Validate Kill called.");
 
   // Check authentication status
   if (!req.oidc.isAuthenticated())
   {
-      console.log("Not authenticated");
+      //console.log("Not authenticated");
       res.render('landing');
       return;
   }
@@ -570,12 +570,14 @@ router.post('/validateKill', function(req, res, next)
           res.render('errorMessagePage', {result: ERROR_MYSQL_SYSTEM_ERROR_ON_RPC});
           return;
       } else {
-          console.log("Successful RPC validate_kill call.");
-          console.log(rows);
+          //console.log("Successful RPC validate_kill call.");
+          //console.log(rows);
 
           // Check return code.  1 = successful kill.
           if (rows[0][0].phone == CALL_SUCCESS)
           {
+              //console.log("Valid kill at " + formatDate(new Date()));
+
               if (rows[0].length > 1)
               {
                 if (TWILIO_FLAG != TWILIO_OFF)
@@ -585,6 +587,7 @@ router.post('/validateKill', function(req, res, next)
           }
           else
           {
+            console.log("Invalid kill attempt at " + formatDate(new Date()));
             // Render error page, passing in error code
             res.render('errorMessagePage', {result: parseInt(rows[0][0].phone)});
             return;
@@ -602,12 +605,12 @@ router.post('/validateKill', function(req, res, next)
 //
 router.post('/rebuy', function(req, res, next)
 {
-  console.log("Got into rebuy");
+  //console.log("Got into rebuy");
 
   // Check authentication status
   if (!req.oidc.isAuthenticated())
   {
-      console.log("Not authenticated");
+      //console.log("Not authenticated");
       res.render('landing');
       return;
   }
@@ -653,12 +656,12 @@ router.post('/rebuy', function(req, res, next)
 //
 router.post('/goLive', function(req, res, next)
 {
-  console.log("Got into Go Live");
+  //console.log("Got into Go Live");
 
   // Check authentication status
   if (!req.oidc.isAuthenticated())
   {
-      console.log("Not authenticated");
+      //console.log("Not authenticated");
       res.render('landing');
       return;
   }
@@ -673,8 +676,8 @@ router.post('/goLive', function(req, res, next)
           res.render('errorMessagePage', {result: ERROR_MYSQL_SYSTEM_ERROR_ON_RPC});
           return;
       } else {
-          console.log("Successful Go Live RPC call.");
-          console.log(rows);
+          //console.log("Successful Go Live RPC call.");
+          //console.log(rows);
 
           // Error checking here if Player couldn't go Live.
           if (rows[0][0].phone == CALL_SUCCESS)
@@ -704,12 +707,12 @@ router.post('/goLive', function(req, res, next)
 //
 router.post('/joinTeam', function(req, res, next)
 {
-  console.log("Got into Join Team");
+  //console.log("Got into Join Team");
 
   // Check authentication status
   if (!req.oidc.isAuthenticated())
   {
-      console.log("Not authenticated");
+      //console.log("Not authenticated");
       res.render('landing');
       return;
   }
@@ -736,8 +739,8 @@ router.post('/joinTeam', function(req, res, next)
       }
       else
       {
-          console.log("Successful Join Team RPC call, now check return code.");
-          console.log(rows);
+          //console.log("Successful Join Team RPC call, now check return code.");
+          //console.log(rows);
 
           if (rows[0][0].phone == CALL_SUCCESS)
           {
@@ -766,12 +769,12 @@ router.post('/joinTeam', function(req, res, next)
 //
 router.post('/createTeam', function(req, res, next)
 {
-  console.log("Got into Create Team");
+  //console.log("Got into Create Team");
 
   // Check authentication status
   if (!req.oidc.isAuthenticated())
   {
-      console.log("Not authenticated");
+      //console.log("Not authenticated");
       res.render('landing');
       return;
   }
@@ -795,8 +798,8 @@ router.post('/createTeam', function(req, res, next)
       }
       else
       {
-          console.log("Successful Create Team RPC call.");
-          console.log(rows);
+          //console.log("Successful Create Team RPC call.");
+          //console.log(rows);
 
           if (rows[0][0].phone == CALL_SUCCESS)
           {
@@ -820,12 +823,12 @@ router.post('/createTeam', function(req, res, next)
 //
 router.post('/takeBreak', function(req, res, next)
 {
-  console.log("Got into take break");
+  //console.log("Got into take break");
 
   // Check authentication status
   if (!req.oidc.isAuthenticated())
   {
-      console.log("Not authenticated");
+      //console.log("Not authenticated");
       res.render('landing');
       return;
   }
@@ -841,8 +844,8 @@ router.post('/takeBreak', function(req, res, next)
           return;
       } else
       {
-          console.log("Successful take break RPC call.");
-          console.log(rows);
+          //console.log("Successful take break RPC call.");
+          //console.log(rows);
 
           if (rows[0][0].phone == CALL_SUCCESS)
           {
@@ -871,12 +874,12 @@ router.post('/takeBreak', function(req, res, next)
 //
 router.post('/returnFromBreak', function(req, res, next)
 {
-  console.log("Got into return from break");
+  //console.log("Got into return from break");
 
   // Check authentication status
   if (!req.oidc.isAuthenticated())
   {
-      console.log("Not authenticated");
+      //console.log("Not authenticated");
       res.render('landing');
       return;
   }
@@ -892,8 +895,8 @@ router.post('/returnFromBreak', function(req, res, next)
           return;
       } else
       {
-          console.log("Successful return from break RPC call.");
-          console.log(rows);
+          //console.log("Successful return from break RPC call.");
+          //console.log(rows);
 
           if (rows[0][0].phone == CALL_SUCCESS)
           {
@@ -922,12 +925,12 @@ router.post('/returnFromBreak', function(req, res, next)
 //
 router.post('/addPlayer', function(req, res, next)
 {
-  console.log("Got into addPlayer");
+  //console.log("Got into addPlayer");
 
   // Check authentication status
   if (!req.oidc.isAuthenticated())
   {
-      console.log("Not authenticated");
+      //console.log("Not authenticated");
       res.render('landing');
       return;
   }
@@ -952,8 +955,8 @@ router.post('/addPlayer', function(req, res, next)
           res.render('errorMessagePage', {result: ERROR_MYSQL_SYSTEM_ERROR_ON_RPC});
           return;
       } else {
-          console.log("Successful add player RPC call.");
-          console.log(rows);
+          //console.log("Successful add player RPC call.");
+          //console.log(rows);
 
           if (rows[0][0].phone == CALL_SUCCESS)
           {
@@ -982,12 +985,12 @@ router.post('/addPlayer', function(req, res, next)
 //
 router.post('/removePlayerFromTeam', function(req, res, next)
 {
-  console.log("Got into removePlayerFromTeam");
+  //console.log("Got into removePlayerFromTeam");
 
   // Check authentication status
   if (!req.oidc.isAuthenticated())
   {
-      console.log("Not authenticated");
+      //console.log("Not authenticated");
       res.render('landing');
       return;
   }
@@ -1014,8 +1017,8 @@ router.post('/removePlayerFromTeam', function(req, res, next)
       }
       else
       {
-          console.log("Successful removePlayerFromTeam RPC call, now check return code.");
-          console.log(rows);
+          //console.log("Successful removePlayerFromTeam RPC call, now check return code.");
+          //console.log(rows);
 
           if (rows[0][0].phone == CALL_SUCCESS)
           {
@@ -1044,12 +1047,12 @@ router.post('/removePlayerFromTeam', function(req, res, next)
 //
 router.post('/quitGame', function(req, res, next)
 {
-  console.log("Got into quitGame");
+  //console.log("Got into quitGame");
 
   // Check authentication status
   if (!req.oidc.isAuthenticated())
   {
-      console.log("Not authenticated");
+      //console.log("Not authenticated");
       res.render('landing');
       return;
   }
@@ -1065,8 +1068,8 @@ router.post('/quitGame', function(req, res, next)
           return;
       } else
       {
-          console.log("Successful quitGame RPC call.");
-          console.log(rows);
+          //console.log("Successful quitGame RPC call.");
+          //console.log(rows);
 
           if (rows[0][0].phone == CALL_SUCCESS)
           {
@@ -1094,12 +1097,12 @@ router.post('/quitGame', function(req, res, next)
 // Route called by any Player to view their picture.  Currently no plan to allow editing, just a courtesy
 router.post('/managePicture', function(req, res, next)
 {
-  console.log("Got into managePicture");
+  //console.log("Got into managePicture");
 
   // Check authentication status
   if (!req.oidc.isAuthenticated())
   {
-      console.log("Not authenticated");
+      //console.log("Not authenticated");
       res.render('landing');
       return;
   }
@@ -1120,12 +1123,12 @@ router.post('/managePicture', function(req, res, next)
 
 router.post('/adminShowCreatePrepsPage', function(req, res, next)
 {
-    console.log("Got into adminShowCreatePrepsPage call");
+    //console.log("Got into adminShowCreatePrepsPage call");
 
     // Check authentication status
     if (!req.oidc.isAuthenticated())
     {
-        console.log("Not authenticated");
+        //console.log("Not authenticated");
         res.render('landing');
         return;
     }
@@ -1140,14 +1143,14 @@ router.post('/adminShowCreatePrepsPage', function(req, res, next)
 //
 router.post('/adminCreatePrepTemplateData', function(req, res, next)
 {
-  console.log("Got into adminCreatePrepTemplateData");
+  //console.log("Got into adminCreatePrepTemplateData");
 
   var num1, num2, num3; // helper vars to make sure the inputs are ints
 
   // Check authentication status
   if (!req.oidc.isAuthenticated())
   {
-      console.log("Not authenticated");
+      //console.log("Not authenticated");
       res.render('landing');
       return;
   }
@@ -1176,8 +1179,8 @@ router.post('/adminCreatePrepTemplateData', function(req, res, next)
           return;
       } else
       {
-          console.log("Successful adminCreatePrepTemplateData RPC call.");
-          console.log(rows);
+          //console.log("Successful adminCreatePrepTemplateData RPC call.");
+          //console.log(rows);
 
           // not going to do an addl layer of error checking here. If call worked, very little chance rpc didn't create the data
           res.oidc.login();
@@ -1195,12 +1198,12 @@ router.post('/adminActivateTeamPrep', function(req, res, next)
 {
   var tempTeamCode; // store original team code passed in because multiple mysql calls made
 
-  console.log("Got into adminActivateTeamPrep");
+  //console.log("Got into adminActivateTeamPrep");
 
   // Check authentication status
   if (!req.oidc.isAuthenticated())
   {
-      console.log("Not authenticated");
+      //console.log("Not authenticated");
       res.render('landing');
       return;
   }
@@ -1228,8 +1231,8 @@ router.post('/adminActivateTeamPrep', function(req, res, next)
           return;
       } else
       {
-          console.log("Successful get_prepped_team_player_codes RPC call.");
-          console.log(rows);
+          //console.log("Successful get_prepped_team_player_codes RPC call.");
+          //console.log(rows);
 
           if (rows[0].length == 0)
           {
@@ -1278,7 +1281,7 @@ router.post('/adminActivateTeamPrep', function(req, res, next)
 
 router.post('/adminActivateTeam', function(req, res, next)
 {
-    console.log("Got into new adminActivateTeam call");
+    //console.log("Got into new adminActivateTeam call");
 
     // helper vars for uploading photo files
     let playerPhotoFile;
@@ -1301,7 +1304,7 @@ router.post('/adminActivateTeam', function(req, res, next)
     // Check authentication status
     if (!req.oidc.isAuthenticated())
     {
-        console.log("Not authenticated");
+        //console.log("Not authenticated");
         res.render('landing');
         return;
     }
@@ -1336,12 +1339,12 @@ router.post('/adminActivateTeam', function(req, res, next)
 
     if (req.body.captainPhone != "")
     {
-        console.log("Captain phone not blank");
+        //console.log("Captain phone not blank");
         captPhone = validatePhone(req.body.captainPhone); // comes back formatted
 
         if (captPhone == null)
         {
-            console.log("Captain phone not null.");
+            //console.log("Captain phone not null.");
             // Render error page, passing in error code
             res.render('errorMessagePage', {result: ERROR_INVALID_PHONE_NUMBER});
             return;
@@ -1457,8 +1460,8 @@ router.post('/adminActivateTeam', function(req, res, next)
         } else
         {
             // admin_activate_team worked
-            console.log("admin_activate_team rpc worked, check return code, upload photos.");
-            console.log(rows);
+            //console.log("admin_activate_team rpc worked, check return code, upload photos.");
+            //console.log(rows);
 
             // check result, return if error
             if (rows[0][0].phone != CALL_SUCCESS)
@@ -1487,7 +1490,7 @@ router.post('/adminActivateTeam', function(req, res, next)
                 }
                 else
                 {
-                    console.log("Successful Captain file upload");
+                    //console.log("Successful Captain file upload");
 
                     if (Object.keys(req.files).length > 1 )
                     {
@@ -1510,7 +1513,7 @@ router.post('/adminActivateTeam', function(req, res, next)
                             }
                             else
                             {
-                                console.log("Successful player 2 file upload");
+                                //console.log("Successful player 2 file upload");
 
                                 if (Object.keys(req.files).length > 2 )
                                 {
@@ -1533,7 +1536,7 @@ router.post('/adminActivateTeam', function(req, res, next)
                                         }
                                         else
                                         {
-                                          console.log("Successful player 3 file upload");
+                                          //console.log("Successful player 3 file upload");
                                           res.oidc.login(); // route back to login
                                         }
 
@@ -1569,12 +1572,12 @@ router.post('/adminActivateTeam', function(req, res, next)
 
 router.post('/adminSearchForTeam', function(req, res, next)
 {
-    console.log("Got into adminSearchForTeam call");
+    //console.log("Got into adminSearchForTeam call");
 
     // Check authentication status
     if (!req.oidc.isAuthenticated())
     {
-        console.log("Not authenticated");
+        //console.log("Not authenticated");
         res.render('landing');
         return;
     }
@@ -1634,10 +1637,10 @@ router.post('/adminSearchForTeam', function(req, res, next)
         } else
         {
             // admin_search_for_team rpc worked
-            console.log("search_for_team successful rpc call.");
+            //console.log("search_for_team successful rpc call.");
 
             // Check results, if only 1 Team, go directly to that edit Team page, otherwise show list of matching teams and let Admin pick
-            console.log(rows);
+            //console.log(rows);
 
             if (rows[0].length == 1)
             {
@@ -1658,8 +1661,8 @@ router.post('/adminSearchForTeam', function(req, res, next)
                 // more than 1 team found, show Team List
                 if (rows[0].length > 1)
                 {
-                    console.log("-----------------------");
-                    console.log(rows[0]);
+                    //console.log("-----------------------");
+                    //console.log(rows[0]);
 
                     res.render('adminTeamList',
                     {
@@ -1687,13 +1690,13 @@ router.post('/adminSearchForTeam', function(req, res, next)
 
 router.post('/adminSearchForPlayer', function(req, res, next)
 {
-    console.log("Got into adminSearchForPlayer call");
-    console.log(req.body);
+    //console.log("Got into adminSearchForPlayer call");
+    //console.log(req.body);
 
     // Check authentication status
     if (!req.oidc.isAuthenticated())
     {
-        console.log("Not authenticated");
+        //console.log("Not authenticated");
         res.render('landing');
         return;
     }
@@ -1753,7 +1756,7 @@ router.post('/adminSearchForPlayer', function(req, res, next)
 
     // end error checking  --------------
 
-    console.log("Test. team name: " + tempTeamName + "  player name:" + tempPlayerName + "  player code:" + tempPlayerCode + "  team code:" + tempTeamCode + "  celeb: " + tempCeleb)
+    //console.log("Test. team name: " + tempTeamName + "  player name:" + tempPlayerName + "  player code:" + tempPlayerCode + "  team code:" + tempTeamCode + "  celeb: " + tempCeleb)
 
     // Call stored procedure to search for the player
     dbConn.query('CALL `assassin`.`admin_search_for_player`(?,?,?,?,?,?)', [tempTeamName, tempPlayerName, tempPlayerCode, tempTeamCode, tempCeleb, tempSearchAll], function(err,rows)
@@ -1767,9 +1770,9 @@ router.post('/adminSearchForPlayer', function(req, res, next)
         } else
         {
             // adminSearchForPlayer worked, now inspect data
-            console.log("adminSearchForPlayer successful rpc call.");
+            //console.log("adminSearchForPlayer successful rpc call.");
 
-            console.log(rows);
+            //console.log(rows);
 
             // Check results, if only 1 player, go directly to that edit player page, otherwise show list of matching players and let Admin pick
             console.log(rows[0].length);
@@ -1799,8 +1802,8 @@ router.post('/adminSearchForPlayer', function(req, res, next)
 
                 if (rows[0].length > 1)
                 {
-                    console.log("-----------------------");
-                    console.log(rows[0]);
+                    //console.log("-----------------------");
+                    //console.log(rows[0]);
 
                     res.render('adminPlayerList',
                     {
@@ -1827,12 +1830,12 @@ router.post('/adminSearchForPlayer', function(req, res, next)
 //
 router.post('/adminApprovePicture', function(req, res, next)
 {
-    console.log("Got into adminApprovePicture call");
+    //console.log("Got into adminApprovePicture call");
 
     // Check authentication status
     if (!req.oidc.isAuthenticated())
     {
-        console.log("Not authenticated");
+        //console.log("Not authenticated");
         res.render('landing');
         return;
     }
@@ -1849,7 +1852,7 @@ router.post('/adminApprovePicture', function(req, res, next)
         } else
         {
             // adminApprovePicture worked
-            console.log("adminApprovePicture successful rpc call.");
+            //console.log("adminApprovePicture successful rpc call.");
 
             if (rows[0][0].phone == CALL_SUCCESS)
             {
@@ -1883,12 +1886,12 @@ router.post('/adminApprovePicture', function(req, res, next)
 
 router.post('/adminRejectPicture', function(req, res, next)
 {
-    console.log("Got into adminRejectPicture call");
+    //console.log("Got into adminRejectPicture call");
 
     // Check authentication status
     if (!req.oidc.isAuthenticated())
     {
-        console.log("Not authenticated");
+        //console.log("Not authenticated");
         res.render('landing');
         return;
     }
@@ -1905,8 +1908,8 @@ router.post('/adminRejectPicture', function(req, res, next)
         } else
         {
             // adminRejectPicture worked
-            console.log("adminRejectPicture successful rpc call.");
-            console.log(rows);
+            //console.log("adminRejectPicture successful rpc call.");
+            //console.log(rows);
 
             if (rows[0][0].phone == CALL_SUCCESS)
             {
@@ -1940,12 +1943,12 @@ router.post('/adminRejectPicture', function(req, res, next)
 
 router.post('/adminChoosePhoto', function(req, res, next)
 {
-    console.log("Got into adminChoosePhoto call");
+    //console.log("Got into adminChoosePhoto call");
 
     // Check authentication status
     if (!req.oidc.isAuthenticated())
     {
-        console.log("Not authenticated");
+        //console.log("Not authenticated");
         res.render('landing');
         return;
     }
@@ -1960,12 +1963,12 @@ router.post('/adminChoosePhoto', function(req, res, next)
 
 router.post('/uploadPhoto', function(req, res, next)
 {
-    console.log("Got into uploadPhoto call");
+    //console.log("Got into uploadPhoto call");
 
     // Check authentication status
     if (!req.oidc.isAuthenticated())
     {
-        console.log("Not authenticated");
+        //console.log("Not authenticated");
         res.render('landing');
         return;
     }
@@ -1991,7 +1994,7 @@ router.post('/uploadPhoto', function(req, res, next)
         } else
         {
             //  upload photo data worked
-            console.log("upload_photo_data rpc worked, now upload photo.");
+            //console.log("upload_photo_data rpc worked, now upload photo.");
 
             if (rows[0][0].phone != CALL_SUCCESS)
             {
@@ -2019,7 +2022,7 @@ router.post('/uploadPhoto', function(req, res, next)
                 }
                 else
                 {
-                    console.log("Successful photo file upload");
+                    //console.log("Successful photo file upload");
                     res.oidc.login();
 
                 } // else first upload
@@ -2037,14 +2040,14 @@ router.post('/uploadPhoto', function(req, res, next)
 
 router.post('/adminPayBounties', function(req, res, next)
 {
-  console.log("Got into new adminPayBounties call");
+  //console.log("Got into new adminPayBounties call");
 
   var tempBounties = parseInt(req.body.numBounties);
 
   // Check authentication status
   if (!req.oidc.isAuthenticated())
   {
-      console.log("Not authenticated");
+      //console.log("Not authenticated");
       res.render('landing');
       return;
   }
@@ -2068,7 +2071,7 @@ router.post('/adminPayBounties', function(req, res, next)
       } else
       {
           // Create Player worked, now upload photo
-          console.log("admin_pay_bounties rpc worked.");
+          //console.log("admin_pay_bounties rpc worked.");
 
           if (rows[0][0].phone == CALL_SUCCESS)
           {
@@ -2092,12 +2095,12 @@ router.post('/adminPayBounties', function(req, res, next)
 
 router.post('/adminMarkPaid', function(req, res, next)
 {
-  console.log("Got into new adminMarkPaid call");
+  //console.log("Got into new adminMarkPaid call");
 
   // Check authentication status
   if (!req.oidc.isAuthenticated())
   {
-      console.log("Not authenticated");
+      //console.log("Not authenticated");
       res.render('landing');
       return;
   }
@@ -2114,8 +2117,8 @@ router.post('/adminMarkPaid', function(req, res, next)
       } else
       {
           // adminMarkPaid worked
-          console.log("adminMarkPaid rpc worked.");
-          console.log(rows);
+          //console.log("adminMarkPaid rpc worked.");
+          //console.log(rows);
 
           if (rows[0][0].phone == CALL_SUCCESS)
           {
@@ -2140,12 +2143,12 @@ router.post('/adminMarkPaid', function(req, res, next)
 
 router.post('/adminMarkPaidAndApprovePhoto', function(req, res, next)
 {
-  console.log("Got into new adminMarkPaidAndApprovePhoto call");
+  //console.log("Got into new adminMarkPaidAndApprovePhoto call");
 
   // Check authentication status
   if (!req.oidc.isAuthenticated())
   {
-      console.log("Not authenticated");
+      //console.log("Not authenticated");
       res.render('landing');
       return;
   }
@@ -2162,7 +2165,7 @@ router.post('/adminMarkPaidAndApprovePhoto', function(req, res, next)
       } else
       {
           // adminMarkPaid worked, now check return code and call approve pic
-          console.log("adminMarkPaid rpc worked.");
+          //console.log("adminMarkPaid rpc worked.");
 
           // check return code here, continue with approve photo if ok
           if (rows[0][0].phone == CALL_SUCCESS)
@@ -2181,8 +2184,8 @@ router.post('/adminMarkPaidAndApprovePhoto', function(req, res, next)
                   } else
                   {
                       // adminApprovePicture worked, check return code
-                      console.log("adminApprovePicture successful rpc call.");
-                      console.log(rows);
+                      //console.log("adminApprovePicture successful rpc call.");
+                      //console.log(rows);
 
                       if (rows[0][0].phone == CALL_SUCCESS)
                       {
@@ -2222,12 +2225,12 @@ router.post('/adminMarkPaidAndApprovePhoto', function(req, res, next)
 
 router.post('/adminAddBounty', function(req, res, next)
 {
-  console.log("Got into new adminAddBounty call");
+  //console.log("Got into new adminAddBounty call");
 
   // Check authentication status
   if (!req.oidc.isAuthenticated())
   {
-      console.log("Not authenticated");
+      //console.log("Not authenticated");
       res.render('landing');
       return;
   }
@@ -2244,7 +2247,7 @@ router.post('/adminAddBounty', function(req, res, next)
       } else
       {
           // admin_add_bounty worked
-          console.log("admin_add_bounty rpc worked.");
+          //console.log("admin_add_bounty rpc worked.");
           // console.log(rows);
 
           if (rows[0][0].phone == CALL_SUCCESS)
@@ -2268,12 +2271,12 @@ router.post('/adminAddBounty', function(req, res, next)
 // Route called by admin to edit player data
 router.post('/adminEditPlayerData', function(req, res, next)
 {
-    console.log("Got into adminEditPlayerData");
+    //console.log("Got into adminEditPlayerData");
 
     // Check authentication status
     if (!req.oidc.isAuthenticated())
     {
-        console.log("Not authenticated");
+        //console.log("Not authenticated");
         res.render('landing');
         return;
     }
@@ -2292,13 +2295,13 @@ router.post('/adminUpdatePlayerData', function(req, res, next)
   // helper var to check and format phone number
   var tempPlayerPhone = "";
 
-  console.log("Got into updatePlayerData");
+  //console.log("Got into updatePlayerData");
   // console.log("Phone is: " + req.body.playerPhone);
 
   // Check authentication status
   if (!req.oidc.isAuthenticated())
   {
-      console.log("Not authenticated");
+      //console.log("Not authenticated");
       res.render('landing');
       return;
   }
@@ -2308,7 +2311,7 @@ router.post('/adminUpdatePlayerData', function(req, res, next)
 
   if (req.body.playerPhone != "")
   {
-    console.log("Phone not blank, checking phone");
+    //console.log("Phone not blank, checking phone");
 
     tempPlayerPhone = validatePhone(req.body.playerPhone); // comes back formatted
 
@@ -2321,7 +2324,7 @@ router.post('/adminUpdatePlayerData', function(req, res, next)
   }
   else
   {
-    console.log("Phone blank.");
+    //console.log("Phone blank.");
     // tempPlayerPhone = "";
   }
 
@@ -2342,8 +2345,8 @@ router.post('/adminUpdatePlayerData', function(req, res, next)
           res.render('errorMessagePage', {result: ERROR_MYSQL_SYSTEM_ERROR_ON_RPC});
           return;
       } else {
-          console.log("Successful update_player_data RPC call.");
-          console.log(rows);
+          //console.log("Successful update_player_data RPC call.");
+          //console.log(rows);
 
           if (rows[0][0].phone == CALL_SUCCESS)
           {
@@ -2368,12 +2371,12 @@ router.post('/adminUpdatePlayerData', function(req, res, next)
 router.post('/adminUpdateTeamName', function(req, res, next)
 {
 
-  console.log("Got into adminUpdateTeamName");
+  //console.log("Got into adminUpdateTeamName");
 
   // Check authentication status
   if (!req.oidc.isAuthenticated())
   {
-      console.log("Not authenticated");
+      //console.log("Not authenticated");
       res.render('landing');
       return;
   }
@@ -2396,8 +2399,8 @@ router.post('/adminUpdateTeamName', function(req, res, next)
           res.render('errorMessagePage', {result: ERROR_MYSQL_SYSTEM_ERROR_ON_RPC});
           return;
       } else {
-          console.log("Successful admin_update_team_name RPC call.");
-          console.log(rows);
+          //console.log("Successful admin_update_team_name RPC call.");
+          //console.log(rows);
 
           if (rows[0][0].phone == CALL_SUCCESS)
           {
@@ -2420,12 +2423,12 @@ router.post('/adminUpdateTeamName', function(req, res, next)
 // Route called by player to edit phone number
 router.post('/addPlayerPhoneNumber', function(req, res, next)
 {
-    console.log("Got into addPlayerPhoneNumber");
+    //console.log("Got into addPlayerPhoneNumber");
 
     // Check authentication status
     if (!req.oidc.isAuthenticated())
     {
-        console.log("Not authenticated");
+        //console.log("Not authenticated");
         res.render('landing');
         return;
     }
@@ -2438,12 +2441,12 @@ router.post('/addPlayerPhoneNumber', function(req, res, next)
 // Route called by player to edit phone number
 router.post('/editPlayerPhoneNumber', function(req, res, next)
 {
-    console.log("Got into editPlayerPhoneNumber");
+    //console.log("Got into editPlayerPhoneNumber");
 
     // Check authentication status
     if (!req.oidc.isAuthenticated())
     {
-        console.log("Not authenticated");
+        //console.log("Not authenticated");
         res.render('landing');
         return;
     }
@@ -2458,7 +2461,7 @@ router.post('/editPlayerPhoneNumber', function(req, res, next)
 router.post('/updatePlayerPhone', function(req, res, next)
 {
 
-  console.log("Got into updatePlayerPhone");
+  //console.log("Got into updatePlayerPhone");
 
   // helper var to check and format phone number
   var tempPlayerPhone;
@@ -2466,7 +2469,7 @@ router.post('/updatePlayerPhone', function(req, res, next)
   // Check authentication status
   if (!req.oidc.isAuthenticated())
   {
-      console.log("Not authenticated");
+      //console.log("Not authenticated");
       res.render('landing');
       return;
   }
@@ -2491,8 +2494,8 @@ router.post('/updatePlayerPhone', function(req, res, next)
           return;
       } else
       {
-          console.log("Successful updatePlayerPhone RPC call.");
-          console.log(rows);
+          //console.log("Successful updatePlayerPhone RPC call.");
+          //console.log(rows);
 
           if (rows[0][0].phone == CALL_SUCCESS)
           {
@@ -2516,12 +2519,12 @@ router.post('/updatePlayerPhone', function(req, res, next)
 router.post('/removePlayerPhoneNumber', function(req, res, next)
 {
 
-  console.log("Got into removePlayerPhone");
+  //console.log("Got into removePlayerPhone");
 
   // Check authentication status
   if (!req.oidc.isAuthenticated())
   {
-      console.log("Not authenticated");
+      //console.log("Not authenticated");
       res.render('landing');
       return;
   }
@@ -2537,8 +2540,8 @@ router.post('/removePlayerPhoneNumber', function(req, res, next)
           return;
       } else
       {
-          console.log("Successful removePlayerPhone RPC call.");
-          console.log(rows);
+          //console.log("Successful removePlayerPhone RPC call.");
+          //console.log(rows);
 
           if (rows[0][0].phone == CALL_SUCCESS)
           {
@@ -2561,12 +2564,12 @@ router.post('/removePlayerPhoneNumber', function(req, res, next)
 
 router.post('/adminBulkPictureApprove', function(req, res, next)
 {
-    console.log("Got into new adminBulkPictureApprove call");
+    //console.log("Got into new adminBulkPictureApprove call");
 
     // Check authentication status
     if (!req.oidc.isAuthenticated())
     {
-        console.log("Not authenticated");
+        //console.log("Not authenticated");
         res.render('landing');
         return;
     }
@@ -2581,12 +2584,12 @@ router.post('/adminBulkPictureApprove', function(req, res, next)
 
 router.post('/adminDropBomb', function(req, res, next)
 {
-  console.log("Got into new adminDropBomb call");
+  //console.log("Got into new adminDropBomb call");
 
   // Check authentication status
   if (!req.oidc.isAuthenticated())
   {
-      console.log("Not authenticated");
+      //console.log("Not authenticated");
       res.render('landing');
       return;
   }
@@ -2603,8 +2606,8 @@ router.post('/adminDropBomb', function(req, res, next)
       } else
       {
           // adminDropBomb worked
-          console.log("adminDropBomb rpc worked.");
-          console.log(rows);
+          //console.log("adminDropBomb rpc worked.");
+          //console.log(rows);
 
           if (rows[0][0].phone == CALL_SUCCESS)
           {
@@ -2637,12 +2640,12 @@ router.post('/adminDropBomb', function(req, res, next)
 
 router.post('/checkNotPaid', function(req, res, next)
 {
-  console.log("Got into new checkNotPaid call");
+  //console.log("Got into new checkNotPaid call");
 
   // Check authentication status
   if (!req.oidc.isAuthenticated())
   {
-      console.log("Not authenticated");
+      //console.log("Not authenticated");
       res.render('landing');
       return;
   }
@@ -2659,10 +2662,10 @@ router.post('/checkNotPaid', function(req, res, next)
       } else
       {
           // admin_search_for_not_paid rpc worked
-          console.log("admin_search_for_not_paid successful rpc call.");
+          //console.log("admin_search_for_not_paid successful rpc call.");
 
           // Check results,
-          console.log(rows);
+          //console.log(rows);
 
           if (rows[0].length == 1)
           {
@@ -2683,8 +2686,8 @@ router.post('/checkNotPaid', function(req, res, next)
               // more than 1 team found, show Team List
               if (rows[0].length > 1)
               {
-                  console.log("-----------------------");
-                  console.log(rows[0]);
+                  //console.log("-----------------------");
+                  //console.log(rows[0]);
 
                   res.render('adminTeamListNotPaid',
                   {
@@ -2712,14 +2715,14 @@ router.post('/checkNotPaid', function(req, res, next)
 
 router.post('/checkPlayersWithNoTeam', function(req, res, next)
 {
-  console.log("Got into new checkPlayersWithNoTeam call");
+  //console.log("Got into new checkPlayersWithNoTeam call");
 
   var playerPicPath; // helper var to replace any spaces from file names with code
 
   // Check authentication status
   if (!req.oidc.isAuthenticated())
   {
-      console.log("Not authenticated");
+      //console.log("Not authenticated");
       res.render('landing');
       return;
   }
@@ -2736,10 +2739,10 @@ router.post('/checkPlayersWithNoTeam', function(req, res, next)
       } else
       {
           // admin_search_for_not_paid rpc worked
-          console.log("admin_search_for_players_no_team successful rpc call.");
+          //console.log("admin_search_for_players_no_team successful rpc call.");
 
           // Check results,
-          console.log(rows);
+          //console.log(rows);
 
           if (rows[0].length == 1)
           {
@@ -2768,8 +2771,8 @@ router.post('/checkPlayersWithNoTeam', function(req, res, next)
               // more than 1 player found, show Player List
               if (rows[0].length > 1)
               {
-                  console.log("-----------------------");
-                  console.log(rows[0]);
+                  //console.log("-----------------------");
+                  //console.log(rows[0]);
 
                   res.render('adminPlayersWithNoTeam',
                   {
@@ -2797,12 +2800,12 @@ router.post('/checkPlayersWithNoTeam', function(req, res, next)
 
 router.post('/sendAllNotPaidMessages', function(req, res, next)
 {
-  console.log("Got into new sendAllNotPaidMessages call");
+  //console.log("Got into new sendAllNotPaidMessages call");
 
   // Check authentication status
   if (!req.oidc.isAuthenticated())
   {
-      console.log("Not authenticated");
+      //console.log("Not authenticated");
       res.render('landing');
       return;
   }
@@ -2819,10 +2822,10 @@ router.post('/sendAllNotPaidMessages', function(req, res, next)
       } else
       {
           // admin_search_for_not_paid rpc worked
-          console.log("admin_search_for_not_paid successful rpc call.");
+          //console.log("admin_search_for_not_paid successful rpc call.");
 
           // Check results,
-          console.log(rows);
+          //console.log(rows);
 
           var i;
 
@@ -2847,12 +2850,12 @@ router.post('/sendAllNotPaidMessages', function(req, res, next)
 
 router.post('/sendAllNoTeamMessages', function(req, res, next)
 {
-  console.log("Got into new sendAllNoTeamMessages call");
+  //console.log("Got into new sendAllNoTeamMessages call");
 
   // Check authentication status
   if (!req.oidc.isAuthenticated())
   {
-      console.log("Not authenticated");
+      //console.log("Not authenticated");
       res.render('landing');
       return;
   }
@@ -2869,10 +2872,10 @@ router.post('/sendAllNoTeamMessages', function(req, res, next)
       } else
       {
           // admin_search_for_not_paid rpc worked
-          console.log("admin_search_for_players_no_team successful rpc call.");
+          //console.log("admin_search_for_players_no_team successful rpc call.");
 
           // Check results,
-          console.log(rows);
+          //console.log(rows);
 
           var i;
 
@@ -2898,12 +2901,12 @@ router.post('/sendAllNoTeamMessages', function(req, res, next)
 
 router.post('/sendPlayerMessage', function(req, res, next)
 {
-  console.log("Got into sendPlayerMessage call");
+  //console.log("Got into sendPlayerMessage call");
 
   // Check authentication status
   if (!req.oidc.isAuthenticated())
   {
-      console.log("Not authenticated");
+      //console.log("Not authenticated");
       res.render('landing');
       return;
   }
@@ -2920,12 +2923,12 @@ router.post('/sendPlayerMessage', function(req, res, next)
 
 router.post('/systemCheckForceShiftChange', function(req, res, next)
 {
-  console.log("Got into new systemCheckForceShiftChange call");
+  //console.log("Got into new systemCheckForceShiftChange call");
 
   // Check authentication status
   if (!req.oidc.isAuthenticated())
   {
-      console.log("Not authenticated");
+      //console.log("Not authenticated");
       res.render('landing');
       return;
   }
@@ -2949,8 +2952,8 @@ router.post('/systemCheckForceShiftChange', function(req, res, next)
       } else
       {
           // Create Player worked, now upload photo
-          console.log("system_check_for_forced_shift_changes rpc worked.");
-          console.log(rows);
+          //console.log("system_check_for_forced_shift_changes rpc worked.");
+          //console.log(rows);
 
           if (rows[0][0].phone == CALL_SUCCESS)
           {
@@ -2979,12 +2982,12 @@ router.post('/systemCheckForceShiftChange', function(req, res, next)
 
 router.post('/resetDatabase', function(req, res, next)
 {
-  console.log("Got into resetDatabase call");
+  //console.log("Got into resetDatabase call");
 
   // Check authentication status
   if (!req.oidc.isAuthenticated())
   {
-      console.log("Not authenticated");
+      //console.log("Not authenticated");
       res.render('landing');
       return;
   }
@@ -3001,7 +3004,7 @@ router.post('/resetDatabase', function(req, res, next)
       } else
       {
           // resetDatabase worked
-          console.log("resetDatabase rpc worked.");
+          //console.log("resetDatabase rpc worked.");
           res.oidc.login();
       } // end else
 
@@ -3024,46 +3027,26 @@ router.post('/test', function(req, res, next)
 
 router.post('/viewRules', function(req, res, next)
 {
-    console.log("Got into viewRules call");
+    //console.log("Got into viewRules call");
 
-    // Check authentication status - Don't need this - anyone can view rules
-    // if (!req.oidc.isAuthenticated())
-    // {
-    //     console.log("Not authenticated");
-    //     res.render('landing');
-    //     return;
-    // }
+    //  anyone can view rules
 
     // No stored procedure needed, just display rules page
     res.render('rules', {paypalFlag: PAYPAL_FLAG, nodeJSFlag: PERSONAL_ENV.NODEJS_ENVIRONMENT});
 
 });  // end router - viewRules
 
-// -------------------------------------------------------------
-// viewExternalRules called by player to view the Assassin game rule
-
-// router.post('/viewExternalRules', function(req, res, next)
-// {
-//     console.log("Got into viewviewExternalRulesRules call");
-//
-//     // no auth
-//
-//     // No stored procedure needed, just display rules page
-//     res.render('rules', {paypalFlag: PAYPAL_FLAG, nodeJSFlag: PERSONAL_ENV.NODEJS_ENVIRONMENT});
-//
-// });  // end router - viewRules
-
 // ------------------------------------------------------
 // viewTeamHistory called by player to view their teams history
 
 router.post('/viewTeamHistory', function(req, res, next)
 {
-    console.log("Got into viewTeamHistory call");
+    //console.log("Got into viewTeamHistory call");
 
     // Check authentication status
     if (!req.oidc.isAuthenticated())
     {
-        console.log("Not authenticated");
+        //console.log("Not authenticated");
         res.render('landing');
         return;
     }
@@ -3082,8 +3065,8 @@ router.post('/viewTeamHistory', function(req, res, next)
         } else
         {
             // get_team_history worked, now inspect data
-            console.log("get_team_history successful rpc call.");
-            console.log(rows);
+            //console.log("get_team_history successful rpc call.");
+            //console.log(rows);
             // show the rows
             res.render('viewHistory',
             {
@@ -3098,22 +3081,31 @@ router.post('/viewTeamHistory', function(req, res, next)
 
 
 // ------------------------------------------------------
-// Admin view events
+// adminGetEvents called by admin to view a number of recent events
 
-router.post('/adminViewEvents', function(req, res, next)
+router.post('/adminGetEvents', function(req, res, next)
 {
-    console.log("Got into adminViewEvents call");
+    //console.log("Got into adminGetEvents call");
 
     // Check authentication status
     if (!req.oidc.isAuthenticated())
     {
-        console.log("Not authenticated");
+        //console.log("Not authenticated");
         res.render('landing');
         return;
     }
 
+    // check valid numEvents
+
+    if ((!Number.isInteger(parseInt(req.body.numEvents))) || (parseInt(req.body.numEvents) <=0))
+    {
+        // Render error page, passing in error code
+        res.render('errorMessagePage', {result: ERROR_INVALID_INTEGER_INPUT});
+        return;
+    }
+
     // Call stored procedure to search for the player
-    dbConn.query('CALL `assassin`.`admin_get_events`(?,?)', [req.body.myTeamCode, req.body.myPlayerCode], function(err,rows)
+    dbConn.query('CALL `assassin`.`admin_get_events`(?)', [req.body.numEvents], function(err,rows)
     {
         if(err)
         {
@@ -3124,31 +3116,31 @@ router.post('/adminViewEvents', function(req, res, next)
         } else
         {
             // get_team_history worked, now inspect data
-            console.log("admin_get_events successful rpc call.");
-            console.log(rows);
+            //console.log("admin_get_events successful rpc call.");
+            //console.log(rows);
             // show the rows
-            // res.render('viewEvents',
-            // {
-            //     rows: rows[0]
-            // });
+            res.render('viewEvents',
+            {
+                eventRecords: rows[0]
+            });
 
         } // end else rpc worked
 
     });  // end db query
 
-});  // end router - admin view events
+});  // end router - viewRget_team_historyules
 
 // ------------------------------------------------------
 // Called by admin to view full status of game
 
 router.post('/admin_get_full_status', function(req, res, next)
 {
-    console.log("Got into get_full_status call");
+    //console.log("Got into get_full_status call");
 
     // Check authentication status
     if (!req.oidc.isAuthenticated())
     {
-        console.log("Not authenticated");
+        //console.log("Not authenticated");
         res.render('landing');
         return;
     }
@@ -3167,8 +3159,8 @@ router.post('/admin_get_full_status', function(req, res, next)
         } else
         {
             // get_team_history worked, now inspect data
-            console.log("get_full_status successful rpc call.");
-            console.log(rows);
+            //console.log("get_full_status successful rpc call.");
+            //console.log(rows);
             // show the rows
             res.render('viewFullStatus',
             {
@@ -3187,12 +3179,12 @@ router.post('/admin_get_full_status', function(req, res, next)
 
 router.post('/adminViewRankings', function(req, res, next)
 {
-    console.log("Got into adminViewRankings call");
+    //console.log("Got into adminViewRankings call");
 
     // Check authentication status
     if (!req.oidc.isAuthenticated())
     {
-        console.log("Not authenticated");
+        //console.log("Not authenticated");
         res.render('landing');
         return;
     }
@@ -3209,8 +3201,8 @@ router.post('/adminViewRankings', function(req, res, next)
         } else
         {
             // get_team_history worked, now inspect data
-            console.log("admin_view_rankings successful rpc call.");
-            console.log(rows);
+            //console.log("admin_view_rankings successful rpc call.");
+            //console.log(rows);
             // show the rows
             res.render('viewRankings',
             {
@@ -3230,12 +3222,12 @@ router.post('/adminViewRankings', function(req, res, next)
 // ---------------------------------------------------------------------------------
 router.post('/contactAdmin', function(req, res, next)
 {
-    console.log("Got into contactAdmin");
+    //console.log("Got into contactAdmin");
 
     // Check authentication status
     if (!req.oidc.isAuthenticated())
     {
-        console.log("Not authenticated");
+        //console.log("Not authenticated");
         res.render('landing');
         return;
     }
@@ -3249,13 +3241,13 @@ router.post('/contactAdmin', function(req, res, next)
 // --------------------------------------------------------------------------------
 router.post('/sendAdminMessage', function(req, res, next)
 {
-    console.log("Got into sendAdminMessage");
-    console.log(req.body);
+    //console.log("Got into sendAdminMessage");
+    //console.log(req.body);
 
     // Check authentication status
     if (!req.oidc.isAuthenticated())
     {
-        console.log("Not authenticated");
+        //console.log("Not authenticated");
         res.render('landing');
         return;
     }
@@ -3279,7 +3271,7 @@ router.post('/sendAdminMessage', function(req, res, next)
             return;
         } else
         {
-            console.log("get_admin_phone_number rpc worked.");
+            //console.log("get_admin_phone_number rpc worked.");
 
             // zzz maybe some error checking here
 
@@ -3306,7 +3298,7 @@ router.post('/sendAdminMessage', function(req, res, next)
                     console.log("MySQL error on log_admin_message_event call: " + err.code + " - " + err.message + " " + (new Date()).toLocaleString());
                 } else
                 {
-                    console.log("Successful log_admin_message_event RPC call.");
+                    //console.log("Successful log_admin_message_event RPC call.");
                 } // end else
 
             }); // end query
@@ -3326,13 +3318,13 @@ router.post('/sendAdminMessage', function(req, res, next)
 // --------------------------------------------------------------------------------
 router.post('/broadcastText', function(req, res, next)
 {
-    console.log("Got into broadcastText");
-    console.log(req.body);
+    //console.log("Got into broadcastText");
+    //console.log(req.body);
 
     // Check authentication status
     if (!req.oidc.isAuthenticated())
     {
-        console.log("Not authenticated");
+        //console.log("Not authenticated");
         res.render('landing');
         return;
     }
@@ -3356,7 +3348,7 @@ router.post('/broadcastText', function(req, res, next)
             return;
         } else
         {
-            console.log("get_all_phone_numbers rpc worked.");
+            //console.log("get_all_phone_numbers rpc worked.");
 
             for (i=0; i<rows[0].length-1; i++)
             {
@@ -3381,12 +3373,12 @@ router.post('/broadcastText', function(req, res, next)
 // --------------------------------------------------------------------------------
 router.get('/updateDBPaidPaypal', function(req, res, next)
 {
-    console.log("Got into updateDBPaidPaypal");
+    //console.log("Got into updateDBPaidPaypal");
 
     // Check authentication status
     if (!req.oidc.isAuthenticated())
     {
-        console.log("Not authenticated");
+        //console.log("Not authenticated");
         res.render('landing');
         return;
     }
@@ -3402,7 +3394,7 @@ router.get('/updateDBPaidPaypal', function(req, res, next)
             return;
         } else
         {
-            console.log("update_db_paid_paypal rpc worked.");
+            //console.log("update_db_paid_paypal rpc worked.");
 
             // zzz maybe some error checking here
 
@@ -3421,12 +3413,12 @@ router.get('/updateDBPaidPaypal', function(req, res, next)
 // --------------------------------------------------------------------------------
 router.post('/systemCheckCleanData', function(req, res, next)
 {
-    console.log("Got into systemCheckCleanData");
+    //console.log("Got into systemCheckCleanData");
 
     // Check authentication status
     if (!req.oidc.isAuthenticated())
     {
-        console.log("Not authenticated");
+        //console.log("Not authenticated");
         res.render('landing');
         return;
     }
@@ -3442,10 +3434,10 @@ router.post('/systemCheckCleanData', function(req, res, next)
             return;
         } else
         {
-            console.log("system_confirm_all_data_clean rpc worked.");
+            //console.log("system_confirm_all_data_clean rpc worked.");
 
             // zzz maybe some error checking here
-            console.log("Return from clean data check: " + rows[0][0].returnCode);
+            //console.log("Return from clean data check: " + rows[0][0].returnCode);
 
             res.oidc.login();
 
@@ -3463,12 +3455,12 @@ router.post('/systemCheckCleanData', function(req, res, next)
 // --------------------------------------------------------------------------------
 router.post('/adminStartContest', function(req, res, next)
 {
-    console.log("Got into adminStartContest");
+    //console.log("Got into adminStartContest");
 
     // Check authentication status
     if (!req.oidc.isAuthenticated())
     {
-        console.log("Not authenticated");
+        //console.log("Not authenticated");
         res.render('landing');
         return;
     }
@@ -3484,7 +3476,7 @@ router.post('/adminStartContest', function(req, res, next)
             return;
         } else
         {
-            console.log("admin_start_contest rpc worked.");
+            //console.log("admin_start_contest rpc worked.");
 
             // Check return code.
             if (rows[0][0].phone == CALL_SUCCESS)
@@ -3533,7 +3525,7 @@ function checkIncrementDailyTextCount()
 // Function sends texts to the phone numbers passed in
 function send_text_alerts(rows)
 {
-  console.log("Got into send text alerts -------------");
+  //console.log("Got into send text alerts -------------");
 
   var i;
   var decodedMessage;
@@ -3549,123 +3541,123 @@ function send_text_alerts(rows)
       switch(rows[0][i+1].eventCode)
       {
           case EVENT_ASSASSINATION:
-            console.log("Your Team has made a successful assassination!");
+            //console.log("Your Team has made a successful assassination!");
             decodedMessage += "Your Team has made a successful assassination! Log into Assassin to view your new Target.";
             break;
 
           case EVENT_NOW_LIVE:
-            console.log("Your Team is Live with a new target!");
+            //console.log("Your Team is Live with a new target!");
             decodedMessage += "Your Team is Live! Log into Assassin to view your new Target.";
             break;
 
           case EVENT_ASSASSINATED:
-            console.log("Your Team has been assassinated!");
+            //console.log("Your Team has been assassinated!");
             decodedMessage += "Your Team has been assassinated. Log into Assassin to rebuy if you have available bounties.";
             break;
 
             case EVENT_NEW_GO_LIVE:
-              console.log("Your Team has a new Live Player.");
+              //console.log("Your Team has a new Live Player.");
               decodedMessage += "Your Team has a new Live Player. Log into Assassin to the change.";
               break;
 
             case EVENT_NEW_REBUY:
-              console.log("Your Team did a Rebuy and has been moved to Waiting Status.");
+              //console.log("Your Team did a Rebuy and has been moved to Waiting Status.");
               decodedMessage += "Your Team did a Rebuy and has been moved to Waiting Status!";
               break;
 
             case EVENT_RETURN_FROM_BREAK_TO_WAITING:
-              console.log("Your Team has returned from Break and is in Waiting Status.");
+              //console.log("Your Team has returned from Break and is in Waiting Status.");
               decodedMessage += "Your Team has returned from Break and is in Waiting Status.";
               break;
 
             case EVENT_REMOVED_FROM_TEAM:
-              console.log("You have been removed from your Team.");
+              //console.log("You have been removed from your Team.");
               decodedMessage += "You have been removed from your Team. You may join another Team or create a new Team.";
               break;
 
             case EVENT_TEAMMATE_REMOVED:
-              console.log("One of your teammates has been removed from your Team.");
+              //console.log("One of your teammates has been removed from your Team.");
               decodedMessage += "One of your teammates has been removed from your Team. Log into Assassin to view the change.";
               break;
 
             case EVENT_ADDED_TO_TEAM:
-              console.log("You have been added to a Team!");
+              //console.log("You have been added to a Team!");
               decodedMessage += "You have been added to a Team! Log into Assassin to view the change.";
               break;
 
             case EVENT_NEW_TEAMMATE:
-              console.log("Your Team has a new Player!");
+              //console.log("Your Team has a new Player!");
               decodedMessage += "Your Team has a new Player! Log into Assassin to view the change.";
               break;
 
             case EVENT_TEAM_ON_BREAK:
-              console.log("Your Team is now on Break!");
+              //console.log("Your Team is now on Break!");
               decodedMessage += "Your Team is now on Break. Log into Assassin to view the change.";
               break;
 
             case EVENT_SOMEONE_ON_TEAM_QUIT:
-              console.log("A Player on your Team has quit!");
+              //console.log("A Player on your Team has quit!");
               decodedMessage += "A Player on your Team has quit. Log into Assassin to view the change.";
               break;
 
             case EVENT_NEW_TARGET:
-              console.log("Your Team has a new Target!");
+              //console.log("Your Team has a new Target!");
               decodedMessage += "Your Team has a new Target. Log into Assassin to view the change.";
               break;
 
             case EVENT_BOMB_DROPPED:
-              console.log("The Assassin Admin dropped a Bomb!");
+              //console.log("The Assassin Admin dropped a Bomb!");
               decodedMessage += "The Assassin Admin dropped a Bomb. Log into Assassin to view your new Target.";
               break;
 
             case EVENT_PHOTO_REJECTED:
-              console.log("Your photo was rejected!");
+              //console.log("Your photo was rejected!");
               decodedMessage += "Your photo was rejected. Please upload a new one.";
               break;
 
             case EVENT_GAME_START:
-              console.log("The Assassin Game has started!");
+              //console.log("The Assassin Game has started!");
               decodedMessage += "The Assassin Game has started!";
               break;
 
             case EVENT_GAME_END:
-              console.log("The Assassin Game has ended!");
+              //console.log("The Assassin Game has ended!");
               decodedMessage += "The Assassin Game has ended!  Please see the Admin as soon as possible if you have a payout.";
               break;
 
             case EVENT_MOVED_TO_WAITING:
-              console.log("Your Team has been moved to the Waiting Area!");
+              //console.log("Your Team has been moved to the Waiting Area!");
               decodedMessage += "Your Team has been moved to the Waiting Area!  You will enter the Game on the next major event.";
               break;
 
             case EVENT_MORNING_START:
-              console.log("Morning start.");
+              //console.log("Morning start.");
               decodedMessage += "Good morning! Assassin has started.";
               break;
 
             case EVENT_MARK_NIGHT_END:
-              console.log("Night end");
+              //console.log("Night end");
               decodedMessage += "Assassin has ended for the night.";
               break;
 
             case CONTEST_NEXT_KILL:
-              console.log("Contest next kill");
+              //console.log("Contest next kill");
               decodedMessage += "The next assassination earns +1 bounty. Expires " + formatDate(dt);
               console.log(decodedMessage);
               break;
 
             case CONTEST_NEXT_CELEB_TARGET:
-              console.log("Contest next celeb target");
+              //console.log("Contest next celeb target");
               decodedMessage += "The next Celebritarian assassinated earns +1 bounty. Expires " + formatDate(dt);
               break;
 
             case CONTEST_NEXT_CELEB_ASSASSIN:
-              console.log("Contest next celeb assassin");
+              //console.log("Contest next celeb assassin");
               decodedMessage += "The next assassination by a Celebritarian earns +1 bounty. Expires " + formatDate(dt);
               break;
 
             case CONTEST_FIRST_MORNING_KILL:
-              console.log("Contest first morning kill!");
+              //console.log("Contest first morning kill!");
               decodedMessage += "The first assassination today earns +1 bounty. Doesn't expire.";
               break;
 
@@ -3685,7 +3677,7 @@ function send_text_alerts(rows)
 
 function send_text(text, phone)
 {
-  console.log("Got into send text: " + text + "  to: " + phone);
+  //console.log("Got into send text: " + text + "  to: " + phone);
 
   TWILIO_TEXTS_TODAY++;
   var tempDate = new Date();
@@ -3697,7 +3689,7 @@ function send_text(text, phone)
     TWILIO_FLAG = TWILIO_PROD_ALL;
   }
 
-  console.log("Twilio Flag: " + TWILIO_FLAG + " - Twilio day: " + TWILIO_DATE.getDate() + " - Number of texts today: " + TWILIO_TEXTS_TODAY);
+  //console.log("Twilio Flag: " + TWILIO_FLAG + " - Twilio day: " + TWILIO_DATE.getDate() + " - Number of texts today: " + TWILIO_TEXTS_TODAY);
 
   if (TWILIO_TEXTS_TODAY > (.95*TWILIO_MAX))
   {
@@ -3735,11 +3727,11 @@ function checkForUploadedPhotos(res)
       } else
       {
           // bulk picture approve worked
-          console.log("bulk picture approve rpc worked.");
+          //console.log("bulk picture approve rpc worked.");
 
           if (rows[0][0].numUploadedPhotos > 0)
           {
-            console.log("At least 1 photo to review.")
+            //console.log("At least 1 photo to review.")
             res.render('adminBulkPictureApprove', {playerCode: rows[0][0].playerCode, playerName: rows[0][0].playerName, photoFilename: "photos/" + rows[0][0].photoFilename});
           }
           else
@@ -3760,7 +3752,7 @@ function validateCode(code)
   var test1 = !isNaN(code);   // check if the string passed in is a number
   var num;
 
-  console.log("Validating: " + code);
+  //console.log("Validating: " + code);
 
   if (test1)  // if it is a number, convert to
   {
@@ -3780,7 +3772,7 @@ function validateCode(code)
 
 function validateString(inString)
 {
-    console.log("Length of string is " + inString.length);
+    //console.log("Length of string is " + inString.length);
 
     // only allow non-empty strings, right size, only letters and spaces
     return ((typeof inString === 'string') && (inString.length > 0) && (inString.length < STRING_LENGTH + 1) && (/^[A-Za-z\s]*$/.test(inString)))
@@ -3864,7 +3856,7 @@ function formatDate(inDate)
 //
 router.post('/cronManager', function(req, res, next)
 {
-    console.log("Got into new cron manager route call");
+    //console.log("Got into new cron manager route call");
 
     var gameStartTime;
     var gameEndTime;
@@ -3884,8 +3876,8 @@ router.post('/cronManager', function(req, res, next)
         } else
         {
             // system_get_game_settings_for_cron worked
-            console.log("system_get_game_settings_for_cron rpc worked.");
-            console.log(rows);
+            //console.log("system_get_game_settings_for_cron rpc worked.");
+            //console.log(rows);
 
             for (i=0; i<rows[0].length; i++)
             {
@@ -3917,7 +3909,7 @@ router.post('/cronManager', function(req, res, next)
 
             } // end for loop
 
-            console.log("Contest is " + currContest);
+            //console.log("Contest is " + currContest);
 
             res.render('cronScheduler',
                 {
@@ -3963,8 +3955,8 @@ router.post('/systemStartCronScripts', function(req, res, next)
     // ------------------------------------
     if (req.body.startGameCheckbox == "on")
     {
-      console.log("startGameCheckbox is on");
-      console.log("Start Game Timestamp: " + req.body.startGameTimestamp);
+      //console.log("startGameCheckbox is on");
+      //console.log("Start Game Timestamp: " + req.body.startGameTimestamp);
 
       // parse start date into cron scheduler format
       var tempDate = new Date(req.body.startGameTimestamp);
@@ -3983,7 +3975,7 @@ router.post('/systemStartCronScripts', function(req, res, next)
 
       var cronString = minute + " " + hour + " " + day + " " + month + " *";
 
-      console.log("Final cron string is " + cronString);
+      //console.log("Final cron string is " + cronString);
 
       if (CRON_START_GAME_SCRIPT_RUNNING == 0)
       {
@@ -4001,7 +3993,7 @@ router.post('/systemStartCronScripts', function(req, res, next)
                 return;
             } else
             {
-                console.log("Successful admin_update_game_data CRON_START_GAME_SCRIPT_RUNNING RPC call.");
+                //console.log("Successful admin_update_game_data CRON_START_GAME_SCRIPT_RUNNING RPC call.");
             } // end else
 
         }); // end query
@@ -4012,7 +4004,7 @@ router.post('/systemStartCronScripts', function(req, res, next)
     // ------------------------------------
     if (req.body.endGameCheckbox == "on")
     {
-      console.log("endGameCheckbox is on");
+      //console.log("endGameCheckbox is on");
 
       // parse start date into cron scheduler format
       var tempDate = new Date(req.body.endGameTimestamp);
@@ -4031,7 +4023,7 @@ router.post('/systemStartCronScripts', function(req, res, next)
 
       var cronString = minute + " " + hour + " " + day + " " + month + " *";
 
-      console.log("Final cron string is " + cronString);
+      //console.log("Final cron string is " + cronString);
 
       if (CRON_END_GAME_SCRIPT_RUNNING == 0)
       {
@@ -4048,7 +4040,7 @@ router.post('/systemStartCronScripts', function(req, res, next)
                 return;
             } else
             {
-                console.log("Successful admin_update_game_data CRON_END_GAME_SCRIPT_RUNNING RPC call.");
+                //console.log("Successful admin_update_game_data CRON_END_GAME_SCRIPT_RUNNING RPC call.");
             } // end else
 
         }); // end query
@@ -4059,7 +4051,7 @@ router.post('/systemStartCronScripts', function(req, res, next)
     // ------------------------------------
     if (req.body.morningStartCheckbox == "on")
     {
-      console.log("morningStartCheckbox is on");
+      //console.log("morningStartCheckbox is on");
 
       var tempDate = new Date(req.body.startGameTimestamp);
 
@@ -4076,7 +4068,7 @@ router.post('/systemStartCronScripts', function(req, res, next)
 
       var cronString = "0" + " " + hour + " " + day + " " + month + " *";
 
-      console.log("Final cron string is " + cronString);
+      //console.log("Final cron string is " + cronString);
 
       if (CRON_MORNING_START_SCRIPT_RUNNING == 0)
       {
@@ -4093,7 +4085,7 @@ router.post('/systemStartCronScripts', function(req, res, next)
                 return;
             } else
             {
-                console.log("Successful admin_update_game_data CRON_MORNING_START_SCRIPT_RUNNING RPC call.");
+                //console.log("Successful admin_update_game_data CRON_MORNING_START_SCRIPT_RUNNING RPC call.");
             } // end else
 
         }); // end query
@@ -4105,7 +4097,7 @@ router.post('/systemStartCronScripts', function(req, res, next)
     // ------------------------------------
     if (req.body.nightEndCheckbox == "on")
     {
-      console.log("nightEndCheckbox is on");
+      //console.log("nightEndCheckbox is on");
 
       var tempDate = new Date(req.body.startGameTimestamp);
 
@@ -4122,7 +4114,7 @@ router.post('/systemStartCronScripts', function(req, res, next)
 
       var cronString = "0" + " " + hour + " " + day + " " + month + " *";
 
-      console.log("Final cron string is " + cronString);
+      //console.log("Final cron string is " + cronString);
 
       if (CRON_NIGHT_END_SCRIPT_RUNNING == 0)
       {
@@ -4139,7 +4131,7 @@ router.post('/systemStartCronScripts', function(req, res, next)
                 return;
             } else
             {
-                console.log("Successful admin_update_game_data CRON_NIGHT_END_SCRIPT_RUNNING RPC call.");
+                //console.log("Successful admin_update_game_data CRON_NIGHT_END_SCRIPT_RUNNING RPC call.");
             } // end else
 
         }); // end query
@@ -4151,7 +4143,7 @@ router.post('/systemStartCronScripts', function(req, res, next)
     // ------------------------------------
     if (req.body.twoHoursToGoCheckbox == "on")
     {
-      console.log("twoHoursToGoCheckbox is on");
+      //console.log("twoHoursToGoCheckbox is on");
 
       var tempDate = new Date(req.body.startGameTimestamp);
 
@@ -4168,11 +4160,11 @@ router.post('/systemStartCronScripts', function(req, res, next)
 
       var cronString = "0" + " " + hour + " " + day + " " + month + " *";
 
-      console.log("Final cron string is " + cronString);
+      //console.log("Final cron string is " + cronString);
 
       if (CRON_2_HOURS_TO_TO_SCRIPT_RUNNING == 0)
       {
-          console.log("Turning on 2 hours to go cron script ");
+          //console.log("Turning on 2 hours to go cron script ");
           CRON_2_HOURS_TO_TO_SCRIPT_RUNNING = 1;
           req.app.locals.twoHoursToGoCronScript = cron.schedule(cronString, twoHoursToGoCronFunction);
       }
@@ -4182,7 +4174,7 @@ router.post('/systemStartCronScripts', function(req, res, next)
     // ------------------------------------
     if (req.body.oneHourToGoCheckbox == "on")
     {
-      console.log("oneHourToGoCheckbox is on");
+      //console.log("oneHourToGoCheckbox is on");
 
       var tempDate = new Date(req.body.startGameTimestamp);
 
@@ -4199,11 +4191,11 @@ router.post('/systemStartCronScripts', function(req, res, next)
 
       var cronString = "0" + " " + hour + " " + day + " " + month + " *";
 
-      console.log("Final cron string is " + cronString);
+      //console.log("Final cron string is " + cronString);
 
       if (CRON_1_HOUR_TO_GO_SCRIPT_RUNNING == 0)
       {
-          console.log("Turning on 1 hour to go cron script ");
+          //console.log("Turning on 1 hour to go cron script ");
           CRON_1_HOUR_TO_GO_SCRIPT_RUNNING = 1;
           req.app.locals.oneHourToGoCronScript = cron.schedule(cronString, oneHourToGoCronFunction);
       }
@@ -4213,7 +4205,7 @@ router.post('/systemStartCronScripts', function(req, res, next)
     // ------------------------------------
     if (req.body.checkHowManyPhotosCheckbox == "on")
     {
-      console.log("checkHowManyPhotosCheckbox is on for " + req.body.checkHowManyPhotos);
+      //console.log("checkHowManyPhotosCheckbox is on for " + req.body.checkHowManyPhotos);
 
       if (!Number.isInteger(parseInt(req.body.checkHowManyPhotos)) || (parseInt(req.body.checkHowManyPhotos) <= 0))
       {
@@ -4233,7 +4225,7 @@ router.post('/systemStartCronScripts', function(req, res, next)
     // ------------------------------------
     if (req.body.checkOldPhotosCheckbox == "on")
     {
-      console.log("checkOldPhotosCheckbox is on");
+      //console.log("checkOldPhotosCheckbox is on");
 
       if (!Number.isInteger(parseInt(req.body.checkOldPhotos)) || (parseInt(req.body.checkOldPhotos) <= 0))
       {
@@ -4253,7 +4245,7 @@ router.post('/systemStartCronScripts', function(req, res, next)
     // ------------------------------------
     if (req.body.contestCheckerCheckbox == "on")
     {
-      console.log("contestCheckerCheckbox is on");
+      //console.log("contestCheckerCheckbox is on");
 
       // run every minute
       if (CRON_BONUS_CONTEST_CHECKER_SCRIPT_RUNNING == 0)
@@ -4266,7 +4258,7 @@ router.post('/systemStartCronScripts', function(req, res, next)
     // ------------------------------------
     if (req.body.dbConnectionPingerCheckbox == "on")
     {
-      console.log("dbConnectionPingerCheckbox is on");
+      //console.log("dbConnectionPingerCheckbox is on");
 
       // run every minute
       if (CRON_DB_CONNECTION_PINGER_SCRIPT_RUNNING == 0)
@@ -4301,8 +4293,8 @@ function startGameCronFunction()
         }
         else
         {
-            console.log("Successful startGameCronFunction RPC call.");
-            console.log(rows);
+            //console.log("Successful startGameCronFunction RPC call.");
+            //console.log(rows);
 
             if (rows[0][0].phone == CALL_SUCCESS)
             {
@@ -4340,8 +4332,8 @@ function endGameCronFunction()
         }
         else
         {
-            console.log("Successful system_end_game RPC call.");
-            console.log(rows);
+            //console.log("Successful system_end_game RPC call.");
+            //console.log(rows);
 
             if (rows[0][0].phone == CALL_SUCCESS)
             {
@@ -4381,8 +4373,8 @@ function morningStartCronFunction()
         }
         else
         {
-            console.log("Successful system_morning_start RPC call.");
-            console.log(rows);
+            //console.log("Successful system_morning_start RPC call.");
+            //console.log(rows);
 
             if (rows[0][0].phone == CALL_SUCCESS)
             {
@@ -4420,8 +4412,8 @@ function nightEndCronFunction()
         }
         else
         {
-            console.log("Successful system_night_end RPC call.");
-            console.log(rows);
+            //console.log("Successful system_night_end RPC call.");
+            //console.log(rows);
 
             if (rows[0][0].phone == CALL_SUCCESS)
             {
@@ -4459,8 +4451,8 @@ function twoHoursToGoCronFunction()
         }
         else
         {
-            console.log("Successful system_check_for_forced_shift_changes2 RPC call.");
-            console.log(rows);
+            //console.log("Successful system_check_for_forced_shift_changes2 RPC call.");
+            //console.log(rows);
 
             if (rows[0][0].phone == CALL_SUCCESS)
             {
@@ -4498,8 +4490,8 @@ function oneHourToGoCronFunction()
         }
         else
         {
-            console.log("Successful system_check_for_forced_shift_changes1 RPC call.");
-            console.log(rows);
+            //console.log("Successful system_check_for_forced_shift_changes1 RPC call.");
+            //console.log(rows);
 
             if (rows[0][0].phone == CALL_SUCCESS)
             {
@@ -4538,7 +4530,7 @@ function checkHowManyPhotosCronFunction(maxPhotos)
         }
         else
         {
-            console.log("Successful system_check_how_many_photos RPC call.");
+            //console.log("Successful system_check_how_many_photos RPC call.");
             console.log(rows[0][0].numPhotosWaiting + " photos waiting for approval.");
 
             if (rows[0][0].numPhotosWaiting >= maxPhotos)
@@ -4572,8 +4564,8 @@ function checkOldPhotosCronFunction(photoWaitTime)
         }
         else
         {
-            console.log("Successful system_check_old_photos RPC call.");
-            console.log(rows);
+            //console.log("Successful system_check_old_photos RPC call.");
+            //console.log(rows);
             console.log(rows[0][0].numOldPhotos + " old photos waiting for approval.");
 
             if (rows[0][0].numOldPhotos > 0)
@@ -4607,9 +4599,9 @@ function checkOldPhotosCronFunction(photoWaitTime)
           }
           else
           {
-              console.log("Successful contestCheckerCronFunction RPC call.");
+              //console.log("Successful contestCheckerCronFunction RPC call.");
 
-              console.log(rows);
+              //console.log(rows);
 
               // if (rows[0][0].phone == CALL_SUCCESS)
               // {
@@ -4647,11 +4639,11 @@ function checkOldPhotosCronFunction(photoWaitTime)
 //
 router.post('/systemStopCronScripts', function(req, res, next)
 {
-    console.log("Got into systemStopCronScripts route call");
+    //console.log("Got into systemStopCronScripts route call");
 
     if (req.body.startGameCheckbox == "on")
     {
-      console.log("startGameCheckbox is on");
+      //console.log("startGameCheckbox is on");
 
       if (CRON_START_GAME_SCRIPT_RUNNING == 1)
       {
@@ -4663,7 +4655,7 @@ router.post('/systemStopCronScripts', function(req, res, next)
 
     if (req.body.endGameCheckbox == "on")
     {
-      console.log("endGameCheckbox is on");
+      //console.log("endGameCheckbox is on");
 
       if (CRON_END_GAME_SCRIPT_RUNNING == 1)
       {
@@ -4675,7 +4667,7 @@ router.post('/systemStopCronScripts', function(req, res, next)
 
     if (req.body.morningStartCheckbox == "on")
     {
-      console.log("morningStartCheckbox is on");
+      //console.log("morningStartCheckbox is on");
 
       if (CRON_MORNING_START_SCRIPT_RUNNING == 1)
       {
@@ -4687,7 +4679,7 @@ router.post('/systemStopCronScripts', function(req, res, next)
 
     if (req.body.nightEndCheckbox == "on")
     {
-      console.log("nightEndCheckbox is on");
+      //console.log("nightEndCheckbox is on");
 
       if (CRON_NIGHT_END_SCRIPT_RUNNING == 1)
       {
@@ -4699,7 +4691,7 @@ router.post('/systemStopCronScripts', function(req, res, next)
 
     if (req.body.twoHoursToGoCheckbox == "on")
     {
-      console.log("twoHoursToGoCheckbox is on");
+      //console.log("twoHoursToGoCheckbox is on");
 
       if (CRON_2_HOURS_TO_TO_SCRIPT_RUNNING == 1)
       {
@@ -4711,7 +4703,7 @@ router.post('/systemStopCronScripts', function(req, res, next)
 
     if (req.body.oneHourToGoCheckbox == "on")
     {
-      console.log("oneHourToGoCheckbox is on");
+      //console.log("oneHourToGoCheckbox is on");
 
       if (CRON_1_HOUR_TO_GO_SCRIPT_RUNNING == 1)
       {
@@ -4723,12 +4715,12 @@ router.post('/systemStopCronScripts', function(req, res, next)
 
     if (req.body.checkHowManyPhotosCheckbox == "on")
     {
-      console.log("checkHowManyPhotosCheckbox is on.  Going to try to stop the script now.");
+      //console.log("checkHowManyPhotosCheckbox is on.  Going to try to stop the script now.");
 
       if (CRON_CHECK_MANY_PHOTOS_SCRIPT_RUNNING == 1)
       {
         CRON_CHECK_MANY_PHOTOS_SCRIPT_RUNNING = 0;
-        console.log("Got here 1");
+        //console.log("Got here 1");
         req.app.locals.checkHowManyPhotosCronScript.stop();
       }
 
@@ -4736,7 +4728,7 @@ router.post('/systemStopCronScripts', function(req, res, next)
 
     if (req.body.checkOldPhotosCheckbox == "on")
     {
-      console.log("checkOldPhotosCheckbox is on.  Going to try to stop the script now.");
+      //console.log("checkOldPhotosCheckbox is on.  Going to try to stop the script now.");
 
       if (CRON_CHECK_OLD_PHOTOS_SCRIPT_RUNNING == 1)
       {
@@ -4748,7 +4740,7 @@ router.post('/systemStopCronScripts', function(req, res, next)
 
     if (req.body.contestCheckerCheckbox == "on")
     {
-      console.log("contestCheckerCheckbox is on.  Going to try to stop the script now.");
+      //console.log("contestCheckerCheckbox is on.  Going to try to stop the script now.");
 
       if (CRON_BONUS_CONTEST_CHECKER_SCRIPT_RUNNING == 1)
       {
@@ -4760,7 +4752,7 @@ router.post('/systemStopCronScripts', function(req, res, next)
 
     if (req.body.dbConnectionPingerCheckbox == "on")
     {
-      console.log("dbConnectionPingerCheckbox is on.  Going to try to stop the script now.");
+      //console.log("dbConnectionPingerCheckbox is on.  Going to try to stop the script now.");
 
       if (CRON_DB_CONNECTION_PINGER_SCRIPT_RUNNING == 1)
       {

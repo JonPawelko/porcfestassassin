@@ -62,20 +62,20 @@ global.CONFIRM_ADD_BOUNTY = 8;
 // Global Event Code constants for Alerts
 global.EVENT_ASSASSINATION = 1;
 global.EVENT_NOW_LIVE = 2;
-global.EVENT_ASSASSINATED = 3;
-global.EVENT_NEW_GO_LIVE = 4;
+global.EVENT_ASSASSINATED = 3;	// doesn't appear to be used
+global.EVENT_NEW_GO_LIVE = 4;		// doesn't appear to be used
 global.EVENT_NEW_REBUY = 5;
 global.EVENT_RETURN_FROM_BREAK_TO_WAITING = 6;
-global.EVENT_REMOVED_FROM_TEAM = 7;
-global.EVENT_TEAMMATE_REMOVED = 8;
-global.EVENT_ADDED_TO_TEAM = 9;
-global.EVENT_NEW_TEAMMATE = 10;
+global.EVENT_REMOVED_FROM_TEAM = 7; // doesn't appear to be used
+global.EVENT_TEAMMATE_REMOVED = 8; // doesn't appear to be used
+global.EVENT_ADDED_TO_TEAM = 9; // doesn't appear to be used
+global.EVENT_NEW_TEAMMATE = 10; // doesn't appear to be used
 global.EVENT_TEAM_ON_BREAK = 11;
 global.EVENT_SOMEONE_ON_TEAM_QUIT = 12;
-global.EVENT_NEW_TARGET = 13;
+global.EVENT_NEW_TARGET = 13;		// doesn't appear to be used
 global.EVENT_BOMB_DROPPED = 14;
-global.EVENT_PHOTO_APPROVED = 15;
-global.EVENT_PHOTO_REJECTED = 16;
+global.EVENT_PHOTO_APPROVED = 15;	// doesn't appear to be used
+global.EVENT_PHOTO_REJECTED = 16; // doesn't appear to be used
 global.EVENT_GAME_START = 17;
 global.EVENT_GAME_END = 18;
 global.EVENT_PAID_BOUNTY = 19;
@@ -86,6 +86,8 @@ global.EVENT_MORNING_START = 23;
 global.EVENT_MARK_NIGHT_END = 24;
 global.EVENT_ADMIN_MESSAGE = 25;
 global.EVENT_ONE_TEAM_LEFT = 26;
+global.EVENT_ADD_BOUNTY = 27;
+
 
 // Global contest codes
 global.CONTEST_NEXT_KILL = 1001;
@@ -262,5 +264,24 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
+// Start db pinger
+global.CRON_DB_CONNECTION_PINGER_SCRIPT = cron.schedule('*/10 * * * *', dbConnectionPingerCronFunction);
+global.CRON_DB_CONNECTION_PINGER_SCRIPT_RUNNING = 1;
+
+// ---------------------------
+//
+function dbConnectionPingerCronFunction()
+{
+		dbConn.ping(function (err) {
+			if(err) {
+				console.log("Ping error - failed at " + (new Date()).toLocaleString());
+			}
+			else {
+				console.log("Ping success at " + (new Date()).toLocaleString());
+			}
+		});
+
+} // dbConnectionPingerCronFunction
 
 module.exports = app;

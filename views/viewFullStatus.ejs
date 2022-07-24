@@ -34,14 +34,14 @@
 							{
 								%>
 								<div style="height: 4px;"></div>
-								Chain:
+								<u>Chain</u>
 								<div style="height: 2px;"></div>
 								<ul>
 								<%
 									while ((i<rows[0].length) && (rows[0][i].field1 == "Chain"))
 									{
 											%>
-											<li><%=rows[0][i].field2%> - <%=rows[0][i].field3%> -- <%=rows[0][i].field4%> - <%=rows[0][i].field5%></li>
+											<li><%=rows[0][i].field2%> - <%=rows[0][i].field3%> &gt <%=rows[0][i].field4%> - <%=rows[0][i].field5%></li>
 										<%
 										i++;
 									}
@@ -55,7 +55,7 @@
 							if ((i<rows[0].length) && (rows[0][i].field1 == "Waiting"))
 							{
 								%>
-								Waiting:
+								<u>Waiting</u>
 								<div style="height: 2px;"></div>
 								<ul>
 								<%
@@ -76,7 +76,7 @@
 							if ((i<rows[0].length) && (rows[0][i].field1 == "Inactive"))
 							{
 								%>
-								Inactive:
+								<u>Inactive</u>
 								<div style="height: 2px;"></div>
 								<ul>
 								<%
@@ -97,7 +97,7 @@
 							if ((i<rows[0].length) && (rows[0][i].field1 == "Registered Team"))
 							{
 								%>
-								Registered Teams:
+								<u>Registered Teams</u>
 								<div style="height: 2px;"></div>
 								<ul>
 								<%
@@ -118,7 +118,7 @@
 							if ((i<rows[0].length) && (rows[0][i].field1 == "Break"))
 							{
 								%>
-								Break Teams:
+								<u>Break Teams</u>
 								<div style="height: 2px;"></div>
 								<ul>
 								<%
@@ -139,7 +139,7 @@
 							if ((i<rows[0].length) && (rows[0][i].field1 == "Paid"))
 							{
 								%>
-								Paid Teams:
+								<u>Paid Teams</u>
 								<div style="height: 2px;"></div>
 								<ul>
 								<%
@@ -160,7 +160,7 @@
 							if ((i<rows[0].length) && (rows[0][i].field1 == "Pics Approved"))
 							{
 								%>
-								Pics Approved Teams:
+								<u>Pics Approved Teams</u>
 								<div style="height: 2px;"></div>
 								<ul>
 								<%
@@ -181,7 +181,7 @@
 							if ((i<rows[0].length) && (rows[0][i].field1 == "Quit"))
 							{
 								%>
-								Quit Teams:
+								<u>Quit Teams</u>
 								<div style="height: 2px;"></div>
 								<ul>
 								<%
@@ -203,7 +203,7 @@
 							if ((i<rows[0].length) && (rows[0][i].field1 == "Registered Player"))
 							{
 								%>
-								Registered Players:
+								<u>Registered Players</u>
 								<div style="height: 2px;"></div>
 								<ul>
 								<%
@@ -225,6 +225,8 @@
 
 					</div>
 
+					<div style="height: 10px;"></div>
+
           <form autocomplete="off" action="assassinLogin" method="post" onsubmit="return waitCursor()" encType="multipart/form-data">
                 <input type="submit" class="btn btn-info" value="Home"/>
                 <div style="height: 6px;"></div>
@@ -238,7 +240,7 @@
 
 </div>
 
-<div style="height: 10px;"></div>
+
 
 </body>
 </html>
