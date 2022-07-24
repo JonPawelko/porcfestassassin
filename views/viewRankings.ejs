@@ -34,8 +34,8 @@
 							{
 								%>
 								<div style="height: 4px;"></div>
-								Teams:
-								<ol style="margin:13px; padding:0px">
+								<u>Teams</u>
+								<ol style="margin-left:13px; margin-top:4px; margin-bottom:12px; padding:0px">
 								<%
 									while ((i<rows[0].length) && (rows[0][i].field1 == "Team"))
 									{
@@ -46,7 +46,7 @@
 									}
 							%>
 							</ol>
-							<div style="height: 6px;"></div>
+
 							<%
 							}
 
@@ -54,8 +54,8 @@
 							if ((i<rows[0].length) && (rows[0][i].field1 == "Player"))
 							{
 								%>
-								Players:
-								<ol style="margin:13px; padding:0px">
+								<u>Players</u>
+								<ol style="margin-left:13px; margin-top:4px; padding:0px">
 								<%
 									while ((i<rows[0].length) && (rows[0][i].field1 == "Player"))
 									{

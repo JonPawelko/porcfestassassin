@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<title>Assassin</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="\stylesheets\custom.css">
+	<script src="javascripts/utilities.js"></script>
+</head>
+
+<body class="container" style="margin-top: 10px;" onload="defaultCursor();">
+
+<div style="height: 2px;"></div>
+
+<div class="row justify-content-center">
+
+    <div class="card" style="width:21rem;">
+
+        <div class="card-header">
+          Game Events
+          <div style="height: 4px;"></div>
+        </div>
+
+        <div class="card-body">
+
+					<div class="rules-page">
+
+						<div style="height: 6px;"></div>
+
+            <ul>
+
+                <%
+                    for(var i=0; i<eventRecords.length; i++)
+                    { %>
+                        <li><%=eventRecords[i]['history_record']%></li>
+                        <div style="height: 5px;"></div>
+                <%  } %>
+
+						</ul>
+
+            <div style="height: 4px;"></div>
+
+					</div>
+
+					<div style="height: 10px;"></div>
+
+          <form autocomplete="off" action="assassinLogin" method="post" onsubmit="return waitCursor()" encType="multipart/form-data">
+                <input type="submit" class="btn btn-info" value="Home"/>
+                <div style="height: 6px;"></div>
+          </form>
+
+        </div>
+
+      </div>
+
+</div>
+
+<div style="height: 10px;"></div>
+
+</body>
+</html>
