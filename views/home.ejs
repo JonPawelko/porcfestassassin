@@ -371,25 +371,23 @@
 
 									<div style="height: 18px;"></div>
 
-									<form action="assassinLogout" method="post" onsubmit="return waitCursor()">
-										<input type="hidden" name="myPlayerCode" value="<%= playerCode %>">
-										<input type="hidden" name="myTeamCode" value="<%= playerTeamCode %>">
-										<input type="submit" class="btn btn-info" value="Logout"/>
-										&nbsp&nbsp&nbsp&nbsp&#8201
+
 
 										<%
 											if (teamStatus != '0')
 											{ %>
 
 										<input type="submit" class="btn btn-info" formaction="viewTeamHistory" value="View Team History" onsubmit="return waitCursor()"/>
+										<div style="height: 18px;"></div>
 
 											<% } %>
 
 									</form>
 
-									<div style="height: 4px;"></div>
+									<input type="submit" class="btn btn-info" formaction="viewMyRankings" value="View Rankings" onsubmit="return waitCursor()"/>
+
 									<hr>
-									<div style="height: 2px;"></div>
+									<div style="height: 18px;"></div>
 
 									Click the Quit button below if you want to leave the game or your team.  If you are a team captain and there are other players on your team, one will be chosen as captain.  After quitting, you will become a Free Agent and can join another team.
 									<div style="height: 10px;"></div>
@@ -400,7 +398,15 @@
 											<input type="submit" class="btn btn-info" value="Quit Game"/>
 									</form>
 
+									<div style="height: 16px;"></div>
+
+
 						<% } %>
+
+						<form action="assassinLogout" method="post" onsubmit="return waitCursor()">
+							<input type="hidden" name="myPlayerCode" value="<%= playerCode %>">
+							<input type="hidden" name="myTeamCode" value="<%= playerTeamCode %>">
+							<input type="submit" class="btn btn-info" value="Logout"/>
 
 						<div style="height: 6px;"></div>
 

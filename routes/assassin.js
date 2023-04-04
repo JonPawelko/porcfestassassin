@@ -14,6 +14,7 @@ var PERSONAL_ENV = require('../personal/personal_env.json');
 
 const twilio = require('twilio')(CREDENTIALS.TWILIO_ACCOUNT_SID, CREDENTIALS.TWILIO_AUTH_TOKEN);
 
+var endGameDate;  // need to store this to see if today is last day for night end shift purposes
 // -------------------------------------------------------------
 // Export the router
 //
@@ -545,6 +546,7 @@ router.post('/activateAssassin', function(req, res, next)
 router.post('/validateKill', function(req, res, next)
 {
   //console.log("Validate Kill called.");
+  console.log(req);
 
   // Check authentication status
   if (!req.oidc.isAuthenticated())
@@ -562,7 +564,7 @@ router.post('/validateKill', function(req, res, next)
   }
 
   // Call stored proc
-  dbConn.query('CALL `assassin`.`validate_kill`(?,?)', [req.body.myTeamCode, req.body.myKillName], function(err,rows)
+  dbConn.query('CALL `assassin`.`validate_kill`(?,?,?)', [req.body.myPlayerCode, req.body.myTeamCode, req.body.myKillName], function(err,rows)
   {
       if(err) {
           console.log("MySQL error on validate_kill call: " + err.code + " - " + err.message + " " + (new Date()).toLocaleString());
@@ -2923,7 +2925,7 @@ router.post('/sendPlayerMessage', function(req, res, next)
 
 router.post('/systemCheckForceShiftChange', function(req, res, next)
 {
-  //console.log("Got into new systemCheckForceShiftChange call");
+  console.log("Got into systemCheckForceShiftChange call");
 
   // Check authentication status
   if (!req.oidc.isAuthenticated())
@@ -2952,8 +2954,8 @@ router.post('/systemCheckForceShiftChange', function(req, res, next)
       } else
       {
           // Create Player worked, now upload photo
-          //console.log("system_check_for_forced_shift_changes rpc worked.");
-          //console.log(rows);
+          console.log("system_check_for_forced_shift_changes rpc worked.");
+          console.log(rows);
 
           if (rows[0][0].phone == CALL_SUCCESS)
           {
@@ -3041,7 +3043,7 @@ router.post('/viewRules', function(req, res, next)
 
 router.post('/viewTeamHistory', function(req, res, next)
 {
-    //console.log("Got into viewTeamHistory call");
+    console.log("Got into viewTeamHistory call");
 
     // Check authentication status
     if (!req.oidc.isAuthenticated())
@@ -3065,8 +3067,8 @@ router.post('/viewTeamHistory', function(req, res, next)
         } else
         {
             // get_team_history worked, now inspect data
-            //console.log("get_team_history successful rpc call.");
-            //console.log(rows);
+            console.log("get_team_history successful rpc call.");
+            console.log(rows);
             // show the rows
             res.render('viewHistory',
             {
@@ -3147,6 +3149,7 @@ router.post('/admin_get_full_status', function(req, res, next)
 
     // validate team code and player code here zzz
 
+    // zzzz
     // Call stored procedure to search for the player
     dbConn.query('CALL `assassin`.`admin_get_full_status`()', function(err,rows)
     {
@@ -3159,8 +3162,10 @@ router.post('/admin_get_full_status', function(req, res, next)
         } else
         {
             // get_team_history worked, now inspect data
-            //console.log("get_full_status successful rpc call.");
-            //console.log(rows);
+            // console.log("get_full_status successful rpc call.");
+            // console.log(rows[0][0].type);
+            console.log(rows);
+
             // show the rows
             res.render('viewFullStatus',
             {
@@ -3201,8 +3206,8 @@ router.post('/adminViewRankings', function(req, res, next)
         } else
         {
             // get_team_history worked, now inspect data
-            //console.log("admin_view_rankings successful rpc call.");
-            //console.log(rows);
+            console.log("admin_view_rankings successful rpc call.");
+            console.log(rows);
             // show the rows
             res.render('viewRankings',
             {
@@ -3215,6 +3220,47 @@ router.post('/adminViewRankings', function(req, res, next)
 
 });  // end router - get chain
 
+
+// ------------------------------------------------------
+// Called by player to view team and player rankings
+
+router.post('/viewMyRankings', function(req, res, next)
+{
+    console.log("Got into viewMyRankings call");
+
+    // Check authentication status
+    if (!req.oidc.isAuthenticated())
+    {
+        //console.log("Not authenticated");
+        res.render('landing');
+        return;
+    }
+
+    // Call stored procedure to search for the player
+    dbConn.query('CALL `assassin`.`player_view_rankings`()', function(err,rows)
+    {
+        if(err)
+        {
+            console.log("MySQL error on player_view_rankings call: " + err.code + " - " + err.message + " " + (new Date()).toLocaleString());
+            // Render error page, passing in error data
+            res.render('errorMessagePage', {result: ERROR_MYSQL_SYSTEM_ERROR_ON_RPC});
+            return;
+        } else
+        {
+            // player_view_rankings worked, now inspect data
+            console.log("player_view_rankings successful rpc call.");
+            console.log(rows);
+            // show the rows
+            res.render('viewPlayerRankings',
+            {
+                rows: rows
+            });
+
+        } // end else rpc worked
+
+    });  // end db query
+
+});  // end router - get chain
 
 
 // --------------------------------------------------------------------------------
@@ -3715,6 +3761,8 @@ function send_text(text, phone)
 
 function checkForUploadedPhotos(res)
 {
+  var playerPicPath; // helper var to replace any spaces from file names with code
+
   // Call stored procedure to get uploaded photo info
   dbConn.query('CALL `assassin`.`admin_get_first_uploaded_photo_and_count`()', function(err,rows)
   {
@@ -3731,8 +3779,12 @@ function checkForUploadedPhotos(res)
 
           if (rows[0][0].numUploadedPhotos > 0)
           {
+
+            let tempPath = "photos/" + rows[0][0].photoFilename;
+            playerPicPath = tempPath.replace(/ /g, "%20");
+
             //console.log("At least 1 photo to review.")
-            res.render('adminBulkPictureApprove', {playerCode: rows[0][0].playerCode, playerName: rows[0][0].playerName, photoFilename: "photos/" + rows[0][0].photoFilename});
+            res.render('adminBulkPictureApprove', {playerCode: rows[0][0].playerCode, playerName: rows[0][0].playerName, photoFilename: playerPicPath});
           }
           else
           {
@@ -3955,8 +4007,8 @@ router.post('/systemStartCronScripts', function(req, res, next)
     // ------------------------------------
     if (req.body.startGameCheckbox == "on")
     {
-      //console.log("startGameCheckbox is on");
-      //console.log("Start Game Timestamp: " + req.body.startGameTimestamp);
+      console.log("startGameCheckbox is on");
+      console.log("Start Game Timestamp: " + req.body.startGameTimestamp);
 
       // parse start date into cron scheduler format
       var tempDate = new Date(req.body.startGameTimestamp);
@@ -3975,7 +4027,7 @@ router.post('/systemStartCronScripts', function(req, res, next)
 
       var cronString = minute + " " + hour + " " + day + " " + month + " *";
 
-      //console.log("Final cron string is " + cronString);
+      console.log("Final start game cron string is " + cronString);
 
       if (CRON_START_GAME_SCRIPT_RUNNING == 0)
       {
@@ -4004,10 +4056,13 @@ router.post('/systemStartCronScripts', function(req, res, next)
     // ------------------------------------
     if (req.body.endGameCheckbox == "on")
     {
-      //console.log("endGameCheckbox is on");
+      console.log("endGameCheckbox is on");
 
       // parse start date into cron scheduler format
       var tempDate = new Date(req.body.endGameTimestamp);
+
+      // save end date for later
+      endGameDate = new Date(req.body.endGameTimestamp);
 
       if(isNaN(tempDate.getTime()))
       {
@@ -4023,7 +4078,7 @@ router.post('/systemStartCronScripts', function(req, res, next)
 
       var cronString = minute + " " + hour + " " + day + " " + month + " *";
 
-      //console.log("Final cron string is " + cronString);
+      console.log("Final end game cron string is " + cronString);
 
       if (CRON_END_GAME_SCRIPT_RUNNING == 0)
       {
@@ -4063,12 +4118,14 @@ router.post('/systemStartCronScripts', function(req, res, next)
       }
 
       var hour = req.body.morningStartTime;
-      var day = (tempDate.getDate()+1) + "-" + (tempDate.getDate()+3);  // mornings June 23 - 25
+
+      // hard coded below - second part of the date is now +2 for a 3 day tourn
+      var day = (tempDate.getDate()+1) + "-" + (tempDate.getDate()+2);  // mornings June 23 - 24
       var month = tempDate.getMonth()+1;
 
       var cronString = "0" + " " + hour + " " + day + " " + month + " *";
 
-      //console.log("Final cron string is " + cronString);
+      console.log("Final morning start cron string is " + cronString);
 
       if (CRON_MORNING_START_SCRIPT_RUNNING == 0)
       {
@@ -4100,6 +4157,7 @@ router.post('/systemStartCronScripts', function(req, res, next)
       //console.log("nightEndCheckbox is on");
 
       var tempDate = new Date(req.body.startGameTimestamp);
+      // var todaysDate = new Date();
 
       if(isNaN(tempDate.getTime()))
       {
@@ -4109,12 +4167,15 @@ router.post('/systemStartCronScripts', function(req, res, next)
       }
 
       var hour = req.body.nightEndTime;
-      var day = (tempDate.getDate()) + "-" + (tempDate.getDate()+2);  // nights 22 - 24
+
+      // hard coded below - second part of the date is now +1 for a 2 day tourn
+
+      var day = (tempDate.getDate()) + "-" + (tempDate.getDate()+1);  // nights 22 - 23
       var month = tempDate.getMonth()+1;
 
       var cronString = "0" + " " + hour + " " + day + " " + month + " *";
 
-      //console.log("Final cron string is " + cronString);
+      console.log("Final night end cron string is " + cronString);
 
       if (CRON_NIGHT_END_SCRIPT_RUNNING == 0)
       {
@@ -4154,19 +4215,33 @@ router.post('/systemStartCronScripts', function(req, res, next)
           return;
       }
 
+      // first 2 days of pfest, night ends late
       var hour = req.body.nightEndTime - 2;
-      var day = (tempDate.getDate()) + "-" + (tempDate.getDate()+3);  // nights 22 - 25
+      // hard coded below - second part of the date is now +1 for a 3 day tourn
+      var day = (tempDate.getDate()) + "-" + (tempDate.getDate()+1);  // nights 22 - 23 2023
       var month = tempDate.getMonth()+1;
 
       var cronString = "0" + " " + hour + " " + day + " " + month + " *";
 
-      //console.log("Final cron string is " + cronString);
+      console.log("First 2 days 2 hour shift check cron string is " + cronString);
+
+      // last day of pfest, night ends early
+      var hourLastNight = req.body.nightEndTime - 5;
+      // hard coded below - second part of the date is now +2 for a 3 day tourn
+      var dayLastNight = (tempDate.getDate()+2);  // final night
+      var monthLastNight = tempDate.getMonth()+1;
+
+      var cronStringLastNight = "0" + " " + hourLastNight + " " + dayLastNight + " " + monthLastNight + " *";
+
+      console.log("Final day 2 hour shift check cron string is " + cronStringLastNight);
 
       if (CRON_2_HOURS_TO_TO_SCRIPT_RUNNING == 0)
       {
-          //console.log("Turning on 2 hours to go cron script ");
+          console.log("Turning on 2 hours to go cron script ");
           CRON_2_HOURS_TO_TO_SCRIPT_RUNNING = 1;
+          CRON_2_HOURS_TO_TO_SCRIPT_RUNNING_LAST_DAY = 1;
           req.app.locals.twoHoursToGoCronScript = cron.schedule(cronString, twoHoursToGoCronFunction);
+          req.app.locals.twoHoursToGoLastDayCronScript = cron.schedule(cronStringLastNight, twoHoursToGoLastNightCronFunction);
       }
 
     }
@@ -4174,7 +4249,7 @@ router.post('/systemStartCronScripts', function(req, res, next)
     // ------------------------------------
     if (req.body.oneHourToGoCheckbox == "on")
     {
-      //console.log("oneHourToGoCheckbox is on");
+      console.log("oneHourToGoCheckbox is on");
 
       var tempDate = new Date(req.body.startGameTimestamp);
 
@@ -4186,18 +4261,31 @@ router.post('/systemStartCronScripts', function(req, res, next)
       }
 
       var hour = req.body.nightEndTime - 1;
-      var day = (tempDate.getDate()) + "-" + (tempDate.getDate()+3);  // nights 22 - 25
+      // hard coded below - second part of the date is now +1 for a 3 day tourn
+      var day = (tempDate.getDate()) + "-" + (tempDate.getDate()+1);  // nights 22 - 24
       var month = tempDate.getMonth()+1;
 
       var cronString = "0" + " " + hour + " " + day + " " + month + " *";
 
-      //console.log("Final cron string is " + cronString);
+      console.log("Final first 2 days 1 hour cron string is " + cronString);
+
+      // ends 3 hours earlier on last night
+      var hourLastNight = req.body.nightEndTime - 4;
+      // hard coded below - second part of the date is now +2 for a 3 day tourn
+      var dayLastNight = (tempDate.getDate()+2);  // final
+      var monthLastNight = tempDate.getMonth()+1;
+
+      var cronStringLastNight = "0" + " " + hourLastNight + " " + dayLastNight + " " + monthLastNight + " *";
+
+      console.log("Final last night 1 hour cron string is " + cronStringLastNight);
 
       if (CRON_1_HOUR_TO_GO_SCRIPT_RUNNING == 0)
       {
           //console.log("Turning on 1 hour to go cron script ");
           CRON_1_HOUR_TO_GO_SCRIPT_RUNNING = 1;
+          CRON_1_HOUR_TO_GO_SCRIPT_RUNNING_LAST_NIGHT = 1;
           req.app.locals.oneHourToGoCronScript = cron.schedule(cronString, oneHourToGoCronFunction);
+          req.app.locals.oneHourToGoLastNightCronScript = cron.schedule(cronStringLastNight, oneHourToGoCronLastNightFunction);
       }
 
     }
@@ -4476,6 +4564,45 @@ function twoHoursToGoCronFunction()
 
 // ---------------------------
 
+function twoHoursToGoLastNightCronFunction()
+{
+    console.log('twoHoursToGoLastNightCronFunction started');
+
+    // call stored procedure
+    dbConn.query('CALL `assassin`.`system_check_for_forced_shift_changes`(?)',2, function(err,rows)
+    {
+        if(err)
+        {
+            console.log("MySQL error on Cron last night system_check_for_forced_shift_changes call: " + err.code + " - " + err.message + " " + (new Date()).toLocaleString());
+            return;
+        }
+        else
+        {
+            console.log("Successful last night system_check_for_forced_shift_changes2 RPC call.");
+            console.log(rows);
+
+            if (rows[0][0].phone == CALL_SUCCESS)
+            {
+                  if (rows[0].length > 1)
+                  {
+                    if (TWILIO_FLAG != TWILIO_OFF)
+                      send_text_alerts(rows);
+                  }
+            }
+            else
+            {
+              console.log("Cron error code on last night system_check_for_forced_shift_changes2 RPC call: " + rows[0][0].phone);
+              return;
+            }
+
+        } // end else
+
+    }); // end query
+
+  } // twoHoursToGoLastNightCronFunction
+
+// ---------------------------
+
 function oneHourToGoCronFunction()
 {
     console.log('OneHourToGoCronFunction started');
@@ -4512,6 +4639,46 @@ function oneHourToGoCronFunction()
     }); // end query
 
 } // oneHourToGoCronFunction
+
+
+// ---------------------------
+
+function oneHourToGoCronLastNightFunction()
+{
+    console.log('oneHourToGoCronLastNightFunction started');
+
+    // call stored procedure
+    dbConn.query('CALL `assassin`.`system_check_for_forced_shift_changes`(?)',1, function(err,rows)
+    {
+        if(err)
+        {
+            console.log("MySQL error on Cron last night system_check_for_forced_shift_changes call: " + err.code + " - " + err.message + " " + (new Date()).toLocaleString());
+            return;
+        }
+        else
+        {
+            //console.log("Successful system_check_for_forced_shift_changes1 RPC call.");
+            //console.log(rows);
+
+            if (rows[0][0].phone == CALL_SUCCESS)
+            {
+                  if (rows[0].length > 1)
+                  {
+                    if (TWILIO_FLAG != TWILIO_OFF)
+                      send_text_alerts(rows);
+                  }
+            }
+            else
+            {
+              console.log("Cron error code on last night system_check_for_forced_shift_changes1 RPC call: " + rows[0][0].phone);
+              return;
+            }
+
+        } // end else
+
+    }); // end query
+
+} // oneHourToGoCronLastNightFunction
 
 // ---------------------------
 
@@ -4573,7 +4740,7 @@ function checkOldPhotosCronFunction(photoWaitTime)
 
               if (TWILIO_FLAG != TWILIO_OFF)
               {
-                send_text(rows[0][0].checkOldPhotos + " old photos require approval.", rows[0][0].adminPhone);
+                send_text(rows[0][0].numOldPhotos + " old photos require approval.", rows[0][0].adminPhone);
               }
             }
 
@@ -4696,7 +4863,9 @@ router.post('/systemStopCronScripts', function(req, res, next)
       if (CRON_2_HOURS_TO_TO_SCRIPT_RUNNING == 1)
       {
         CRON_2_HOURS_TO_TO_SCRIPT_RUNNING = 0;
+        CRON_2_HOURS_TO_TO_SCRIPT_RUNNING_LAST_DAY = 0;
         req.app.locals.twoHoursToGoCronScript.stop();
+        req.app.locals.twoHoursToGoLastDayCronScript.stop();
       }
 
     }
@@ -4708,7 +4877,9 @@ router.post('/systemStopCronScripts', function(req, res, next)
       if (CRON_1_HOUR_TO_GO_SCRIPT_RUNNING == 1)
       {
         CRON_1_HOUR_TO_GO_SCRIPT_RUNNING = 0;
+        CRON_1_HOUR_TO_GO_SCRIPT_RUNNING_LAST_NIGHT = 0;
         req.app.locals.oneHourToGoCronScript.stop();
+        req.app.locals.oneHourToGoLastNightCronScript.stop();
       }
 
     }

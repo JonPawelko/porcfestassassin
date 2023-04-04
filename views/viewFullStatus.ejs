@@ -26,204 +26,294 @@
 
 					<div class="rules-page">
 
+					<div style="height: 4px;"></div>
+					<u>Chain</u>
+					<div style="height: 2px;"></div>
+
 					<%
 							var i = 0;
 
 							// Chain first -------------------------
-							if ((i<rows[0].length) && (rows[0][i].field1 == "Chain"))
+							console.log("full rows");
+							console.log(rows);
+							console.log("rows 0");
+							console.log(rows[0]);
+							console.log("rows 0 0");
+							console.log(rows[0][0]);
+							console.log("rows 0 0 type");
+							console.log(rows[0][0].type);
+
+							if ((i<rows[0].length) && (rows[0][i].type == "Chain"))
 							{
 								%>
-								<div style="height: 4px;"></div>
-								<u>Chain</u>
-								<div style="height: 2px;"></div>
 								<ul>
-								<%
-									while ((i<rows[0].length) && (rows[0][i].field1 == "Chain"))
-									{
-											%>
-											<li><%=rows[0][i].field2%> - <%=rows[0][i].field3%> &gt <%=rows[0][i].field4%> - <%=rows[0][i].field5%></li>
-										<%
-										i++;
-									}
-							%>
-							</ul>
-							<div style="height: 12px;"></div>
+									<%
+										while ((i<rows[0].length) && (rows[0][i].type == "Chain"))
+										{
+												%>
+												<li><%=rows[0][i].data%></li>
+											<%
+											i++;
+										}
+									%>
+								</ul>
+
 							<%
 							}
+							%>
 
-							// Waiting next -------------------------
-							if ((i<rows[0].length) && (rows[0][i].field1 == "Waiting"))
+					<div style="height: 10px;"></div>
+
+
+					<u>Waiting Teams</u>
+					<div style="height: 2px;"></div>
+
+					<%
+
+							// Waiting -------------------------
+
+							if ((i<rows[0].length) && (rows[0][i].type == "Waiting"))
 							{
 								%>
-								<u>Waiting</u>
-								<div style="height: 2px;"></div>
 								<ul>
-								<%
-									while ((i<rows[0].length) && (rows[0][i].field1 == "Waiting"))
-									{
-											%>
-											<li><%=rows[0][i].field2%> - <%=rows[0][i].field3%></li>
-										<%
-										i++;
-									}
-							%>
-							</ul>
-							<div style="height: 12px;"></div>
+									<%
+										while ((i<rows[0].length) && (rows[0][i].type == "Waiting"))
+										{
+												%>
+												<li><%=rows[0][i].data%></li>
+											<%
+											i++;
+										}
+									%>
+								</ul>
+
 							<%
 							}
+							%>
 
-							// Inactive next -------------------------
-							if ((i<rows[0].length) && (rows[0][i].field1 == "Inactive"))
+					<div style="height: 10px;"></div>
+
+					<u>Inactive Teams</u>
+					<div style="height: 2px;"></div>
+
+					<%
+
+							// Inactive -------------------------
+
+							if ((i<rows[0].length) && (rows[0][i].type == "Inactive"))
 							{
 								%>
-								<u>Inactive</u>
-								<div style="height: 2px;"></div>
 								<ul>
-								<%
-									while ((i<rows[0].length) && (rows[0][i].field1 == "Inactive"))
-									{
-											%>
-											<li><%=rows[0][i].field2%> - <%=rows[0][i].field3%></li>
-										<%
-										i++;
-									}
-							%>
-							</ul>
-							<div style="height: 12px;"></div>
+									<%
+										while ((i<rows[0].length) && (rows[0][i].type == "Inactive"))
+										{
+												%>
+												<li><%=rows[0][i].data%></li>
+											<%
+											i++;
+										}
+									%>
+								</ul>
+
 							<%
 							}
+							%>
 
-							// Registered Team next -------------------------
-							if ((i<rows[0].length) && (rows[0][i].field1 == "Registered Team"))
+					<div style="height: 10px;"></div>
+
+					<u>Break Teams</u>
+					<div style="height: 2px;"></div>
+
+					<%
+
+							// Break -------------------------
+
+							if ((i<rows[0].length) && (rows[0][i].type == "Break"))
 							{
 								%>
-								<u>Registered Teams</u>
-								<div style="height: 2px;"></div>
 								<ul>
-								<%
-									while ((i<rows[0].length) && (rows[0][i].field1 == "Registered Team"))
-									{
-											%>
-											<li><%=rows[0][i].field2%> - <%=rows[0][i].field3%></li>
-										<%
-										i++;
-									}
-							%>
-							</ul>
-							<div style="height: 12px;"></div>
+									<%
+										while ((i<rows[0].length) && (rows[0][i].type == "Break"))
+										{
+												%>
+												<li><%=rows[0][i].data%></li>
+											<%
+											i++;
+										}
+									%>
+								</ul>
+
 							<%
 							}
+							%>
 
-							// Break  next -------------------------
-							if ((i<rows[0].length) && (rows[0][i].field1 == "Break"))
+					<div style="height: 10px;"></div>
+
+					<u>Registered Teams</u>
+					<div style="height: 2px;"></div>
+
+					<%
+
+							// Registered -------------------------
+
+							if ((i<rows[0].length) && (rows[0][i].type == "Registered"))
 							{
 								%>
-								<u>Break Teams</u>
-								<div style="height: 2px;"></div>
 								<ul>
-								<%
-									while ((i<rows[0].length) && (rows[0][i].field1 == "Break"))
-									{
-											%>
-											<li><%=rows[0][i].field2%> - <%=rows[0][i].field3%></li>
-										<%
-										i++;
-									}
-							%>
-							</ul>
-							<div style="height: 12px;"></div>
+									<%
+										while ((i<rows[0].length) && (rows[0][i].type == "Registered"))
+										{
+												%>
+												<li><%=rows[0][i].data%></li>
+											<%
+											i++;
+										}
+									%>
+								</ul>
+
 							<%
 							}
+							%>
 
-							// Paid  next -------------------------
-							if ((i<rows[0].length) && (rows[0][i].field1 == "Paid"))
+					<div style="height: 10px;"></div>
+
+					<u>Paid Teams</u>
+					<div style="height: 2px;"></div>
+
+					<%
+
+							// Paid -------------------------
+
+							if ((i<rows[0].length) && (rows[0][i].type == "Paid"))
 							{
 								%>
-								<u>Paid Teams</u>
-								<div style="height: 2px;"></div>
 								<ul>
-								<%
-									while ((i<rows[0].length) && (rows[0][i].field1 == "Paid"))
-									{
-											%>
-											<li><%=rows[0][i].field2%> - <%=rows[0][i].field3%></li>
-										<%
-										i++;
-									}
-							%>
-							</ul>
-							<div style="height: 12px;"></div>
+									<%
+										while ((i<rows[0].length) && (rows[0][i].type == "Paid"))
+										{
+												%>
+												<li><%=rows[0][i].data%></li>
+											<%
+											i++;
+										}
+									%>
+								</ul>
+
 							<%
 							}
+							%>
 
-							// Pics Approved  next -------------------------
-							if ((i<rows[0].length) && (rows[0][i].field1 == "Pics Approved"))
+					<div style="height: 10px;"></div>
+
+					<u>Pics Approved Teams</u>
+					<div style="height: 2px;"></div>
+
+					<%
+
+							// Pics approved -------------------------
+
+							if ((i<rows[0].length) && (rows[0][i].type == "Pics Approved"))
 							{
 								%>
-								<u>Pics Approved Teams</u>
-								<div style="height: 2px;"></div>
 								<ul>
-								<%
-									while ((i<rows[0].length) && (rows[0][i].field1 == "Pics Approved"))
-									{
-											%>
-											<li><%=rows[0][i].field2%> - <%=rows[0][i].field3%></li>
-										<%
-										i++;
-									}
-							%>
-							</ul>
-							<div style="height: 12px;"></div>
+									<%
+										while ((i<rows[0].length) && (rows[0][i].type == "Pics Approved"))
+										{
+												%>
+												<li><%=rows[0][i].data%></li>
+											<%
+											i++;
+										}
+									%>
+								</ul>
+
 							<%
 							}
+							%>
 
-							// Quit  next -------------------------
-							if ((i<rows[0].length) && (rows[0][i].field1 == "Quit"))
+					<div style="height: 10px;"></div>
+
+					<u>Quit Teams</u>
+					<div style="height: 2px;"></div>
+
+					<%
+
+							// Quit -------------------------
+
+							if ((i<rows[0].length) && (rows[0][i].type == "Quit"))
 							{
 								%>
-								<u>Quit Teams</u>
-								<div style="height: 2px;"></div>
 								<ul>
-								<%
-									while ((i<rows[0].length) && (rows[0][i].field1 == "Quit"))
-									{
-											%>
-											<li><%=rows[0][i].field2%> - <%=rows[0][i].field3%></li>
-										<%
-										i++;
-									}
-							%>
-							</ul>
-							<div style="height: 12px;"></div>
+									<%
+										while ((i<rows[0].length) && (rows[0][i].type == "Quit"))
+										{
+												%>
+												<li><%=rows[0][i].data%></li>
+											<%
+											i++;
+										}
+									%>
+								</ul>
+
 							<%
 							}
+							%>
 
+					<div style="height: 14px;"></div>
 
-							// Players  next -------------------------
-							if ((i<rows[0].length) && (rows[0][i].field1 == "Registered Player"))
+					<u>Celebritarians</u>
+					<div style="height: 2px;"></div>
+
+					<%
+
+							// Celebritarians -------------------------
+
+							if ((i<rows[0].length) && (rows[0][i].type == "Celeb"))
 							{
 								%>
-								<u>Registered Players</u>
-								<div style="height: 2px;"></div>
 								<ul>
-								<%
-									while ((i<rows[0].length) && (rows[0][i].field1 == "Registered Player"))
-									{
-											%>
-											<li><%=rows[0][i].field2%></li>
-										<%
-										i++;
-									}
-							%>
-							</ul>
-							<div style="height: 12px;"></div>
+									<%
+										while ((i<rows[0].length) && (rows[0][i].type == "Celeb"))
+										{
+												%>
+												<li><%=rows[0][i].data%></li>
+											<%
+											i++;
+										}
+									%>
+								</ul>
+
 							<%
 							}
-
 							%>
 
+					<div style="height: 10px;"></div>
 
-					</div>
+					<u>Players</u>
+					<div style="height: 2px;"></div>
+
+					<%
+
+							// Players -------------------------
+
+							if ((i<rows[0].length) && (rows[0][i].type == "Player"))
+							{
+								%>
+								<ul>
+									<%
+										while ((i<rows[0].length) && (rows[0][i].type == "Player"))
+										{
+												%>
+												<li><%=rows[0][i].data%></li>
+											<%
+											i++;
+										}
+									%>
+								</ul>
+
+							<%
+							}
+							%>
 
 					<div style="height: 10px;"></div>
 
@@ -239,8 +329,6 @@
       </div>
 
 </div>
-
-
 
 </body>
 </html>
