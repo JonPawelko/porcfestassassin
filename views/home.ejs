@@ -362,12 +362,13 @@
 
 									<form action="viewRules" method="post">
 										<input type="hidden" name="myPlayerCode" value="<%= playerCode %>">
+										<input type="hidden" name="myTeamCode" value="<%= playerTeamCode %>">
 										<input type="hidden" name="myPhone" value="<%= playerPhone %>">
 										<input type="hidden" name="myPlayerName" value="<%= playerName %>">
 										<input type="submit" class="btn btn-info" value="View Rules"/>
 										&nbsp&nbsp&nbsp&nbsp&#8201
 										<input type="submit" class="btn btn-info" formaction="contactAdmin" value="Contact Admin"/>
-									</form>
+
 
 									<div style="height: 18px;"></div>
 
@@ -379,12 +380,12 @@
 
 										<input type="submit" class="btn btn-info" formaction="viewTeamHistory" value="View Team History" onsubmit="return waitCursor()"/>
 										<div style="height: 18px;"></div>
+										<input type="submit" class="btn btn-info" formaction="viewMyRankings" value="View Full Rankings" onsubmit="return waitCursor()"/>
+										<div style="height: 18px;"></div>
 
 											<% } %>
 
-									</form>
-
-									<input type="submit" class="btn btn-info" formaction="viewMyRankings" value="View Rankings" onsubmit="return waitCursor()"/>
+								</form>
 
 									<hr>
 									<div style="height: 18px;"></div>

@@ -3044,6 +3044,7 @@ router.post('/viewRules', function(req, res, next)
 router.post('/viewTeamHistory', function(req, res, next)
 {
     console.log("Got into viewTeamHistory call");
+    console.log("Data is " + req.body.myTeamCode + " " + req.body.myPlayerCode);
 
     // Check authentication status
     if (!req.oidc.isAuthenticated())
@@ -3068,11 +3069,11 @@ router.post('/viewTeamHistory', function(req, res, next)
         {
             // get_team_history worked, now inspect data
             console.log("get_team_history successful rpc call.");
-            console.log(rows);
+            console.log(rows[1]);
             // show the rows
             res.render('viewHistory',
             {
-                eventRecords: rows[0]
+                eventRecords: rows[1]
             });
 
         } // end else rpc worked
@@ -3237,7 +3238,7 @@ router.post('/viewMyRankings', function(req, res, next)
     }
 
     // Call stored procedure to search for the player
-    dbConn.query('CALL `assassin`.`player_view_rankings`()', function(err,rows)
+    dbConn.query('CALL `assassin`.`player_view_rankings`(?,?)', [req.body.myPlayerCode, req.body.myTeamCode], function(err,rows)
     {
         if(err)
         {
