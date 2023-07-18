@@ -35,7 +35,7 @@ router.post('/assassinLogin', function(req, res, next)
 //
 router.post('/assassinRegister', function(req, res, next) {
 
-  //console.log("Got into assassinRegister");
+  // console.log("Got into assassinRegister at " + new Date());
 
   res.oidc.login(
   {
@@ -52,8 +52,7 @@ router.post('/assassinRegister', function(req, res, next) {
 //
 router.post('/assassinLogout', function(req, res, next)
 {
-  //console.log("Got into assassinLogout");
-
+  console.log("User logged out at " + formatDate(new Date()) + " - Email is " + req.oidc.user.email);
   res.oidc.logout();
 
 }); // end router post assassinLogout
@@ -87,7 +86,7 @@ router.get('/', function(req, res, next) {
   {
       if(err)
       {
-        console.log("MySQL error on get_player_info_and_game_status call: " + err.code + " - " + err.message + " " + (new Date()).toLocaleString());
+        console.log("MySQL error on get_player_info_and_game_status call: " + err.code + " - " + err.message + " - User email is " + req.oidc.user.email + " " + (new Date()).toLocaleString());
 
         // Render error page, passing in error data
         res.render('errorMessagePage', {result: ERROR_MYSQL_SYSTEM_ERROR_ON_RPC});
@@ -95,8 +94,9 @@ router.get('/', function(req, res, next) {
 
       } else
       {
-          //console.log("Successful Get Info RPC call.");
-          //console.log(rows);
+          // console.log("Successful Get Info RPC call.  ******************");
+          // console.log(rows);
+          // console.log("Successful Get Info RPC call.  ******************");
 
           // Check to see if Player exists in the database already, if not, redirect to landing2
           if (rows[0][0].playerCode == null)
@@ -123,7 +123,7 @@ router.get('/', function(req, res, next) {
               {
                   if(err)
                   {
-                      console.log("MySQL error on get_statistics call: " + err.code + " - " + err.message + " " + (new Date()).toLocaleString());
+                      console.log("MySQL error on get_statistics call: " + err.code + " - " + err.message + " - User email is " + req.oidc.user.email + " " + (new Date()).toLocaleString());
                       // Render error page, passing in error data
                       res.render('errorMessagePage', {result: ERROR_MYSQL_SYSTEM_ERROR_ON_RPC});
                       return;
@@ -157,11 +157,11 @@ router.get('/', function(req, res, next) {
                       }
 
                       // update pic path and replace any spaces in file names with code
-                      let tempPic = "photos/" + rows[0][0].playerPic;
+                      let tempPic = "photos/" + rows[0][0].playerCode + "/" + rows[0][0].playerPic;
                       tempPlayerPic = tempPic.replace(/ /g, "%20");
                       //console.log("tempPlayerPic is " + tempPlayerPic);
 
-                      let tempPic2 = "photos/" + rows[0][0].targetPic;
+                      let tempPic2 = "photos/" + rows[0][0].targetPlayerCode + "/" + rows[0][0].targetPic;
                       tempTargetPic = tempPic2.replace(/ /g, "%20");
                       //console.log("tempPlayerPic2 is " + tempTargetPic);
 
@@ -175,7 +175,7 @@ router.get('/', function(req, res, next) {
                           {
                               if(err)
                               {
-                                  console.log("MySQL error on get_teammate_info call: " + err.code + " - " + err.message + " " + (new Date()).toLocaleString());
+                                  console.log("MySQL error on get_teammate_info call: " + err.code + " - " + err.message + " - User email is " + req.oidc.user.email + " " + (new Date()).toLocaleString());
                                   // Render error page, passing in error data
                                   res.render('errorMessagePage', {result: ERROR_MYSQL_SYSTEM_ERROR_ON_RPC});
                                   return;
@@ -314,8 +314,6 @@ router.get('/', function(req, res, next) {
 //
 router.post('/newAssassin', function(req, res, next)
 {
-    //console.log("Got into new assassin call");
-
     var adminPhone;
 
     // helper vars for uploading photo file
@@ -328,6 +326,9 @@ router.post('/newAssassin', function(req, res, next)
     // helper var to check and format player name
     var tempPlayerName;
 
+    // helper var to save new player id for use in saving picture
+    var tempPlayerId;
+
     // Check authentication status
     if (!req.oidc.isAuthenticated())
     {
@@ -335,6 +336,8 @@ router.post('/newAssassin', function(req, res, next)
         res.render('landing');
         return;
     }
+
+    console.log("Got into new assassin call " + formatDate(new Date()) + " - Email is " + req.oidc.user.email);
 
     // Check if photo file was passed in correctly
     if (!req.files || Object.keys(req.files).length === 0)
@@ -391,9 +394,6 @@ router.post('/newAssassin', function(req, res, next)
 
     // name of the input is playerPhotoFile
     playerPhotoFile = req.files.playerPhotoFile;
-    uploadPath = __dirname + '/../public/photos/' + playerPhotoFile.name;  // might want to clean up this directory logic
-
-    //console.log("Upload path is: " + uploadPath);
 
     // Call stored procedure to create the player
     dbConn.query('CALL `assassin`.`create_player_from_email`(?,?,?,?,?)', [req.oidc.user.email, tempPlayerName, tempPlayerPhone, playerPhotoFile.name, req.body.playerTeamName], function(err,rows)
@@ -407,8 +407,11 @@ router.post('/newAssassin', function(req, res, next)
         } else
         {
             // Create Player worked, now upload photo
-            //console.log("Create Player RPC worked, now check return code.");
+            console.log("Create Player RPC worked, now check return code. " + formatDate(new Date()) + " - Email is " + req.oidc.user.email);
 
+            // console.log("________________________________________________");
+            // console.log(rows);
+            // console.log("________________________________________________");
             // Check return code
             if (rows[0][0].phone == CALL_SUCCESS)
             {
@@ -416,11 +419,20 @@ router.post('/newAssassin', function(req, res, next)
                 if ((req.body.playerTeamName == null) || (req.body.playerTeamName == ""))
                 {
                   adminPhone = rows[0][0].adminPhone;
+                  tempPlayerId = rows[0][0].eventCode; // using this field to save player id
+                  console.log("Create Player RPC worked, call success return code. " + formatDate(new Date()) + " - Email is " + req.oidc.user.email + " - New id is " + rows[0][0].eventCode );
                 }
                 else
                 {
                   adminPhone = rows[1][0].adminPhone;
+                  tempPlayerId = rows[1][0].eventCode; // using this field to save player id
+                  console.log("Create Player RPC worked, call success return code. " + formatDate(new Date()) + " - Email is " + req.oidc.user.email + " - New id is " + rows[1][0].eventCode );
                 }
+
+                // Build upload path after getting the player id
+                uploadPath = __dirname + '/../public/photos/' + tempPlayerId + '/' + playerPhotoFile.name;  // might want to clean up this directory logic
+
+                console.log("Upload path is: " + uploadPath);
 
                 // Use mv() to place file on the server
                 playerPhotoFile.mv(uploadPath, function (err)
@@ -488,7 +500,6 @@ router.post('/newAssassin', function(req, res, next)
 
 router.post('/activateAssassin', function(req, res, next)
 {
-  //console.log("Got into activateAssassin call");
 
   // Check authentication status
   if (!req.oidc.isAuthenticated())
@@ -497,6 +508,8 @@ router.post('/activateAssassin', function(req, res, next)
       res.render('landing');
       return;
   }
+
+  console.log("Got into activateAssassin call " + formatDate(new Date()) + " - Email is " + req.oidc.user.email);
 
   if (!validateCode(req.body.playerCode))
   {
@@ -531,7 +544,7 @@ router.post('/activateAssassin', function(req, res, next)
           }
           else // success
           {
-            //console.log("Full activate player RPC call success.");
+            console.log("Successful activate player " + formatDate(new Date()) + " - Email is " + req.oidc.user.email);
             res.oidc.login();  // route Player back to Home
           }
       } // end else
@@ -546,7 +559,7 @@ router.post('/activateAssassin', function(req, res, next)
 router.post('/validateKill', function(req, res, next)
 {
   //console.log("Validate Kill called.");
-  console.log(req);
+  // console.log(req);
 
   // Check authentication status
   if (!req.oidc.isAuthenticated())
@@ -562,6 +575,8 @@ router.post('/validateKill', function(req, res, next)
       res.render('errorMessagePage', {result: ERROR_INVALID_PLAYER_NAME});
       return;
   }
+
+  console.log("Validate kill attempt: " + formatDate(new Date()) + " - Email is " + req.oidc.user.email);
 
   // Call stored proc
   dbConn.query('CALL `assassin`.`validate_kill`(?,?,?)', [req.body.myPlayerCode, req.body.myTeamCode, req.body.myKillName], function(err,rows)
@@ -579,6 +594,7 @@ router.post('/validateKill', function(req, res, next)
           if (rows[0][0].phone == CALL_SUCCESS)
           {
               //console.log("Valid kill at " + formatDate(new Date()));
+              console.log("Successful assassination " + formatDate(new Date()) + " - Email is " + req.oidc.user.email);
 
               if (rows[0].length > 1)
               {
@@ -589,7 +605,8 @@ router.post('/validateKill', function(req, res, next)
           }
           else
           {
-            console.log("Invalid kill attempt at " + formatDate(new Date()));
+            console.log("Invalid kill attempt: " + formatDate(new Date()) + " - Email is " + req.oidc.user.email);
+
             // Render error page, passing in error code
             res.render('errorMessagePage', {result: parseInt(rows[0][0].phone)});
             return;
@@ -617,6 +634,8 @@ router.post('/rebuy', function(req, res, next)
       return;
   }
 
+  console.log("Got into rebuy " + formatDate(new Date()) + " - Email is " + req.oidc.user.email);
+
   // call stored procedure
   dbConn.query('CALL `assassin`.`rebuy`(?,?)', [req.body.myPlayerCode, req.body.myTeamCode], function(err,rows)
   {
@@ -628,11 +647,11 @@ router.post('/rebuy', function(req, res, next)
       }
       else
       {
-          console.log("Successful rebuy RPC call.");
-          console.log(rows);
-
+          // console.log(rows);
           if (rows[0][0].phone == CALL_SUCCESS)
           {
+                console.log("Successful rebuy " + formatDate(new Date()) + " - Email is " + req.oidc.user.email);
+
                 if (rows[0].length > 1)
                 {
                   if (TWILIO_FLAG == TWILIO_PROD_ALL)
@@ -668,6 +687,8 @@ router.post('/goLive', function(req, res, next)
       return;
   }
 
+  console.log("Got into GoLive " + formatDate(new Date()) + " - Email is " + req.oidc.user.email);
+
   // Call stored procedure
   dbConn.query('CALL `assassin`.`go_live`(?,?)', [req.body.myPlayerCode, req.body.myTeamCode], function(err,rows)
   {
@@ -677,13 +698,15 @@ router.post('/goLive', function(req, res, next)
           // Render error page, passing in error data
           res.render('errorMessagePage', {result: ERROR_MYSQL_SYSTEM_ERROR_ON_RPC});
           return;
-      } else {
-          //console.log("Successful Go Live RPC call.");
+      } else
+        {
           //console.log(rows);
 
           // Error checking here if Player couldn't go Live.
           if (rows[0][0].phone == CALL_SUCCESS)
           {
+                console.log("Successful Go Live " + formatDate(new Date()) + " - Email is " + req.oidc.user.email);
+
                 if (rows[0].length > 1)
                 {
                     if (TWILIO_FLAG == TWILIO_PROD_ALL)
@@ -719,6 +742,8 @@ router.post('/joinTeam', function(req, res, next)
       return;
   }
 
+  console.log("Got into Join Team " + formatDate(new Date()) + " - Email is " + req.oidc.user.email);
+
   if (!validateCode(req.body.joinTeamCode))
   {
       console.log("Bad data found, routing to error page");
@@ -746,6 +771,8 @@ router.post('/joinTeam', function(req, res, next)
 
           if (rows[0][0].phone == CALL_SUCCESS)
           {
+              console.log("Successful Join Team " + formatDate(new Date()) + " - Email is " + req.oidc.user.email);
+
                 if (rows[0].length > 1)
                 {
                   if (TWILIO_FLAG == TWILIO_PROD_ALL)
@@ -755,6 +782,8 @@ router.post('/joinTeam', function(req, res, next)
           }
           else
           {
+            console.log("Unsuccessful Join Team " + formatDate(new Date()) + " - Email is " + req.oidc.user.email);
+
             // Render error page, passing in error code
             res.render('errorMessagePage', {result: parseInt(rows[0][0].phone)});
             return;
@@ -781,6 +810,8 @@ router.post('/createTeam', function(req, res, next)
       return;
   }
 
+  console.log("Got into Create Team: " + formatDate(new Date()) + " - Email is " + req.oidc.user.email);
+
   if (validateTeamName(req.body.playerTeamName) == false)
   {
       // Render error page, passing in error code
@@ -805,6 +836,7 @@ router.post('/createTeam', function(req, res, next)
 
           if (rows[0][0].phone == CALL_SUCCESS)
           {
+                console.log("Create Team Success: " + formatDate(new Date()) + " - Email is " + req.oidc.user.email);
                 res.oidc.login(); // send back home to refresh page, may now be on a new Team
           }
           else
@@ -835,6 +867,8 @@ router.post('/takeBreak', function(req, res, next)
       return;
   }
 
+  console.log("Got into Take Break: " + formatDate(new Date()) + " - Email is " + req.oidc.user.email);
+
   // Call stored procedure, passing in LEAVE_BREAK
   dbConn.query('CALL `assassin`.`leave_game`(?,?,?)', [req.body.myPlayerCode, req.body.myTeamCode, LEAVE_BREAK], function(err,rows)
   {
@@ -851,6 +885,8 @@ router.post('/takeBreak', function(req, res, next)
 
           if (rows[0][0].phone == CALL_SUCCESS)
           {
+                console.log("Success take a break: " + formatDate(new Date()) + " - Email is " + req.oidc.user.email);
+
                 if (rows[0].length > 1)
                 {
                   if (TWILIO_FLAG != TWILIO_OFF)
@@ -886,6 +922,8 @@ router.post('/returnFromBreak', function(req, res, next)
       return;
   }
 
+  console.log("Got into Return From Break: " + formatDate(new Date()) + " - Email is " + req.oidc.user.email);
+
   // Call stored proc
   dbConn.query('CALL `assassin`.`return_from_break`(?,?)', [req.body.playerCode, req.body.teamCode], function(err,rows)
   {
@@ -902,6 +940,8 @@ router.post('/returnFromBreak', function(req, res, next)
 
           if (rows[0][0].phone == CALL_SUCCESS)
           {
+                console.log("Return From Break worked: " + formatDate(new Date()) + " - Email is " + req.oidc.user.email);
+
                 if (rows[0].length > 1)
                 {
                   if (TWILIO_FLAG == TWILIO_PROD_ALL)
@@ -937,6 +977,8 @@ router.post('/addPlayer', function(req, res, next)
       return;
   }
 
+  console.log("Got into add player: " + formatDate(new Date()) + " - Email is " + req.oidc.user.email);
+
   if (!validateCode(req.body.playerCode))
   {
       console.log("Bad data found, routing to error page");
@@ -962,6 +1004,8 @@ router.post('/addPlayer', function(req, res, next)
 
           if (rows[0][0].phone == CALL_SUCCESS)
           {
+                console.log("Add player success: " + formatDate(new Date()) + " - Email is " + req.oidc.user.email);
+
                 if (rows[0].length > 1)
                 {
                   if (TWILIO_FLAG == TWILIO_PROD_ALL)
@@ -997,6 +1041,8 @@ router.post('/removePlayerFromTeam', function(req, res, next)
       return;
   }
 
+  console.log("Got into Remove Player From Team: " + formatDate(new Date()) + " - Email is " + req.oidc.user.email);
+
   if (!validateCode(req.body.playerCode))
   {
       console.log("Bad data found, routing to error page");
@@ -1024,6 +1070,8 @@ router.post('/removePlayerFromTeam', function(req, res, next)
 
           if (rows[0][0].phone == CALL_SUCCESS)
           {
+              console.log("Remove Player From Team success: " + formatDate(new Date()) + " - Email is " + req.oidc.user.email);
+
               if (rows[0].length > 1)
               {
                 if (TWILIO_FLAG == TWILIO_PROD_ALL)
@@ -1059,6 +1107,8 @@ router.post('/quitGame', function(req, res, next)
       return;
   }
 
+  console.log("Got into Quit Game: " + formatDate(new Date()) + " - Email is " + req.oidc.user.email);
+
   // leave_game stored proc handles both Quit and Break, send in quit here
   dbConn.query('CALL `assassin`.`leave_game`(?,?,?)', [req.body.myPlayerCode, req.body.myTeamCode, LEAVE_QUIT], function(err,rows)
   {
@@ -1075,6 +1125,8 @@ router.post('/quitGame', function(req, res, next)
 
           if (rows[0][0].phone == CALL_SUCCESS)
           {
+              console.log("Success quit game: " + formatDate(new Date()) + " - Email is " + req.oidc.user.email);
+
               if (rows[0].length > 1)
               {
                 if (TWILIO_FLAG != TWILIO_OFF)
@@ -1109,11 +1161,18 @@ router.post('/managePicture', function(req, res, next)
       return;
   }
 
-// console.log(req.body.playerPic);
+  console.log("Got into managePicture: " + formatDate(new Date()) + " - Email is " + req.oidc.user.email);
+
+  // console.log("Player pic variable is " + req.body.playerPic);
 //  console.log(__dirname);
 
+  // let tempPath = "../../" + req.body.myPlayerCode + "/" + req.body.playerPic;
+
   let tempPath = "../../" + req.body.playerPic;
+
   var playerPicPath = tempPath.replace(/ /g, "%20");
+
+  // console.log("Player pic path is " + playerPicPath);
 
   // No stored procedure needed, just load manage template
   res.render('managePicture', {playerCode: req.body.myPlayerCode, myPicture: playerPicPath, picFeature: req.body.picFeature});
@@ -1311,6 +1370,8 @@ router.post('/adminActivateTeam', function(req, res, next)
         return;
     }
 
+    console.log("Got into adminActivateTeam: " + formatDate(new Date()) + " - Email is " + req.oidc.user.email);
+
     // Full check based on the number of IDs passed in, not the number of files.
     // If an id was passed in, then the player's data must be entered
     // Always need to check for captain data
@@ -1468,6 +1529,8 @@ router.post('/adminActivateTeam', function(req, res, next)
             // check result, return if error
             if (rows[0][0].phone != CALL_SUCCESS)
             {
+                console.log("admin_activate_team success: " + formatDate(new Date()) + " - Email is " + req.oidc.user.email);
+
                 // Render error page, passing in error code
                 res.render('errorMessagePage', {result: parseInt(rows[0][0].phone)});
                 return;
@@ -1475,7 +1538,7 @@ router.post('/adminActivateTeam', function(req, res, next)
 
             // Start processing  Captain
             playerPhotoFile = req.files.captainPhotoFile;
-            uploadPath = __dirname + '/../public/photos/' + playerPhotoFile.name;  // might want to clean up this directory logic
+            uploadPath = __dirname + '/../public/photos/' + req.body.captainCode + "/" + playerPhotoFile.name;  // might want to clean up this directory logic
 
             console.log(uploadPath);
 
@@ -1498,7 +1561,7 @@ router.post('/adminActivateTeam', function(req, res, next)
                     {
                         // Upload second file
                         playerPhotoFile = req.files.player2PhotoFile;
-                        uploadPath = __dirname + '/../public/photos/' + playerPhotoFile.name;  // might want to clean up this directory logic
+                        uploadPath = __dirname + '/../public/photos/' + p2Code + "/" + playerPhotoFile.name;  // might want to clean up this directory logic
 
                         console.log(uploadPath);
 
@@ -1521,7 +1584,7 @@ router.post('/adminActivateTeam', function(req, res, next)
                                 {
                                     // Upload third file
                                     playerPhotoFile = req.files.player3PhotoFile;
-                                    uploadPath = __dirname + '/../public/photos/' + playerPhotoFile.name;  // might want to clean up this directory logic
+                                    uploadPath = __dirname + '/../public/photos/' + p3Code + "/" + playerPhotoFile.name;  // might want to clean up this directory logic
 
                                     console.log(uploadPath);
 
@@ -1777,11 +1840,11 @@ router.post('/adminSearchForPlayer', function(req, res, next)
             //console.log(rows);
 
             // Check results, if only 1 player, go directly to that edit player page, otherwise show list of matching players and let Admin pick
-            console.log(rows[0].length);
+            // console.log(rows[0].length);
 
             if (rows[0].length == 1)
             {
-                let tempPath = "photos/" + rows[0][0]['player-pic'];
+                let tempPath = "photos/" + rows[0][0]['player-code'] + "/" + rows[0][0]['player-pic'];
                 playerPicPath = tempPath.replace(/ /g, "%20");
 
                 res.render('adminPlayerHome',
@@ -1975,6 +2038,8 @@ router.post('/uploadPhoto', function(req, res, next)
         return;
     }
 
+    console.log("got into uploadPhoto: " + formatDate(new Date()) + " - Email is " + req.oidc.user.email);
+
     // helper vars for uploading photo files
     let playerPhotoFile;
     let uploadPath;
@@ -2007,7 +2072,7 @@ router.post('/uploadPhoto', function(req, res, next)
 
             // name of the input is playerPhotoFile
             playerPhotoFile = req.files.playerPhotoFile;
-            uploadPath = __dirname + '/../public/photos/' + playerPhotoFile.name;  // might want to clean up this directory logic
+            uploadPath = __dirname + '/../public/photos/' + req.body.playerCode + "/" + playerPhotoFile.name;  // might want to clean up this directory logic
 
             console.log(uploadPath);
 
@@ -2024,6 +2089,8 @@ router.post('/uploadPhoto', function(req, res, next)
                 }
                 else
                 {
+                    console.log("uploadPhoto success: " + formatDate(new Date()) + " - Email is " + req.oidc.user.email);
+
                     //console.log("Successful photo file upload");
                     res.oidc.login();
 
@@ -2422,7 +2489,7 @@ router.post('/adminUpdateTeamName', function(req, res, next)
 }); // end router post update_player_data
 
 // --------------------------------------------------------------------------------------------------------
-// Route called by player to edit phone number
+// Route called by player to add phone number
 router.post('/addPlayerPhoneNumber', function(req, res, next)
 {
     //console.log("Got into addPlayerPhoneNumber");
@@ -2434,6 +2501,8 @@ router.post('/addPlayerPhoneNumber', function(req, res, next)
         res.render('landing');
         return;
     }
+
+    console.log("got into addPlayerPhoneNumber: " + formatDate(new Date()) + " - Email is " + req.oidc.user.email);
 
     res.render('editPlayerPhone', {playerCode: req.body.myPlayerCode, playerPhone: ""});
 
@@ -2453,6 +2522,8 @@ router.post('/editPlayerPhoneNumber', function(req, res, next)
         return;
     }
 
+    console.log("got into edit PlayerPhoneNumber: " + formatDate(new Date()) + " - Email is " + req.oidc.user.email);
+
     res.render('editPlayerPhone', {playerCode: req.body.myPlayerCode, playerPhone: req.body.myPhoneNumber});
 
 }); // end router post editPlayerPhoneNumber
@@ -2462,8 +2533,6 @@ router.post('/editPlayerPhoneNumber', function(req, res, next)
 //
 router.post('/updatePlayerPhone', function(req, res, next)
 {
-
-  //console.log("Got into updatePlayerPhone");
 
   // helper var to check and format phone number
   var tempPlayerPhone;
@@ -2475,6 +2544,8 @@ router.post('/updatePlayerPhone', function(req, res, next)
       res.render('landing');
       return;
   }
+
+  console.log("got into updatePlayerPhone: " + formatDate(new Date()) + " - Email is " + req.oidc.user.email);
 
   tempPlayerPhone = validatePhone(req.body.playerPhone); // comes back formatted
 
@@ -2501,6 +2572,8 @@ router.post('/updatePlayerPhone', function(req, res, next)
 
           if (rows[0][0].phone == CALL_SUCCESS)
           {
+              console.log("Update phone success: " + formatDate(new Date()) + " - Email is " + req.oidc.user.email);
+
               res.oidc.login(); // send back home to refresh page
           }
           else
@@ -2521,8 +2594,6 @@ router.post('/updatePlayerPhone', function(req, res, next)
 router.post('/removePlayerPhoneNumber', function(req, res, next)
 {
 
-  //console.log("Got into removePlayerPhone");
-
   // Check authentication status
   if (!req.oidc.isAuthenticated())
   {
@@ -2530,6 +2601,8 @@ router.post('/removePlayerPhoneNumber', function(req, res, next)
       res.render('landing');
       return;
   }
+
+  console.log("Got into remove phone: " + formatDate(new Date()) + " - Email is " + req.oidc.user.email);
 
   // Call stored procedure
   dbConn.query('CALL `assassin`.`remove_player_phone`(?)', req.body.myPlayerCode, function(err,rows)
@@ -2547,6 +2620,8 @@ router.post('/removePlayerPhoneNumber', function(req, res, next)
 
           if (rows[0][0].phone == CALL_SUCCESS)
           {
+              console.log("Remove phone success: " + formatDate(new Date()) + " - Email is " + req.oidc.user.email);
+
               res.oidc.login(); // send back home to refresh page
           }
           else
@@ -2613,6 +2688,8 @@ router.post('/adminDropBomb', function(req, res, next)
 
           if (rows[0][0].phone == CALL_SUCCESS)
           {
+              console.log("Admin dropped bomb: " + formatDate(new Date()) + " - Email is " + req.oidc.user.email);
+
               // send texts if nec.
               if (rows[0].length > 1)
               {
@@ -2748,7 +2825,7 @@ router.post('/checkPlayersWithNoTeam', function(req, res, next)
 
           if (rows[0].length == 1)
           {
-            let tempPath = "photos/" + rows[0][0]['picture-url'];
+            let tempPath = "photos/" + rows[0][0]['player-code'] + "/" + rows[0][0]['picture-url'];
             playerPicPath = tempPath.replace(/ /g, "%20");
 
             // Only 1 player found, go to player Home
@@ -2955,7 +3032,7 @@ router.post('/systemCheckForceShiftChange', function(req, res, next)
       {
           // Create Player worked, now upload photo
           console.log("system_check_for_forced_shift_changes rpc worked.");
-          console.log(rows);
+          // console.log(rows);
 
           if (rows[0][0].phone == CALL_SUCCESS)
           {
@@ -3054,6 +3131,8 @@ router.post('/viewTeamHistory', function(req, res, next)
         return;
     }
 
+    console.log("Got into view team history: " + formatDate(new Date()) + " - Email is " + req.oidc.user.email);
+
     // validate team code and player code here zzz
 
     // Call stored procedure to search for the player
@@ -3067,9 +3146,12 @@ router.post('/viewTeamHistory', function(req, res, next)
             return;
         } else
         {
+
+          console.log("Get team history success: " + formatDate(new Date()) + " - Email is " + req.oidc.user.email);
+
             // get_team_history worked, now inspect data
             console.log("get_team_history successful rpc call.");
-            console.log(rows[1]);
+            // console.log(rows[1]);
             // show the rows
             res.render('viewHistory',
             {
@@ -3150,7 +3232,6 @@ router.post('/admin_get_full_status', function(req, res, next)
 
     // validate team code and player code here zzz
 
-    // zzzz
     // Call stored procedure to search for the player
     dbConn.query('CALL `assassin`.`admin_get_full_status`()', function(err,rows)
     {
@@ -3165,7 +3246,7 @@ router.post('/admin_get_full_status', function(req, res, next)
             // get_team_history worked, now inspect data
             // console.log("get_full_status successful rpc call.");
             // console.log(rows[0][0].type);
-            console.log(rows);
+            // console.log(rows);
 
             // show the rows
             res.render('viewFullStatus',
@@ -3208,7 +3289,7 @@ router.post('/adminViewRankings', function(req, res, next)
         {
             // get_team_history worked, now inspect data
             console.log("admin_view_rankings successful rpc call.");
-            console.log(rows);
+            // console.log(rows);
             // show the rows
             res.render('viewRankings',
             {
@@ -3237,6 +3318,8 @@ router.post('/viewMyRankings', function(req, res, next)
         return;
     }
 
+    console.log("Got into viewmyrankings: " + formatDate(new Date()) + " - Email is " + req.oidc.user.email);
+
     // Call stored procedure to search for the player
     dbConn.query('CALL `assassin`.`player_view_rankings`(?,?)', [req.body.myPlayerCode, req.body.myTeamCode], function(err,rows)
     {
@@ -3248,9 +3331,11 @@ router.post('/viewMyRankings', function(req, res, next)
             return;
         } else
         {
+            console.log("player_view_rankings successful: " + formatDate(new Date()) + " - Email is " + req.oidc.user.email);
+
             // player_view_rankings worked, now inspect data
             console.log("player_view_rankings successful rpc call.");
-            console.log(rows);
+            // console.log(rows);
             // show the rows
             res.render('viewPlayerRankings',
             {
@@ -3279,6 +3364,8 @@ router.post('/contactAdmin', function(req, res, next)
         return;
     }
 
+    console.log("Got into contact admin: " + formatDate(new Date()) + " - Email is " + req.oidc.user.email);
+
     res.render('contactAdmin', {playerCode: req.body.myPlayerCode, playerName: req.body.myPlayerName, playerPhone: req.body.myPhone });
 
 }); // end router post contactAdmin
@@ -3298,6 +3385,8 @@ router.post('/sendAdminMessage', function(req, res, next)
         res.render('landing');
         return;
     }
+
+    console.log("Got into send admin msg: " + formatDate(new Date()) + " - Email is " + req.oidc.user.email);
 
     // Check if photo file was passed in correctly
     if (req.body.message == '')
@@ -3319,6 +3408,8 @@ router.post('/sendAdminMessage', function(req, res, next)
         } else
         {
             //console.log("get_admin_phone_number rpc worked.");
+
+            console.log("Send admin msg: " + formatDate(new Date()) + " - Email is " + req.oidc.user.email);
 
             // zzz maybe some error checking here
 
@@ -3781,7 +3872,7 @@ function checkForUploadedPhotos(res)
           if (rows[0][0].numUploadedPhotos > 0)
           {
 
-            let tempPath = "photos/" + rows[0][0].photoFilename;
+            let tempPath = "photos/" + rows[0][0].playerCode + "/" + rows[0][0].photoFilename;
             playerPicPath = tempPath.replace(/ /g, "%20");
 
             //console.log("At least 1 photo to review.")
@@ -4580,7 +4671,7 @@ function twoHoursToGoLastNightCronFunction()
         else
         {
             console.log("Successful last night system_check_for_forced_shift_changes2 RPC call.");
-            console.log(rows);
+            // console.log(rows);
 
             if (rows[0][0].phone == CALL_SUCCESS)
             {
@@ -4699,7 +4790,7 @@ function checkHowManyPhotosCronFunction(maxPhotos)
         else
         {
             //console.log("Successful system_check_how_many_photos RPC call.");
-            console.log(rows[0][0].numPhotosWaiting + " photos waiting for approval.");
+            // console.log(rows[0][0].numPhotosWaiting + " photos waiting for approval.");
 
             if (rows[0][0].numPhotosWaiting >= maxPhotos)
             {
@@ -4734,7 +4825,7 @@ function checkOldPhotosCronFunction(photoWaitTime)
         {
             //console.log("Successful system_check_old_photos RPC call.");
             //console.log(rows);
-            console.log(rows[0][0].numOldPhotos + " old photos waiting for approval.");
+            // console.log(rows[0][0].numOldPhotos + " old photos waiting for approval.");
 
             if (rows[0][0].numOldPhotos > 0)
             {
